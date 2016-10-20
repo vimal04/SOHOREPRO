@@ -2,13 +2,13 @@
 //error_reporting(E_ALL ^ E_DEPRECATED);
 
 error_reporting(0);
-error_reporting(E_ALL & ~E_NOTICE);
+//error_reporting(E_ALL & ~E_NOTICE);
 
 
    
-    $link = mysql_connect('localhost', 'cipldevc_jasim', 'Jasim#123');
+    $link = mysql_connect('localhost', 'root', '');
 
-    $db_selected = mysql_select_db('cipldevc_soho_new', $link);
+    $db_selected = mysql_select_db('supply.sohorepro.com', $link);
     
     $base_url="http://".$_SERVER['SERVER_NAME']."";
 

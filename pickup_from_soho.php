@@ -277,7 +277,7 @@ if ($_POST['pickup_from_soho'] == '1') {
             <?php
             if(count($cust_original_order) > '0'){
             ?>
-            <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #4285F4;font-weight: bold;">
+            <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #4285F4;font-weight: bold; font-size: 17px;">
                 PLOTTING & ARCHITECTURAL COPIES
             </div>
              <div style="width: 95%;float: left;margin-left: 25px;">                    
@@ -422,7 +422,7 @@ if ($_POST['pickup_from_soho'] == '1') {
             <?php
             if(count($original_service_lfp) > '0'){
             ?>
-            <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #34A853;font-weight: bold;">
+            <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #34A853;font-weight: bold; font-size: 17px;">
                 LARGE FORMAT COLOR & BW
             </div>
             
@@ -560,7 +560,7 @@ if ($_POST['pickup_from_soho'] == '1') {
             <?php
             if(count($original_service_fap) > '0'){
             ?>
-            <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #EA4335;font-weight: bold;">
+            <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #EA4335;font-weight: bold; font-size: 17px;">
                 FINE ART PRINTING
             </div>
             

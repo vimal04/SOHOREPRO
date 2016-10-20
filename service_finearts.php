@@ -1579,7 +1579,7 @@ color: red;
         var output_both                 =   $("#output_both").val();
         
         var dropoff                     =   document.getElementById("dropoff").checked;
-        var dropoff_val                 =   (dropoff == true) ? "381 Broome Stree" : "0";
+        var dropoff_val                 =   (dropoff == true) ? "381 Broome Street" : "0";
         
         var link                        =   document.getElementById("link").checked;
         
