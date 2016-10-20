@@ -1,0 +1,457 @@
+.style16 {
+	font-size: 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+}
+
+#all {
+	position: absolute;
+	width: 1000px;
+	left: 0px;
+	top: 0px;
+}
+
+
+
+#all  #logo {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	background-color: #5379A4;
+	background-image: url(images/logo.jpg);
+	background-repeat: no-repeat;
+	height: 122px;
+	width: 172px;
+	float: left;
+	clear: left;
+}
+#all  #topImage {
+	position: absolute;
+	left: 172px;
+	top: 0px;
+	background-image: url(images/header_img.jpg);
+	background-repeat: no-repeat;
+	height: 122px;
+	width: 340px;
+	clear: none;
+	float: none;
+}
+#all  #topNav {
+	position: absolute;
+	left: 560px;
+	top: 5px;
+	width: 380px;
+	height: 0px;
+}
+#all  #mainContent {
+	position: absolute;
+	left: 175px;
+	top: 260px;
+	width: 625px;
+}
+
+
+#all  #mainContentHome {
+	position: absolute;
+	left: 192px;
+	top: 348px;
+	width: 584px;
+}
+
+
+
+
+#all  #loginTop {
+	position: absolute;
+	height: 300px;
+	width: 300px;
+	left: 35px;
+	top: 60px;
+}
+#all  #leftNav {
+	position: absolute;
+	left: 1px;
+	top: 254px;
+}
+
+#all  #leftNavHome {
+	position: absolute;
+	left: 1px;
+	top: 344px;
+}
+
+
+#all #mainContent #orderBtn {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #5279A4;
+	position: relative;
+	height: 69px;
+	width: 378px;
+	top: 0px;
+	left: 0px;
+	margin-top: 30px;
+	background-image: url(images/order_btn.jpg);
+	background-repeat: no-repeat;
+	background-position: 0px 0px;
+}
+
+#all  #loginStatus {
+	background-color: #5279A4;
+	background-image: url(images/login_bkg.jpg);
+	background-repeat: no-repeat;
+	position: absolute;
+	height: 85px;
+	background-position: right bottom;
+	top: 26px;
+	left: 545px;
+	width: 400px;
+}
+
+
+
+
+
+.bodyWhite {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	color: #FFFFFF;
+	margin-bottom: 0px;
+	margin-top: 10px;
+}
+a:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:visited {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+a.bodylink:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+a.bodylink:visited {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a.bodylink:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: underline;
+}
+	
+h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	font-size: 20px;
+	line-height: 20px;
+	margin: 0px 0px 5px 0px;
+}
+.white11pt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	width: 300px;
+}
+h2 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+	font-size: 24px;
+	line-height: 24px;
+	margin: 0px;
+	font-weight: bold;
+}
+h3 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FF6600;
+	font-size: 14px;
+	line-height: 18px;
+	margin: 0px;
+	font-weight: bold;
+}
+.bodyBlack {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	line-height: 16px;
+	color: #000000;
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+.white14pt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	line-height: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.orange16pt {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	line-height: 19px;
+	font-weight: bold;
+	color: #FF6633;
+	text-decoration: none;
+}
+#all #middleNav {
+	height: 26px;
+	width: 900px;
+	position: absolute;
+	top: 122px;
+	left: 0px;
+}
+#all #middleImage {
+	height: 80px;
+	width: 954px;
+	left: 0px;
+	top: 168px;
+	position: absolute;
+}
+
+
+#all #mainLoginTable {
+	height: 400px;
+	width: 820px;
+	left: 1px;
+	top: 4px;
+	position: absolute;
+	border: 1px solid #7C9ABA;
+}
+
+#all #mainSetupTable {
+	height: 400px;
+	width: 820px;
+	left: 1px;
+	top: 2px;
+	position: absolute;
+	border: 1px solid #BDB494;
+}
+
+#all #mainOrderTable {
+	height: 400px;
+	width: 820px;
+	left: 1px;
+	top: 2px;
+	position: absolute;
+}
+
+
+#all #mainLoginTable #loginSignIn {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #D6E1EB;
+	position: absolute;
+	height: 17px;
+	width: 64px;
+	left: 35px;
+	top: 20px;
+}
+#all #mainSetupTable #setupSignIn {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #B77248;
+	position: absolute;
+	height: 17px;
+	width: 200px;
+	left: 35px;
+	top: 10px;
+}
+#all #mainLoginTable #loginLeftInfo {
+	position: absolute;
+	height: 300px;
+	width: 300px;
+	left: 35px;
+	top: 60px;
+}
+#all #mainSetupTable #setupInfo {
+	position: absolute;
+	height: 300px;
+	width: 802px;
+	left: 5px;
+	top: 5px;
+	font-size: 12px;
+	color: #666666;
+}
+#all #mainLoginTable #loginNewCustomer {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #BDB494;
+	position: absolute;
+	height: 17px;
+	width: 200px;
+	left: 440px;
+	top: 20px;
+}
+#all #mainLoginTable #loginRightInfo {
+	position: absolute;
+	height: 300px;
+	width: 300px;
+	left: 402px;
+	top: 61px;
+}
+#all #mainLoginTable #loginBottomDotted {
+	position: absolute;
+	height: 50px;
+	width: 300px;
+	left: 18px;
+	top: 200px;
+	border-top-style: dotted;
+	border-top-color: #BDB494;
+	border-top-width: 1px;
+}
+#all #mainSetupTable #setupBottomDotted {
+	position: absolute;
+	height: 50px;
+	width: 750px;
+	left: 18px;
+	top: 325px;
+	padding-top: 10px;
+	border-top-style: dotted;
+	border-top-color: #BDB494;
+	border-top-width: 1px;
+}
+#all #middleImage #homeLogin img {
+	height: 166px;
+	width: 280px;
+	background-image: url(images/login-new-bg.jpg);
+	background-repeat: no-repeat;
+	clear: none;
+	display: block;
+}
+#all #middleImage #indexLoginTable {
+	background-image: url(images/login-new-bg.jpg);
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+#all #mainContent #orderBtn .orderLink {
+	background-image: url(images/order_btn.jpg);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
+
+#all #mainContent #orderBtn a.orderLink:link {
+	background-image: url(images/order_btn.jpg);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
+
+#all #mainContent #orderBtn a.orderLink:hover {
+	background-image: url(images/order_btn.jpg);
+	background-position: 0px -69px;
+	background-repeat: no-repeat;
+}
+
+#all #mainContent #orderBtn a.orderLink:active {
+	background-image: url(images/order_btn.jpg);
+	background-position: 0px -69px;
+	background-repeat: no-repeat;
+}
+
+#all #mainContent #orderBtn a.orderLink:visited {
+	background-image: url(images/order_btn.jpg);
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
+#all #mainContent #mainAboutTable {
+	line-height: 16px;
+}
+#all #middleImage #indexLoginTable #indexLoginTableSmall {
+	position: relative;
+	top: 13px;
+	left: 5px;
+}
+#all #mainContent #liner {
+	border-top-width: 1px;
+	border-top-style: solid;
+	border-top-color: #333333;
+	width: 800px;
+}
+
+TH
+{
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	background-color: rgb(128,128,128);
+	color: rgb(224,224,224);
+}
+
+TD.odd
+{
+	background-color: rgb(240,255,240);
+	color: rgb(64,64,64);
+	cursor: auto;
+}
+
+TD.even
+{
+	background-color: rgb(165,190,230);
+	color: rgb(64,64,64);
+	cursor: auto;
+}
+
+TD.focused
+{
+	background-color: rgb(90,120,160);
+	color: rgb(206,255,206);
+	cursor: pointer;
+}
+
+TD.subheading
+{
+	background-color: rgb(90,120,160);
+	color: rgb(165,190,230);
+	font-weight: bold;
+}
+
+A.darklink {
+	color: #5379A4;
+	text-decoration: none;
+}
+
+A.darklink:hover {
+	text-decoration: underline;
+}
+
+A.darklink:visited {
+	color: #5379A4;
+}

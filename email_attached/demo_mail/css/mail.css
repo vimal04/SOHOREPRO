@@ -1,0 +1,138 @@
+* {
+   background-color: #16a085;
+   margin: 0;
+   padding: 0;
+}
+@font-face{
+font-family: Lobster;
+src: url('Lobster.otf');
+}
+.error_msg{
+  color: red;
+}
+
+
+table{
+  color: #fff;
+  font-size: 20px;
+}
+td{
+  padding: 20px 0 0 0;
+}
+textarea{
+  border-radius: 5px;
+  color: #fff;
+  font-size : 17px;
+  font-family: Verdana;
+}
+textarea:focus{
+  color: #FF9900;
+  border: 2px solid green;
+}
+.mail{
+  width: 500px;
+  margin:0 auto; 
+}
+.label{
+  text-align: right;
+  padding-right: 20px;
+
+}
+#image{
+
+height: 30px;
+}
+.title{
+  font-family: Lobster;
+  text-align: center;
+  font-size: 35px;
+  color: #FFf;
+  margin: 50px 0 10px 0;
+  text-decoration:underline;
+}
+.form-input{
+   width: 275px;
+   height: 40px;
+   border-radius: 5px;
+   color: #999;
+   font-size : 17px;
+   background: #fff;
+   border: 2px solid #fff;
+}
+
+.form-input:focus{
+   color: #3D991F;
+   border: 2px solid green;
+}
+.submit_btn:hover{
+   background: green;
+   border: 2px solid green;
+   color: #fff;
+}
+
+.submit_btn{
+  margin-left: 140px;
+  width: 280px;
+  height: 45px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #EE872A;
+  font: bold 15px Verdana;
+  margin-bottom: 100px;
+  border: 2px solid #EE872A;
+}
+#message{
+background: #fff;
+color: #999;
+border: 2px solid #fff;
+}
+
+em.error {
+  background:url("unchecked.gif") no-repeat 0px 0px;
+  padding-left: 16px;
+  color: #ff0000;
+  font-weight: bold;
+}
+em.success {
+  background:url("checked.gif") no-repeat 0px 0px;
+  padding-left: 16px;
+  color: #33ff55 !important;
+}
+
+form.cmxform label.error {
+	margin-left: auto;
+	width: 250px;
+	color: red;
+}
+#warning { display: none; }
+.status{
+   width : 250px;
+   position: absolute;
+}
+#message1{
+  display: none;
+  width: 350px;
+  height: 100px;
+  color: #fff;
+  margin-left: 90px;
+  margin-top: 100px;
+  border: 2px solid #fff;
+  position: relative;
+  border-radius: 10px;
+}
+
+#message1 h2, #message1 p{
+  text-align: center;
+}
+#message1 #checkmark{
+   margin-left: 150px;
+}
+
+#cancel{
+  position: absolute;
+  right: -10px;
+  top: -10px;
+}
+.hide{
+  display: none;
+}

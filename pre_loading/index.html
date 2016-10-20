@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html >
+    <head>
+        <meta charset="utf-8">
+        <title>PRE LOADINF</title>
+        <style>
+            .none{
+                display: none;
+            }
+            .home-content{
+                list-style: none;
+            }
+        </style>
+        <!--<script src="js/jquery-1.11.2.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $.ajax
+                    ({
+                        type: "POST",
+                        url: "home.php",
+                        data: "home_id=1",
+                        beforeSend: loadStart,
+                        complete: loadStop,
+                        success: function(content)
+                        {
+                            $("#home-content").html(content);
+                        }
+                    });
+            });
+
+            function loadStart() {
+                $('#loading').show();
+            }
+
+            function loadStop() {
+                $('#loading').hide();
+            }
+        </script> -->
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+
+        <!-- Preloader --><script type="text/javascript">// <![CDATA[
+            $(window).load(function() {
+                $("#spinner").fadeOut("slow");
+            })
+            // ]]></script>
+        <style>
+            #spinner {
+                position: fixed;
+                left: 0px;
+                top: 0px;
+                width: 100%;
+                height: 100%;
+                z-index: 9999;
+                background: url(images/loading.gif) 50% 50% no-repeat #ede9df;
+            }
+        </style>
+    </head>    
+    <body>
+        <!--<div id="loading" class="none"  style="position: fixed;top: 35%;left: 48%;padding: 5px;z-index: 10;">
+            <img src="images/loading.gif" border="0" />
+        </div> -->
+        <div id="spinner"></div>
+        <div>
+            <ul class="home-content">                
+                <li><img src="images/image-4.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-5.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-6.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-7.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-8.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-9.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-4.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-5.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-6.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-7.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-8.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-9.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-4.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-5.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-6.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-7.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-8.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-9.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-4.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-5.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-6.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-7.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-8.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-9.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-4.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-5.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-6.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-7.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-8.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-9.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-4.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-5.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-6.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-7.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-8.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-9.png" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-1.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-2.jpg" style="border: 0px" title="Image_1" /></li>
+                <li><img src="images/image-3.jpg" style="border: 0px" title="Image_1" /></li>
+            </ul>
+        </div>
+    </body>
+</html>
