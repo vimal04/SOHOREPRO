@@ -626,7 +626,7 @@ if ($_POST['everything_return_to'] == '1') {
                     <div style="float: left;width: 100%;margin-top: 10px;">
                         <div style="float: right;width: 100%;">
                             <div id="show_address_att" style="float: left;width: 90%;border: 1px #F99B3E solid;padding: 5px;height: 25px;">
-                                <input type="text" name="shipp_att" id="shipp_att" value="<?php echo $address_book[0]['attention_to']; ?>" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                <input type="text" name="shipp_att" id="shipp_att" value="<?php //echo $address_book[0]['attention_to']; ?>" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
                             </div>
                         </div>
                     </div>

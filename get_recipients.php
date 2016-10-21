@@ -4413,7 +4413,7 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '</tr>';
     }
     $html_5 .= '</table>';
-    
+     
     $html_5 .= '<table border="0" style="width: 100%;float: left;">';
     foreach ($cust_original_order_final_pdf as $original) {
         $html_5 .= '<tr>';
@@ -4421,21 +4421,21 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '</tr>';
         $html_5 .= '<tr style="font-weight: bold;color: #000;">';
         $html_5 .= '<td> OPTION&nbsp;'.$original['options'].'&nbsp;- Details</td>';
-        $html_5 .= '</tr>';
-        if ($original['size'] == 'Custom') {
+        $html_5 .= '</tr><br>';
+        if ($original['size'] == 'CUSTOM') {
         $html_5 .= '<tr>';
-        $html_5 .= '<td>Custom Size:&nbsp;'.$original['custome_details'].'</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '<td><b>Custom Size:</b>&nbsp;'.$original['custome_details'].'</td>';
+        $html_5 .= '</tr><br>';
         }
-        if ($original['output'] == 'Both') {
+        if ($original['output'] == 'BOTH') {
         $html_5 .= '<tr>';
-        $html_5 .= '<td>Color Page Numbers:&nbsp;'.$original['output_both'].'</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '<td><b>Color Page Numbers:</b>&nbsp;'.$original['output_both'].'</td>';
+        $html_5 .= '</tr><br>';
         }
         if ($original['spl_instruction'] != '') {
         $html_5 .= '<tr>';
-        $html_5 .= '<td>Special Instructions:&nbsp;'.$original['spl_instruction'].'</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original['spl_instruction'].'</td>';
+        $html_5 .= '</tr><br>';
         }
         if ($original['ftp_link'] != "0") {
             $link = ($original['ftp_link'] != '0') ? $original['ftp_link'] : '';
@@ -4444,51 +4444,51 @@ if ($_POST['recipients'] == '1') {
             if ($original['use_same_alt'] == "0") {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'File Option: Provide Link to a File<br>';
-        $html_5 .= 'FTP Link:&nbsp;'.$link.'<br>';
-        $html_5 .= 'User Name:&nbsp;'.$user_name.'<br>';
-        $html_5 .= 'Password:&nbsp;'.$password;
+        $html_5 .= '<b>File Option: Provide Link to a File</b><br>';
+        $html_5 .= '<b>FTP Link:</b>&nbsp;'.$link.'<br>';
+        $html_5 .= '<b>User Name:</b>&nbsp;'.$user_name.'<br>';
+        $html_5 .= '<b>Password:</b>&nbsp;'.$password;
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '</tr><br>';
         } else {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'File Option: Provide Link to a File<br>';
-        $html_5 .= 'Use same file as Option&nbsp;'.$original['use_same_alt'];
+        $html_5 .= '<b>File Option: Provide Link to a File</b><br>';
+        $html_5 .= '<b>Use same file as Option</b>&nbsp;'.$original['use_same_alt'];
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '</tr><br>';
             }
         }
         if ($original['upload_file'] != "") {
             if ($original['use_same_alt'] == "0") {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'File Option: Upload a file<br>';
+        $html_5 .= '<b>File Option: Upload a file</b><br>';
         $html_5 .= '<a href="http://cipldev.com/supply-new.sohorepro.com/uploads/'.$original['upload_file'].'"  target="_blank">'.$original['upload_file'].'</a>';
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '</tr><br>';
         } else {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'File Option: Upload a file<br>';
+        $html_5 .= '<b>File Option: Upload a file</b><br>';
         $html_5 .= 'Use same file as Option&nbsp;'.$original['use_same_alt'];
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '</tr><br>';
         }
         }
         if ($original['drop_off'] != "0") {
             if ($original['use_same_alt'] == "0") {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'Drop-Off Option:&nbsp;'.$original['drop_off'];
+        $html_5 .= '<b>Drop-Off Option:</b>&nbsp;'.$original['drop_off'];
         $html_5 .= '</td>';
-        $html_5 .= '</tr>'; 
+        $html_5 .= '</tr><br>'; 
         } else {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'Drop-Off Option:&nbsp;Use same file as Option&nbsp;'.$original['use_same_alt'];
+        $html_5 .= '<b>Drop-Off Option:</b>&nbsp;Use same file as Option&nbsp;'.$original['use_same_alt'];
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '</tr><br>';
             }
         }
         if ($original['pick_up'] != "0") {
@@ -4500,15 +4500,15 @@ if ($_POST['recipients'] == '1') {
             if ($original['use_same_alt'] == "0") {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'Pickup Option:&nbsp;'.$pickup_details;
+        $html_5 .= '<b>Pickup Option:</b>&nbsp;'.$pickup_details;
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';               
+        $html_5 .= '</tr><br>';               
         } else {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= 'Pickup Option:&nbsp;Use same file as Option&nbsp;'.$original['use_same_alt'];
+        $html_5 .= '<b>Pickup Option:</b>&nbsp;Use same file as Option&nbsp;'.$original['use_same_alt'];
         $html_5 .= '</td>';
-        $html_5 .= '</tr>';
+        $html_5 .= '</tr><br>';
             }
         }
         
@@ -4520,13 +4520,13 @@ if ($_POST['recipients'] == '1') {
             $address_3       = ($address_dtls[0]['address_3'] != '') ? $address_dtls[0]['address_3'].'<br>' : '';
             $address_string  = $address_dtls[0]['company_name'].'<br>'.$address_dtls[0]['address_1'].'<br>'.$address_dtls[0]['address_2'].'<br>'.$address_3.$address_dtls[0]['city'].',&nbsp;'.StateName($address_dtls[0]['state']).'&nbsp;'.$address_dtls[0]['zip'];
 
-            $option_sechdule = ($original['my_office_alt'] == 'my_office') ? '<span style="font-weight: bold">My Office</span>' : '<br><span style="font-weight: bold">Alternate:</span><br>'.$address_string;
+            $option_sechdule = ($original['my_office_alt'] == 'my_office') ? '<span>My Office</span>' : '<br><span>Alternate:</span><br>'.$address_string;
             
             $html_5 .= '<tr>';
             $html_5 .= '<td>';
             $html_5 .= '<span style="font-weight: bold">Schedule a Pick-up Option:</span>&nbsp;' . $option_sechdule;
             $html_5 .= '</td>';
-            $html_5 .= '</tr>'; 
+            $html_5 .= '</tr><br>'; 
             
         }  
         //Alternate End
@@ -4550,14 +4550,61 @@ if ($_POST['recipients'] == '1') {
     }
     $html_5 .= '</td>';   
     $html_5 .= '</tr>';
-    $html_5 .= '</table>';
+    $html_5 .= '</table></br>';
    
     
     if ($entered_needed_sets_pdf[0]['delivery_type_option'] == '1') {
         $pdf->writeHTML($html_5, true, 0, true, 0);
         $pdf->lastPage();
         $pdf->AddPage();
-            
+          $html_retmo .= '<table style="width: 100%;float: left;margin-top: 10px;">';
+          $html_retmo .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
+          $html_retmo .= ' </tr></table></br>';
+         
+           $html_retmo .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+    $html_retmo .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    $total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+    $cust_original_order_final_pdf = SetsOrderedFinalizeOriginal($job_reference_final[0]['id']);
+    $upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    $cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    $cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    $option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+
+    $html_retmo .= '<tr style="background-color: #002369;color: #FFF;">
+                    <td style="width: 9%;">Option</td>
+                    <td style="width: 11%;">Originals</td>
+                    <td style="width: 8%;">Sets</td>
+                    <td style="width: 20%;">Order Type</td>
+                    <td style="width: 8%;">Size</td>
+                    <td style="width: 9%;">Output</td>
+                    <td style="width: 9%;">Media</td>
+                    <td style="width: 9%;">Binding</td>
+                    <td style="width: 9%;">Folding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf as $original_pdf) {
+        $cust_needed_sets = ($original_pdf['print_ea'] != '0') ? $original_pdf['print_ea'] : $original_pdf['arch_needed'];
+        $cust_order_type = ($original_pdf['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+        $size = ($original_pdf['size'] == 'undefined') ? $original_pdf['arch_size'] : $original_pdf['size'];
+        $output = ($original_pdf['output'] == 'undefined') ? $original_pdf['arch_output'] : $original_pdf['output'];
+        $media = ($original_pdf['media'] == 'undefined') ? $original_pdf['arch_media'] : $original_pdf['media'];
+        $binding = ($original_pdf['binding'] == 'undefined') ? $original_pdf['arch_binding'] : $original_pdf['binding'];
+        $folding = ($original_pdf['folding'] == 'undefined') ? $original_pdf['arch_folding'] : $original_pdf['folding'];
+        $html_retmo .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_retmo .= '<td>' . $original_pdf['options'] . '</td>';
+        $html_retmo .= '<td>' . $original_pdf['origininals'] . '</td>';
+        $html_retmo .= '<td>' . $cust_needed_sets . '</td>';
+        $html_retmo .= '<td>' . $cust_order_type . '</td>';
+        $html_retmo .= '<td>' . $size . '</td>';
+        $html_retmo .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+        $html_retmo .= '<td>' . $media . '</td>';
+        $html_retmo .= '<td>' . ucfirst($binding) . '</td>';
+        $html_retmo .= '<td>' . ucfirst($folding) . '</td>';
+        $html_retmo .= '</tr>';
+    }
+    $html_retmo .= '</table>';
+          
         $html_retmo .= '<table>';
         
         $html_retmo .= '<tr>';
@@ -4639,7 +4686,53 @@ if ($_POST['recipients'] == '1') {
         $pdf->writeHTML($html_5, true, 0, true, 0);
         $pdf->lastPage();
         $pdf->AddPage();
-        
+         $html_seto .= '<table style="width: 100%;float: left;margin-top: 10px;">';
+          $html_seto .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
+          $html_seto .= ' </tr></table></br>';
+         
+           $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+    $html_seto .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    $total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+    $cust_original_order_final_pdf = SetsOrderedFinalizeOriginal($job_reference_final[0]['id']);
+    $upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    $cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    $cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    $option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+
+    $html_seto .= '<tr style="background-color: #002369;color: #FFF;">
+                    <td style="width: 9%;">Option</td>
+                    <td style="width: 11%;">Originals</td>
+                    <td style="width: 8%;">Sets</td>
+                    <td style="width: 20%;">Order Type</td>
+                    <td style="width: 8%;">Size</td>
+                    <td style="width: 9%;">Output</td>
+                    <td style="width: 9%;">Media</td>
+                    <td style="width: 9%;">Binding</td>
+                    <td style="width: 9%;">Folding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf as $original_pdf) {
+        $cust_needed_sets = ($original_pdf['print_ea'] != '0') ? $original_pdf['print_ea'] : $original_pdf['arch_needed'];
+        $cust_order_type = ($original_pdf['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+        $size = ($original_pdf['size'] == 'undefined') ? $original_pdf['arch_size'] : $original_pdf['size'];
+        $output = ($original_pdf['output'] == 'undefined') ? $original_pdf['arch_output'] : $original_pdf['output'];
+        $media = ($original_pdf['media'] == 'undefined') ? $original_pdf['arch_media'] : $original_pdf['media'];
+        $binding = ($original_pdf['binding'] == 'undefined') ? $original_pdf['arch_binding'] : $original_pdf['binding'];
+        $folding = ($original_pdf['folding'] == 'undefined') ? $original_pdf['arch_folding'] : $original_pdf['folding'];
+        $html_seto .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_seto .= '<td>' . $original_pdf['options'] . '</td>';
+        $html_seto .= '<td>' . $original_pdf['origininals'] . '</td>';
+        $html_seto .= '<td>' . $cust_needed_sets . '</td>';
+        $html_seto .= '<td>' . $cust_order_type . '</td>';
+        $html_seto .= '<td>' . $size . '</td>';
+        $html_seto .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+        $html_seto .= '<td>' . $media . '</td>';
+        $html_seto .= '<td>' . ucfirst($binding) . '</td>';
+        $html_seto .= '<td>' . ucfirst($folding) . '</td>';
+        $html_seto .= '</tr>';
+    }
+    $html_seto .= '</table>';
         if (($entered_needed_sets_final[0]['shipp_id'] == 'P1') && ($entered_needed_sets_final[0]['shipp_id'] == 'P2')) {
             $shipp_add = AddressBookPickupSohoCap($entered_needed_sets_final[0]['shipp_id']);
         } else {
@@ -4738,7 +4831,53 @@ if ($_POST['recipients'] == '1') {
         $cust_user_name = $cust_user_add[0]['cus_fname'] . '&nbsp;' . $cust_user_add[0]['cus_lname'];
         $cust_mail_id = $cust_user_add[0]['cus_email'];
         $cust_phone_num = $cust_user_add[0]['cus_contact_phone'];
-        
+        $html_wpfsr .= '<table style="width: 100%;float: left;margin-top: 10px;">';
+          $html_wpfsr .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
+          $html_wpfsr .= ' </tr></table></br>';
+         
+           $html_wpfsr .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+    $html_wpfsr .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    $total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+    $cust_original_order_final_pdf = SetsOrderedFinalizeOriginal($job_reference_final[0]['id']);
+    $upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    $cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    $cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    $option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+
+    $html_wpfsr .= '<tr style="background-color: #002369;color: #FFF;">
+                    <td style="width: 9%;">Option</td>
+                    <td style="width: 11%;">Originals</td>
+                    <td style="width: 8%;">Sets</td>
+                    <td style="width: 20%;">Order Type</td>
+                    <td style="width: 8%;">Size</td>
+                    <td style="width: 9%;">Output</td>
+                    <td style="width: 9%;">Media</td>
+                    <td style="width: 9%;">Binding</td>
+                    <td style="width: 9%;">Folding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf as $original_pdf) {
+        $cust_needed_sets = ($original_pdf['print_ea'] != '0') ? $original_pdf['print_ea'] : $original_pdf['arch_needed'];
+        $cust_order_type = ($original_pdf['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+        $size = ($original_pdf['size'] == 'undefined') ? $original_pdf['arch_size'] : $original_pdf['size'];
+        $output = ($original_pdf['output'] == 'undefined') ? $original_pdf['arch_output'] : $original_pdf['output'];
+        $media = ($original_pdf['media'] == 'undefined') ? $original_pdf['arch_media'] : $original_pdf['media'];
+        $binding = ($original_pdf['binding'] == 'undefined') ? $original_pdf['arch_binding'] : $original_pdf['binding'];
+        $folding = ($original_pdf['folding'] == 'undefined') ? $original_pdf['arch_folding'] : $original_pdf['folding'];
+        $html_wpfsr .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_wpfsr .= '<td>' . $original_pdf['options'] . '</td>';
+        $html_wpfsr .= '<td>' . $original_pdf['origininals'] . '</td>';
+        $html_wpfsr .= '<td>' . $cust_needed_sets . '</td>';
+        $html_wpfsr .= '<td>' . $cust_order_type . '</td>';
+        $html_wpfsr .= '<td>' . $size . '</td>';
+        $html_wpfsr .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+        $html_wpfsr .= '<td>' . $media . '</td>';
+        $html_wpfsr .= '<td>' . ucfirst($binding) . '</td>';
+        $html_wpfsr .= '<td>' . ucfirst($folding) . '</td>';
+        $html_wpfsr .= '</tr>';
+    }
+    $html_wpfsr .= '</table>';
         $html_wpfsr .= '<table>';
         $html_wpfsr .= '<tr>';
         $html_wpfsr .= '<td>&nbsp;</td><td>&nbsp;</td>';
@@ -5053,10 +5192,10 @@ if ($_POST['recipients'] == '1') {
     foreach ($cust_original_order_final as $original) {
         $message .= '<div style="float:left;width: 95%;margin-top: 10px;">';
         $message .= '<div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;font-weight:bold;"> OPTION&nbsp;' . $original['options'] . '&nbsp;- Details</div>';
-        if ($original['size'] == 'Custom') {
+        if ($original['size'] == 'CUSTOM') {
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Custom Size:&nbsp;' . $original['custome_details'] . '</div>';
         }
-        if ($original['output'] == 'Both') {
+        if ($original['output'] == 'BOTH') {
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Color Page Numbers:&nbsp;' . $original['output_both'] . '</div>';
         }
         if ($original['spl_instruction'] != '') {

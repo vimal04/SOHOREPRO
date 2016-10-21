@@ -114,7 +114,7 @@ define ('PDF_HEADER_TITLE', 'Soho Reprographics');
 /**
  * Header description string.
  */
-define ('PDF_HEADER_STRING', "81 Broome St; NY, NY 10013\n(212) 925-7575\ninfo@sohorepro.com");
+define ('PDF_HEADER_STRING', "381 Broome Street\nNew York, NY 10013\n(212) 925-7575\n");
 
 /**
  * Document unit of measure [pt=point, mm=millimeter, cm=centimeter, in=inch].

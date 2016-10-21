@@ -8,7 +8,8 @@ if ($_POST['everything_return'] == '1') {
     $current_option = CurrentOption($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $number_of_sets = EnteredPlotttingPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $rem_avl_options = AvlOptionsRemaining($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
-    ?>    
+    ?> 
+   
     <div style="width: 100%;float: left;border: 0px #F99B3E solid;margin-bottom: 5px;color: #FA8526;">            
         <div style="width: 96%;float: left;text-align: left;font-weight: bold;font-size: 15px;">ALL OPTIONS</div>        
     </div>
@@ -139,7 +140,7 @@ if ($_POST['everything_return'] == '1') {
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
                                     <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['spl_instruction']; ?>" />
-                                    <?php echo $entered['spl_instruction']; ?>
+                                    <div class="instr "><?php echo $entered['spl_instruction']; ?></div>
                                 </div>
                             </div>
                             <?php
@@ -523,7 +524,7 @@ if ($_POST['everything_return'] == '1') {
                     </select>
                 </div>
                 <!-- Address Show Start -->
-                <div id="show_address" style="float: left;width: 25%;height: 50px !important;padding: 6px;border: 1px #F99B3E solid;margin-top: 10px;margin-left: 5px;height: 20px;font-weight: bold;">
+                <div id="show_address" style="float: left;width: 35%;height: 50px !important;padding: 6px;border: 1px #F99B3E solid;margin-top: 10px;margin-left: 5px;height: 20px;font-weight: bold;">
                     <div style="float: left;width: 90%;font-weight: bold;"><?php echo $address_book[0]['address_1']; ?></div>
                     <div style="float: left;width: 90%;font-weight: bold;"><?php echo $address_book[0]['address_2']; ?></div>
                     <?php if($address_book[0]['address_3'] != ''){?>
@@ -548,7 +549,7 @@ if ($_POST['everything_return'] == '1') {
                         <div style="float: left;width: 100%;margin-top: 10px;">
                             <div style="float: right;width: 100%;">                                
                                 <div id="show_address_att" style="float: left;width: 90%;border: 1px #F99B3E solid;padding: 5px;height: 25px;">
-                                    <input type="text" name="shipp_att" id="shipp_att" value="<?php echo $_SESSION['sohorepro_username']; ?>" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                    <input type="text" name="shipp_att" id="shipp_att" value="<?php //echo $_SESSION['sohorepro_username']; ?>" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
                                 </div>
                             </div>
                         </div>
@@ -565,7 +566,7 @@ if ($_POST['everything_return'] == '1') {
                                     <?php
                                     $attention_to_phone = company_phone($_SESSION['sohorepro_companyid']);
                                     ?>
-                                    <input type="text" name="contact_ph" id="contact_ph" onfocus="return contact_phone();"  value="<?php echo $attention_to_phone; ?>" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                    <input type="text" name="contact_ph" id="contact_ph" value="<?php // echo $attention_to_phone; ?>" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
                                 </div>
                             </div>
                         </div>

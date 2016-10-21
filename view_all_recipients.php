@@ -291,7 +291,10 @@ padding-bottom: 0px !important;
     float: left;
 }
 #multi_recipients{
+      border-top: 2px solid;
+    float: left;
     margin-top: 5px;
+    width: 100%;
 }
 
 .modal-overlay {
@@ -417,7 +420,7 @@ $upload_file_exist       = UploadFileExist($user_session_comp, $user_session);
 if(count($cust_original_order) > "0"){
 ?>
 <div style="float: left;margin-top: 12px;margin-bottom: 20px;" class="shaddows">
-                            <div class="ribbon" id="ribbon_final"><span style="background: #79A70A !important;">Original</span></div>
+                            <div class="ribbon" id="ribbon_final"><span style="background: #79A70A !important;">PAC</span></div>
                         <div style="width: 100%;float: left;margin-top: 25px;margin-bottom: 10px;">
                 <div class="details_div">
                     
@@ -1310,23 +1313,39 @@ if(count($cust_original_order) > "0"){
                     
                     <li>
                     <div id="multi_recipients">
+                        <div style="float:left; width:100%;font-size:17px; margin: 10px 15px 13px 0;">
+                       <?php  if($entered_needed_sets[0]['delivery_type_option'] == '1'){ 
+                           echo "RETURN EVERYTHING TO MY OFFICE";
+                       }
+                       elseif($entered_needed_sets[0]['delivery_type_option'] == '2'){
+                           echo " SEND EVERYTHING TO";
+                       }
+                       elseif($entered_needed_sets[0]['delivery_type_option']== '3'){
+                         
+                               $cust_add = AddressBookPickupSohoCap($entered_needed_sets[0]['shipp_id']);
+                               echo "WILL PICKUP FROM SOHO REPRO - ". $cust_add[0]['caption'];
+                      }
+                       
+                     
+                            ?>
+                        </div>
                         <div>
-                            <h2 style="color: #79A70A;">PLOTTING & ARCHITECTURAL COPIES</h2>
+                            <h2 style="color: #79A70A; font-size: 15px;">PLOTTING & ARCHITECTURAL COPIES</h2>
                         </div>
                     <?php
                         
                         if($entered_needed_sets[0]['delivery_type_option'] == '1'){
                          ?>
                         <div style="float: left;margin-top: 6px;" class="shaddows">
-                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT 1</span></div>
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
                             <div style="float: right;">
                                 <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_1('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
                             </div>
                             
-                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
                                 RETURN EVERYTHING TO MY OFFICE
-                            </div>
+                            </div>-->
                             
                             <div class="details_div">
                     
@@ -1559,7 +1578,7 @@ if(count($cust_original_order) > "0"){
                             }
                     ?> 
                          <div style="float: left;" class="shaddows">
-                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT 1</span></div>
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
                             <div style="float: right;">
                                 <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_2('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
@@ -2165,18 +2184,18 @@ if(count($cust_original_order) > "0"){
                     if(count($number_of_lfp) > '0'){
                          ?>
                         <div>
-                            <h2 style="color: #4285F4;">LARGE FORMAT COLOR & BW</h2>
+                            <h2 style="color: #4285F4; font-size: 15px;">LARGE FORMAT COLOR & BW</h2>
                         </div>
                         <div style="float: left;margin-top: 6px;" class="shaddows">
-                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT 2</span></div>
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
                             <div style="float: right;">
                                 <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_1('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
                             </div>
                             
-                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
                                 RETURN EVERYTHING TO MY OFFICE
-                            </div>
+                            </div>-->
                             
                             <div class="details_div">
                     
@@ -2316,18 +2335,18 @@ if(count($cust_original_order) > "0"){
                     if(count($number_of_fap) > '0'){
                          ?>
                         <div>
-                            <h2 style="color: #FBBC05;">FINE ART PRINTING</h2>
+                            <h2 style="color: #FBBC05; font-size: 15px;">FINE ART PRINTING</h2>
                         </div>
                         <div style="float: left;margin-top: 6px;" class="shaddows">
-                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT 3</span></div>
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
                             <div style="float: right;">
                                 <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_1('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
                             </div>
                             
-                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
                                 RETURN EVERYTHING TO MY OFFICE
-                            </div>
+                            </div>-->
                             
                             <div class="details_div">
                     
