@@ -4439,14 +4439,14 @@ if ($_POST['recipients'] == '1') {
         }
         if ($original['ftp_link'] != "0") {
             $link = ($original['ftp_link'] != '0') ? $original['ftp_link'] : '';
-            $user_name = ($original['user_name'] != '0') ? $original['user_name'] : '';
+            $user_name_ftp = ($original['user_name'] != '0') ? $original['user_name'] : '';
             $password = ($original['password'] != '0') ? $original['password'] : '';
             if ($original['use_same_alt'] == "0") {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
         $html_5 .= '<b>File Option: Provide Link to a File</b><br>';
         $html_5 .= '<b>FTP Link:</b>&nbsp;'.$link.'<br>';
-        $html_5 .= '<b>User Name:</b>&nbsp;'.$user_name.'<br>';
+        $html_5 .= '<b>User Name:</b>&nbsp;'.$user_name_ftp.'<br>';
         $html_5 .= '<b>Password:</b>&nbsp;'.$password;
         $html_5 .= '</td>';
         $html_5 .= '</tr><br>';

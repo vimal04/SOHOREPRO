@@ -501,7 +501,7 @@ padding-bottom: 0px !important;
     margin-top: 5px;
     border-bottom: 1px solid #e5e5e5;
     background: #fff;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
     box-shadow: 2px 2px 2px 2px rgba(0,0,0,.1);
     -webkit-box-shadow: 2px 2px 2px 2px rgba(0,0,0,.1);
     margin-bottom: 10px;
@@ -790,8 +790,75 @@ padding-bottom: 0px !important;
                     ?>
                 </table>
             </div>
+            <!-- Mounting and Lamination -->
+            <?php// print_r($original_service_lfp); ?>
+             
+                <div>
+                <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                    <span style="font-weight: bold;float: left;margin-top: 5px;margin-bottom: 5px;">M&L ORDER</span>
+                
+                <table border="1" style="width: 100%;">
+                           <?php     $i = 1; $j=1;
+                    foreach ($original_service_lfp as $original){ if($original['ml_active']==1){
+                       if($j==1){ 
+                        ?>
+                    <tr bgcolor="#F99B3E">
+                        <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                    </tr>
+                    <?php
+                       }
+                        $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                        $cust_needed_sets       = $original['print_of_each'];
+                        $cust_order_type        = "LFP";  
+                        $size         = $original['size'];
+                        $output       = $original['output'];
+                        $media        = $original['media'];
+                        $binding      = $original['binding'];
+                        if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                       
+                    ?>
+                    <tr bgcolor="<?php echo $rowColor; ?>" style="height: 20px;">
+                        <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']==0) echo "No"; else echo "Yes"; ?></td>
+                    </tr>
+                    <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    <?php } } ?>
+                </table>
+                   <?php } ?>
+
+            </div>
+              <!-- Mounting and Lamination end -->
         </div>
-        <?php } ?>
     <!-- LFP End -->
     
     <!-- FAP Start -->

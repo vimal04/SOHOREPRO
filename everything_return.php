@@ -355,6 +355,110 @@ if ($_POST['everything_return'] == '1') {
                 
                 </div>
             
+            <!-- Mounting and Lamination -->
+                   <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                  <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #34A853;font-weight: bold; font-size: 17px;">
+                Mounting & Lamination
+            </div>
+                
+            
+            <div style="width: 95%;float: left;margin-left: 25px;">                    
+                        <div style="width: 100%;float: left;">                            
+                             <table border="1" style="width: 100%;">
+                           <?php     $i = 1; $j=1;
+                    foreach ($original_service_lfp as $original){ if($original['ml_active']==1){
+                       if($j==1){ 
+                        ?>
+                    <tr bgcolor="#F99B3E">
+                        <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                    </tr>
+                    <?php
+                       }
+                        $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                        $cust_needed_sets       = $original['print_of_each'];
+                        $cust_order_type        = "LFP";  
+                        $size         = $original['size'];
+                        $output       = $original['output'];
+                        $media        = $original['media'];
+                        $binding      = $original['binding'];
+                        if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                       
+                    ?>
+                    <tr bgcolor="<?php echo $rowColor; ?>" style="height: 20px;">
+                        <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']==0) echo "No"; else echo "Yes"; ?></td>
+                    </tr>
+                    <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    <?php } ?>
+                </table>
+<?php  ?>
+                        </div>
+                        
+ 
+                            <?php
+                           
+                            foreach ($original_service_lfp as $entered) {
+                      
+                                
+                                if ($entered['mal_splns'] != ''){
+                                ?>
+                                
+                    <div style="float:left;width: 100%;font-weight: bold;color: #000;margin-top: 7px;"> OPTION <?php echo $entered['option_id']; ?></div>
+                    <div style="width: 98%;float: left;border: 1px solid #F99B3E;padding: 5px;">   
+                     
+                            <?php if ($entered['mal_splns'] != '') {  ?> 
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                    Special Instructions
+                                </div>
+                                <div style="padding-top: 3px;width: 100%;float: left;">
+                                    
+                                    <?php echo $entered['mal_splns']; ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                     ?>
+                        </div>
+                        <?php
+                               }
+                    }}
+                            ?>
+                        <!-- Options Details End -->
+                
+                </div>
+            <!-- Mounting and lamination end -->
+            
             <?php
             }
             ?>

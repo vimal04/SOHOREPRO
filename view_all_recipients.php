@@ -387,7 +387,7 @@ $entered_needed_sets     = NeededSets($user_session_comp, $user_session);
 $total_sets              = SetsOrderedFinalizeCountOfSetsCustomer($user_session_comp, $user_session);
 $upload_file_exist       = UploadFileExist($user_session_comp, $user_session);
 ?>
-     
+     <?php //echo $user_session_comp."dsfd".$user_session;//pirnt_r($entered_needed_sets); ?>
 <div style="float: left;width: 100%;margin-top: 10px;">
     <?php include "./service_nav.php"; ?>
 </div>     
@@ -983,8 +983,101 @@ if(count($cust_original_order) > "0"){
                                 </div>
                            <?php }} ?>
                         </div>
+                    
+                    <!--------------Mounting--------------------->
+                     <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: Mounting & Lamination</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($number_of_lfp as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#BFC5CD">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#F8F8F8">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']==0) echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div> <?php
+                $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
+                foreach($enteredPlot as $entered){?>
+                       <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['options']; ?></div>
+                    <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">  <?php
+                    
+                   
+                         if ($entered['spl_instruction'] != '') {
+                            ?> 
+                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
+                                <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
+                                    Special Instructions
+                                </div>
+                                <div style="padding-top: 3px;width: 100%;float: left;">
+                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['spl_instruction']; ?>" />
+                                    <?php echo $entered['spl_instruction']; ?>
+                                </div>
+                            </div>
+                            <?php
+                    } } ?>
+                    </div>
                         <?php
-                               // }
+                               }
                             }
                             ?>
                 </div>
@@ -1311,7 +1404,7 @@ if(count($cust_original_order) > "0"){
                 <ul> 
                     
                     
-                    <li>
+                    <li> 
                     <div id="multi_recipients">
                         <div style="float:left; width:100%;font-size:17px; margin: 10px 15px 13px 0;">
                        <?php  if($entered_needed_sets[0]['delivery_type_option'] == '1'){ 
@@ -1329,13 +1422,14 @@ if(count($cust_original_order) > "0"){
                      
                             ?>
                         </div>
-                        <div>
-                            <h2 style="color: #79A70A; font-size: 15px;">PLOTTING & ARCHITECTURAL COPIES</h2>
-                        </div>
-                    <?php
+                          <?php
                         
                         if($entered_needed_sets[0]['delivery_type_option'] == '1'){
                          ?>
+                        <div>
+                            <h2 style="color: #79A70A; font-size: 15px;">PLOTTING & ARCHITECTURAL COPIES</h2>
+                        </div>
+                  
                         <div style="float: left;margin-top: 6px;" class="shaddows">
                             <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
@@ -1576,7 +1670,9 @@ if(count($cust_original_order) > "0"){
                             }else{
                                 $shipp_add = editAddressServices($entered_needed_sets[0]['shipp_id']);  
                             }
-                    ?> 
+                    ?>   <div>
+                            <h2 style="color:#79A70A;; font-size: 15px;">PLOTTING & ARCHITECTURAL COPIES</h2>
+                        </div>
                          <div style="float: left;" class="shaddows">
                             <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
@@ -1584,9 +1680,9 @@ if(count($cust_original_order) > "0"){
                                 <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_2('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
                             </div>
                             
-                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
                                 SEND EVERYTHING TO
-                            </div>
+                            </div>-->
                             
                             <div class="details_div">
                     
@@ -1817,20 +1913,22 @@ if(count($cust_original_order) > "0"){
                             }
                             
                             $cust_add = AddressBookPickupSohoCap($entered_needed_sets[0]['shipp_id']);
-                    ?> 
+                    ?>   <div>
+                            <h2 style="color: #79A70A; font-size: 15px;">PLOTTING & ARCHITECTURAL COPIES</h2>
+                        </div>
                          <div style="float: left;" class="shaddows">
                             <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">    
                             
-                            
+                          
                             
                             <div style="float: right;">
                                 <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_3('<?php echo $entered_needed_sets[0]['shipp_id']; ?>');">Edit</span>                               
                             </div>
                             
-                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
                                 WILL PICKUP FROM SOHO REPRO - <?php echo $cust_add[0]['caption']; ?>
-                            </div>
+                            </div>-->
                             
                             <div class="details_div">
                     
@@ -2236,7 +2334,7 @@ if(count($cust_original_order) > "0"){
                             <td style="font-weight: bold;">Sets</td> 
                             <td style="font-weight: bold;">Order Type</td>                            
                             <td style="font-weight: bold;">Size</td>
-                            <td style="font-weight: bold;">Output</td>
+                            <td style="font-weight: bold;">Outputs</td>
                             <td style="font-weight: bold;">Media</td>
                             <td style="font-weight: bold;">Binding</td>
                         </tr>
@@ -2271,7 +2369,78 @@ if(count($cust_original_order) > "0"){
                    
                 </div>
                 
-                
+                  <!--------------Mounting--------------------->
+                   <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: Mounting & Lamination</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($number_of_lfp as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#BFC5CD">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#F8F8F8">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']==0) echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div>
                 
                 <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
                     <?php
@@ -2323,7 +2492,7 @@ if(count($cust_original_order) > "0"){
                         </div>
                     </div>
                     <?php  
-                        }
+                    }}
                         ?>
                 </div>
                 
