@@ -845,7 +845,7 @@ padding-bottom: 0px !important;
                         <td><?php echo $original['ml_length']; ?></td>
                         <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
                         <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
-                        <td><?php  if($original['ml_grommets']==0) echo "No"; else echo "Yes"; ?></td>
+                        <td><?php  if($original['ml_grommets']=="0") echo "No"; else echo "Yes"; ?></td>
                     </tr>
                     <?php 
                     $i++;
