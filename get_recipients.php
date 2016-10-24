@@ -5203,12 +5203,12 @@ if ($_POST['recipients'] == '1') {
         }
         if ($original['ftp_link'] != "0") {
             $link = ($original['ftp_link'] != '0') ? $original['ftp_link'] : '';
-            $user_name = ($original['user_name'] != '0') ? $original['user_name'] : '';
+            $user_name_ftp = ($original['user_name'] != '0') ? $original['user_name'] : '';
             $password = ($original['password'] != '0') ? $original['password'] : '';
             if ($original['use_same_alt'] == "0") {
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">File Option: Provide Link to a File</div>';
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">FTP Link:&nbsp;' . $link . '</div>';
-                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">User Name:&nbsp;' . $user_name . '</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">User Name:&nbsp;' . $user_name_ftp . '</div>';
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Password:&nbsp;' . $password . '</div>';
             } else {
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">File Option: Provide Link to a File</div>';
