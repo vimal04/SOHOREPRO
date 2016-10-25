@@ -794,9 +794,10 @@ if(count($cust_original_order) > "0"){
                 
                 <?php
                             //$enteredPlot = EnteredPlotRecipients($company_id_view_plot, $user_id_add_set);
-                            $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
+                          //  $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
                             $i = 1;
-                            foreach ($enteredPlot as $entered) {
+                          //  print_r($number_of_lfp);
+                            foreach ($number_of_lfp as $entered) {
                                 $rowColor = ($i % 2 != 0) ? '#ffeee1' : '#fff6f0';
                                 $binding = strtoupper($entered['binding']);
                                 $folding = strtoupper($entered['folding']);
@@ -813,7 +814,7 @@ if(count($cust_original_order) > "0"){
                     <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['options']; ?></div>
                     <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">   
                         <?php
-                        if ($entered['size'] == 'Custom') {
+                        if ($entered['size'] == 'CUSTOM') {
                             ?>
                             <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
@@ -821,39 +822,39 @@ if(count($cust_original_order) > "0"){
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
                                     <input type="hidden" name="size_custom_details" id="size_custom_details" value="<?php echo $entered['custome_details']; ?>" />
-                                    <?php echo $entered['custome_details']; ?>
+                                    <?php echo $entered['size_custom']; ?>
                                 </div>
                             </div>
                             <?php
                         }
-                        if ($entered['output'] == 'Both') {
+                        if ($entered['output'] == 'BOTH') {
                             ?>
                             <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Color Page Numbers
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
-                                    <input type="hidden" name="output_page_details" id="output_page_details" value="<?php echo $entered['output_both']; ?>" />
-                                    <?php echo $entered['output_both']; ?>
+                                    <input type="hidden" name="output_page_details" id="output_page_details" value="<?php echo $entered['output_both_page']; ?>" />
+                                    <?php echo $entered['output_both_page']; ?>
                                 </div>
                             </div>
                             <?php
                         }
-                        if ($entered['spl_instruction'] != '') {
+                        if ($entered['special_inc'] != '') {
                             ?> 
                             <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Special Instructions
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
-                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['spl_instruction']; ?>" />
-                                    <?php echo $entered['spl_instruction']; ?>
+                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['special_inc']; ?>" />
+                                    <?php echo $entered['special_inc']; ?>
                                 </div>
                             </div>
                             <?php
                         }//if ($entered['plot_arch'] == '0') {
-                            if ($entered['pick_up_time'] != '0') {
-                                $pickup_option = ($entered['pick_up'] == "ASAP") ? $entered['pick_up'] : $entered['pick_up'] . ' ' . $entered['pick_up_time'];
+                            if ($entered['schedule_pickup'] != '0') {
+                                 $pickup_option = ($entered['schedule_pickup'] == "ASAP") ? $entered['schedule_pickup'] : $entered['schedule_pickup'] . ' ' . $entered['pick_up_time'];
                                 if($entered['use_same_alt'] == '0'){
                                 ?>
                                 <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;">
@@ -908,7 +909,7 @@ if(count($cust_original_order) > "0"){
                                 </div>
                             <?php } ?>
                             <?php } ?>
-                            <?php if ($entered['drop_off'] != '0') {
+                            <?php if ($entered['drop_off_381'] != '0') {
                                      if($entered['use_same_alt'] == '0'){
                                 ?>
                                 <div style="width: 22%;float: left;border: 1px solid #BFC5CD;">
@@ -916,8 +917,8 @@ if(count($cust_original_order) > "0"){
                                         Drop-off Option
                                     </div>
                                     <div style="padding-top: 3px;width: 100%;float: left;">
-                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off']; ?>" />
-                                        <?php echo $entered['drop_off']; ?>
+                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off_381']; ?>" />
+                                        <?php echo $entered['drop_off_381']; ?>
                                     </div>
                                 </div>
                             <?php }  else {?>
@@ -926,7 +927,7 @@ if(count($cust_original_order) > "0"){
                                         Drop-off Option
                                     </div>
                                     <div style="padding-top: 3px;width: 100%;float: left;">
-                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off']; ?>" />
+                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off_381']; ?>" />
                                         Use same file as Option <?php echo $entered['use_same_alt']; ?>
                                     </div>
                                 </div>
@@ -966,7 +967,7 @@ if(count($cust_original_order) > "0"){
                                     </div>
                                 </div>
                         
-                            <?php }   }if($entered['upload_file'] != ''){
+                            <?php }   }if($entered['upload_file'] != '0'){
                                  if($entered['use_same_alt'] == '0'){
                                 ?>
                                 <div style="width: 45%;float: left;border: 1px solid #BFC5CD;">
@@ -1057,28 +1058,29 @@ if(count($cust_original_order) > "0"){
                    
                 </div> <?php
                 $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
-                foreach($enteredPlot as $entered){?>
+                foreach($enteredPlot as $entered){
+                         if ($entered['mal_splns'] != '') { ?>
                        <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['options']; ?></div>
                     <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">  <?php
                     
                    
-                         if ($entered['spl_instruction'] != '') {
+                      
                             ?> 
                             <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Special Instructions
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
-                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['spl_instruction']; ?>" />
-                                    <?php echo $entered['spl_instruction']; ?>
+                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['mal_splns']; ?>" />
+                                    <?php echo $entered['mal_splns']; ?>
                                 </div>
                             </div>
                             <?php
-                    } } ?>
+                     } ?>
                     </div>
                         <?php
-                               }
-                            }
+                    } }
+                           }
                             ?>
                 </div>
                 </div>
@@ -2441,7 +2443,9 @@ if(count($cust_original_order) > "0"){
                     </table>
                    
                 </div>
-                
+                 <?php  
+                    }}
+                        ?>
                 <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
                     <?php
                     $date_asap  = ($entered_needed_sets[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_needed_sets[0]['shipp_time'] : '';
@@ -2489,14 +2493,12 @@ if(count($cust_original_order) > "0"){
                     </div>
                         <?php } ?>
                         </div>
-                        </div>
-                    </div>
-                    <?php  
-                    }}
-                        ?>
-                </div>
-                
-
+                       
+                   
+                   
+                </div> </div>
+ </div>
+ 
                     
                 <div style="float:left;width:100%;">
     <!--- FAP START --->
@@ -2560,7 +2562,7 @@ if(count($cust_original_order) > "0"){
                         </tr>
                         <?php
 //                        echo '<pre>';
-//                        print_r($cust_original_order);
+//                        print_r($number_of_fap);
 //                        echo '</pre>';
                         
                         foreach ($number_of_fap as $original){
@@ -2596,7 +2598,7 @@ if(count($cust_original_order) > "0"){
                     <span style="font-weight: bold;">When Needed: </span><?php echo $entered_needed_sets[0]['shipp_date'].$date_asap; ?>            
                 </div>        
                 <?php
-                if ($entered_needed_sets[0]['delivery_type'] != '0') {
+                if (($entered_needed_sets[0]['delivery_type'] == '1') OR ($entered_needed_sets[0]['delivery_type'] == '2')) {
                     ?>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <span style="font-weight: bold;">Send Via: </span>
@@ -2643,7 +2645,7 @@ if(count($cust_original_order) > "0"){
                         ?>
                 </div>
                 <!--- FAP END --->
-
+ </div>
                     </div>
                     </div>
                     

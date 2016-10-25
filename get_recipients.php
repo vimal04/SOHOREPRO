@@ -4208,7 +4208,7 @@ if ($_POST['recipients'] == '1') {
     mysql_query($sql_plot);
     
     
-    $delete_empty = "DELETE FROM sohorepro_service_lfp WHERE company_id = '".$_SESSION['sohorepro_companyid']."' AND user_id = '".$_SESSION['sohorepro_userid']."' AND order_id = '0'";
+    $delete_empty = "UPDATE FROM sohorepro_service_lfp SET order_id ='1' WHERE company_id = '".$_SESSION['sohorepro_companyid']."' AND user_id = '".$_SESSION['sohorepro_userid']."' AND order_id = '0'";
     mysql_query($delete_empty);
     
     
@@ -4370,7 +4370,7 @@ if ($_POST['recipients'] == '1') {
     
     
     $html_5 .= '</table>';
-    $html_5 .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+    $html_5 .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES </div>';
     $html_5 .= '<table border="0" style="width: 100%;float: left;">';
 
     $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -4532,6 +4532,182 @@ if ($_POST['recipients'] == '1') {
         //Alternate End
                 
     }
+    
+    /*****---LFP Start *************/
+    
+     $html_5 .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
+    $html_5 .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    //$total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+   // $cust_original_order_final_pdf_lfp = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$_SESSION['ref_val']);
+    //$upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    //$cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    //$cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    //$option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+ 
+    $html_5 .= '<tr style="background-color: #002369;color: #FFF;">
+                        <td style="font-weight: bold;">Option</td> 
+                            <td style="">Originals</td> 
+                            <td style="">Sets</td> 
+                            <td style="width: 20%;">Order Type</td>                            
+                            <td style="">Size</td>
+                            <td style="">Output</td>
+                            <td style="">Media</td>
+                            <td style="">Binding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf_lfp as $original_pdf_lfp) {
+        
+            $cust_needed_sets_lfp       = $original_pdf_lfp['print_of_each'];
+                                $cust_order_type_lfp        = "LFP";  
+                                $size_lfp         = ucwords(strtolower($original_pdf_lfp['size']));
+                                $output_lfp       = $original_pdf_lfp['output'];
+                                $media_lfp        = $original_pdf_lfp['media'];
+                                $binding_lfp      = $original_pdf_lfp['binding']; 
+        
+        
+        $html_5 .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_5 .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
+        $html_5 .= '<td>' . $original_pdf_lfp['original'] . '</td>';
+        $html_5 .= '<td>' . $cust_needed_sets_lfp . '</td>';
+        $html_5 .= '<td>' . $cust_order_type_lfp . '</td>';
+        $html_5 .= '<td>' . $size_lfp . '</td>';
+        $html_5 .= '<td style="text-transform: uppercase;">' . $output_lfp . '</td>';
+        $html_5 .= '<td>' . ucfirst($media_lfp) . '</td>';
+        $html_5 .= '<td>' . ucfirst($binding_lfp) . '</td>';
+        $html_5 .= '</tr>';
+    }
+    $html_5 .= '</table>';
+     
+    $html_5 .= '<table border="0" style="width: 100%;float: left;">';
+    foreach ($cust_original_order_pdf_lfp as $original_lfp) {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>&nbsp;</td>';
+        $html_5 .= '</tr>';
+        $html_5 .= '<tr style="font-weight: bold;color: #000;">';
+        $html_5 .= '<td> OPTION&nbsp;'.$original_lfp['options'].'&nbsp;- Details</td>';
+        $html_5 .= '</tr><br>';
+        if ($original_lfp['size'] == 'CUSTOM') {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td><b>Custom Size:</b>&nbsp;'.$original_lfp['size_custom'].'</td>';
+        $html_5 .= '</tr><br>';
+        }
+        if ($original_lfp['output'] == 'BOTH') {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td><b>Color Page Numbers:</b>&nbsp;'.$original_lfp['output_both_page'].'</td>';
+        $html_5 .= '</tr><br>';
+        }
+        if ($original_lfp['special_inc'] != '') {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original_lfp['special_inc'].'</td>';
+        $html_5 .= '</tr><br>';
+        }
+        if ($original_lfp['ftp_link'] != "0") {
+            $link = ($original_lfp['ftp_link'] != '0') ? $original_lfp['ftp_link'] : '';
+            $user_name_ftp = ($original_lfp['user_name'] != '0') ? $original_lfp['user_name'] : '';
+            $password = ($original_lfp['password'] != '0') ? $original_lfp['password'] : '';
+            if ($original_lfp['use_same_alt'] == "0") {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>File Option: Provide Link to a File</b><br>';
+        $html_5 .= '<b>FTP Link:</b>&nbsp;'.$link.'<br>';
+        $html_5 .= '<b>User Name:</b>&nbsp;'.$user_name_ftp.'<br>'; 
+        $html_5 .= '<b>Password:</b>&nbsp;'.$password;
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';
+        } else {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>File Option: Provide Link to a File</b><br>';
+        $html_5 .= '<b>Use same file as Option</b>&nbsp;'.$original_lfp['use_same_alt'];
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';
+            }
+        }
+        if ($original_lfp['upload_file'] != "0") {
+            if ($original_lfp['use_same_alt'] == "0") {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>File Option: Upload a file</b><br>';
+        $html_5 .= '<a href="http://cipldev.com/supply-new.sohorepro.com/uploads/'.$original_lfp['upload_file'].'"  target="_blank">'.$original_lfp['upload_file'].'</a>';
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';
+        } else {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>File Option: Upload a file</b><br>';
+        $html_5 .= 'Use same file as Option&nbsp;'.$original_lfp['use_same_alt'];
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';
+        }
+        }
+        if ($original_lfp['drop_off_381'] != "0") {
+            if ($original_lfp['use_same_alt'] == "0") {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>Drop-Off Option:</b>&nbsp;'.$original_lfp['drop_off_381'];
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>'; 
+        } else {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>Drop-Off Option:</b>&nbsp;Use same file as Option&nbsp;'.$original_lfp['use_same_alt'];
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';
+            }
+        }
+        if ($original_lfp['schedule_pickup'] != "0") {
+            if (($original_lfp['schedule_pickup'] == "ASAP") && ($original_lfp['pick_up_time'] == "ASAP")) {
+                $pickup_details = $original_lfp['schedule_pickup'];
+            } else {
+                $pickup_details = $original_lfp['schedule_pickup'] . '&nbsp;' . $original_lfp['pick_up_time'];
+            }
+            if ($original_lfp['use_same_alt'] == "0") {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>Pickup Option:</b>&nbsp;'.$pickup_details;
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';               
+        } else {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td>';
+        $html_5 .= '<b>Pickup Option:</b>&nbsp;Use same file as Option&nbsp;'.$original_lfp['use_same_alt'];
+        $html_5 .= '</td>';
+        $html_5 .= '</tr><br>';
+            }
+        }
+        
+        //Alternate Start
+        
+//        if ($original_lfp['my_office_alt'] != "0") {
+//           
+//            $address_dtls    = SelectLastEnteredAddress($original_lfp['address_book_id']);
+//            $address_3       = ($address_dtls[0]['address_3'] != '') ? $address_dtls[0]['address_3'].'<br>' : '';
+//            $address_string  = $address_dtls[0]['company_name'].'<br>'.$address_dtls[0]['address_1'].'<br>'.$address_dtls[0]['address_2'].'<br>'.$address_3.$address_dtls[0]['city'].',&nbsp;'.StateName($address_dtls[0]['state']).'&nbsp;'.$address_dtls[0]['zip'];
+//
+//            $option_sechdule = ($original['my_office_alt'] == 'my_office') ? '<span>My Office</span>' : '<br><span>Alternate:</span><br>'.$address_string;
+//            
+//            $html_5 .= '<tr>';
+//            $html_5 .= '<td>';
+//            $html_5 .= '<span style="font-weight: bold">Schedule a Pick-up Option:</span>&nbsp;' . $option_sechdule;
+//            $html_5 .= '</td>';
+//            $html_5 .= '</tr><br>'; 
+//            
+//        }  
+        //Alternate End
+                
+    }
+    
+    
+    /*****---Mounting and Lamination Star ************/
+    
+        /*****M&L End************/
+    
+    
+    /*****---LFP End ************/
+    
+    
+    
     $html_5 .= '<tr>';
     $html_5 .= '<td style="height:15px;">&nbsp;</td>';
     $html_5 .= '</tr>';
@@ -4561,7 +4737,7 @@ if ($_POST['recipients'] == '1') {
           $html_retmo .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
           $html_retmo .= ' </tr></table></br>';
          
-           $html_retmo .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+           $html_retmo .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES </div>';
     $html_retmo .= '<table border="0" style="width: 100%;float: left;">';
 
     $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -4605,6 +4781,63 @@ if ($_POST['recipients'] == '1') {
     }
     $html_retmo .= '</table>';
           
+    $html_retmo .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
+    $html_retmo .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    //$total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+   // $cust_original_order_final_pdf_lfp = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$_SESSION['ref_val']);
+    //$upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    //$cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    //$cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    //$option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+         $html_retmo .= '<tr>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '<td>&nbsp;</td>';
+        $html_retmo .= '</tr>';
+    $html_retmo .= '<tr style="background-color: #002369;color: #FFF;">
+                        <td style="font-weight: bold;">Option</td> 
+                            <td style="">Originals</td> 
+                            <td style="">Sets</td> 
+                            <td style="width: 20%;">Order Type</td>                            
+                            <td style="">Size</td>
+                            <td style="">Output</td>
+                            <td style="">Media</td>
+                            <td style="">Binding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf_lfp as $original_pdf_lfp) {
+        
+            $cust_needed_sets_lfp       = $original_pdf_lfp['print_of_each'];
+                                $cust_order_type_lfp        = "LFP";  
+                                $size_lfp         = ucwords(strtolower($original_pdf_lfp['size']));
+                                $output_lfp       = $original_pdf_lfp['output'];
+                                $media_lfp        = $original_pdf_lfp['media'];
+                                $binding_lfp      = $original_pdf_lfp['binding']; 
+        
+        
+        $html_retmo .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_retmo .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
+        $html_retmo .= '<td>' . $original_pdf_lfp['original'] . '</td>';
+        $html_retmo .= '<td>' . $cust_needed_sets_lfp . '</td>';
+        $html_retmo .= '<td>' . $cust_order_type_lfp . '</td>';
+        $html_retmo .= '<td>' . $size_lfp . '</td>';
+        $html_retmo .= '<td style="text-transform: uppercase;">' . $output_lfp . '</td>';
+        $html_retmo .= '<td>' . ucfirst($media_lfp) . '</td>';
+        $html_retmo .= '<td>' . ucfirst($binding_lfp) . '</td>';
+        $html_retmo .= '</tr>';
+    }
+    $html_retmo .= '</table>';
+    
+    
+    
+    
+    
         $html_retmo .= '<table>';
         
         $html_retmo .= '<tr>';
@@ -4690,7 +4923,7 @@ if ($_POST['recipients'] == '1') {
           $html_seto .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
           $html_seto .= ' </tr></table></br>';
          
-           $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+           $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES</div>';
     $html_seto .= '<table border="0" style="width: 100%;float: left;">';
 
     $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -4738,7 +4971,59 @@ if ($_POST['recipients'] == '1') {
         } else {
             $shipp_add = editAddressServices($entered_needed_sets_final[0]['shipp_id']);
         }
+         $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
+    $html_seto .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    //$total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+   // $cust_original_order_final_pdf_lfp = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$_SESSION['ref_val']);
+    //$upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    //$cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    //$cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    //$option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+         $html_seto .= '<tr>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+        $html_seto .= '<td>&nbsp;</td>';
+                 
+        $html_seto .= '</tr>';
+    $html_seto .= '<tr style="background-color: #002369;color: #FFF;">
+                        <td style="font-weight: bold;">Option</td> 
+                            <td style="">Originals</td> 
+                            <td style="">Sets</td> 
+                            <td style="width: 20%;">Order Type</td>                            
+                            <td style="">Size</td>
+                            <td style="">Output</td>
+                            <td style="">Media</td>
+                            <td style="">Binding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf_lfp as $original_pdf_lfp) {
         
+            $cust_needed_sets_lfp       = $original_pdf_lfp['print_of_each'];
+                                $cust_order_type_lfp        = "LFP";  
+                                $size_lfp         = ucwords(strtolower($original_pdf_lfp['size']));
+                                $output_lfp       = $original_pdf_lfp['output'];
+                                $media_lfp        = $original_pdf_lfp['media'];
+                                $binding_lfp      = $original_pdf_lfp['binding']; 
+        
+        
+        $html_seto .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_seto .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
+        $html_seto .= '<td>' . $original_pdf_lfp['original'] . '</td>';
+        $html_seto .= '<td>' . $cust_needed_sets_lfp . '</td>';
+        $html_seto .= '<td>' . $cust_order_type_lfp . '</td>';
+        $html_seto .= '<td>' . $size_lfp . '</td>';
+        $html_seto .= '<td style="text-transform: uppercase;">' . $output_lfp . '</td>';
+        $html_seto .= '<td>' . ucfirst($media_lfp) . '</td>';
+        $html_seto .= '<td>' . ucfirst($binding_lfp) . '</td>';
+        $html_seto .= '</tr>';
+    }
+    $html_seto .= '</table>';
         $html_seto .= '<table>';
         
         $html_seto .= '<tr>';
@@ -4835,7 +5120,7 @@ if ($_POST['recipients'] == '1') {
           $html_wpfsr .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
           $html_wpfsr .= ' </tr></table></br>';
          
-           $html_wpfsr .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+           $html_wpfsr .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES</div>';
     $html_wpfsr .= '<table border="0" style="width: 100%;float: left;">';
 
     $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -4878,6 +5163,60 @@ if ($_POST['recipients'] == '1') {
         $html_wpfsr .= '</tr>';
     }
     $html_wpfsr .= '</table>';
+    $html_wpfsr .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
+    $html_wpfsr .= '<table border="0" style="width: 100%;float: left;">';
+
+    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    //$total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+   // $cust_original_order_final_pdf_lfp = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$_SESSION['ref_val']);
+    //$upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    //$cust_needed_sets_pdf = ($cust_original_order_pdf[0]['print_ea'] != '0') ? $cust_original_order_pdf[0]['print_ea'] : $cust_original_order_pdf[0]['arch_needed'];
+    //$cust_order_type_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+    //$option_pdf = ($cust_original_order_pdf[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+         $html_wpfsr .= '<tr>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '<td>&nbsp;</td>';
+        $html_wpfsr .= '</tr>';
+    $html_wpfsr .= '<tr style="background-color: #002369;color: #FFF;">
+                        <td style="font-weight: bold;">Option</td> 
+                            <td style="">Originals</td> 
+                            <td style="">Sets</td> 
+                            <td style="width: 20%;">Order Type</td>                            
+                            <td style="">Size</td>
+                            <td style="">Output</td>
+                            <td style="">Media</td>
+                            <td style="">Binding</td>
+                </tr>';
+    foreach ($cust_original_order_pdf_lfp as $original_pdf_lfp) {
+        
+            $cust_needed_sets_lfp       = $original_pdf_lfp['print_of_each'];
+                                $cust_order_type_lfp        = "LFP";  
+                                $size_lfp         = ucwords(strtolower($original_pdf_lfp['size']));
+                                $output_lfp       = $original_pdf_lfp['output'];
+                                $media_lfp        = $original_pdf_lfp['media'];
+                                $binding_lfp      = $original_pdf_lfp['binding']; 
+        
+        
+        $html_wpfsr .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_wpfsr .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
+        $html_wpfsr .= '<td>' . $original_pdf_lfp['original'] . '</td>';
+        $html_wpfsr .= '<td>' . $cust_needed_sets_lfp . '</td>';
+        $html_wpfsr .= '<td>' . $cust_order_type_lfp . '</td>';
+        $html_wpfsr .= '<td>' . $size_lfp . '</td>';
+        $html_wpfsr .= '<td style="text-transform: uppercase;">' . $output_lfp . '</td>';
+        $html_wpfsr .= '<td>' . ucfirst($media_lfp) . '</td>';
+        $html_wpfsr .= '<td>' . ucfirst($binding_lfp) . '</td>';
+        $html_wpfsr .= '</tr>';
+    }
+    $html_wpfsr .= '</table>';
+    
+    
         $html_wpfsr .= '<table>';
         $html_wpfsr .= '<tr>';
         $html_wpfsr .= '<td>&nbsp;</td><td>&nbsp;</td>';
@@ -5140,7 +5479,7 @@ if ($_POST['recipients'] == '1') {
     $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
 
    
-    $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:</div>';
+    $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES</div>';
     $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
     //$cust_original_order = SetsOrderedFinalize($job_reference_final[0]['id']);
     $cust_original_order = EnteredPlotRecipientsMultiOriginal($user_session_comp, $user_session, $job_reference_final[0]['id']);
@@ -5256,6 +5595,142 @@ if ($_POST['recipients'] == '1') {
             $address_string  = $address_dtls[0]['company_name'].'<br>'.$address_dtls[0]['address_1'].'<br>'.$address_dtls[0]['address_2'].'<br>'.$address_3.$address_dtls[0]['city'].',&nbsp;'.StateName($address_dtls[0]['state']).'&nbsp;'.$address_dtls[0]['zip'];
 
             $option_sechdule = ($original['my_office_alt'] == 'my_office') ? '<span style="font-weight: bold">My Office</span>' : '<br><span style="font-weight: bold">Alternate:</span><br>'.$address_string;
+            
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;"><span style="font-weight: bold">Schedule a Pick-up Option:</span>&nbsp;' . $option_sechdule . '</div>';
+            
+        }
+        
+        
+        //Alternate End
+        
+
+        $message .= '</div>';
+    }
+    // New Format End
+
+    $message .= '</div>';
+    
+    
+    /****************LFP*****************/
+    $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: LARGE FORMAT COLOR & BW </div>';
+    $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
+    //$cust_original_order = SetsOrderedFinalize($job_reference_final[0]['id']);
+//    $cust_original_order = EnteredPlotRecipientsMultiOriginal($user_session_comp, $user_session, $job_reference_final[0]['id']);
+//    $total_plot_needed = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
+//    $cust_original_order_final = SetsOrderedFinalizeOriginal($job_reference_final[0]['id']);
+//    $upload_file_exist = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+//    $cust_needed_sets = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+//    $cust_order_type = ($cust_original_order[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+//    $option = ($cust_original_order[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
+    
+    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    
+    $message .= '<table border="0" style="width: 100%;text-align: center;border-spacing: 1px;">';
+    $message .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
+    $message .= '<td style="font-weight: bold;">Option</td> 
+                            <td style="">Originals</td> 
+                            <td style="">Sets</td> 
+                            <td style="width: 20%;">Order Type</td>                            
+                            <td style="">Size</td>
+                            <td style="">Output</td>
+                            <td style="">Media</td>
+                            <td style="">Binding</td>';
+    $message .= '</tr>';
+    foreach ($cust_original_order_pdf_lfp as $original_pdf_lfp) {
+  
+            $cust_needed_sets_lfp       = $original_pdf_lfp['print_of_each'];
+                                $cust_order_type_lfp        = "LFP";  
+                                $size_lfp         = ucwords(strtolower($original_pdf_lfp['size']));
+                                $output_lfp       = $original_pdf_lfp['output'];
+                                $media_lfp        = $original_pdf_lfp['media'];
+                                $binding_lfp      = $original_pdf_lfp['binding']; 
+        
+        
+        $message .= '<tr style="background-color: #FFF;">';
+        $message .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
+        $message .= '<td>' . $original_pdf_lfp['original'] . '</td>';
+        $message .= '<td>' . $cust_needed_sets_lfp . '</td>';
+        $message .= '<td>' . $cust_order_type_lfp . '</td>';
+        $message .= '<td>' . $size_lfp . '</td>';
+        $message .= '<td style="text-transform: uppercase;">' . $output_lfp . '</td>';
+        $message .= '<td>' . ucfirst($media_lfp) . '</td>';
+        $message .= '<td>' . ucfirst($binding_lfp) . '</td>';
+        $message .= '</tr>';
+    }
+    $message .= '</table>';
+    $message .= '</div>';
+    $message .= '</div>';
+   // $enteredPlot = EnteredPlotRecipientsMultiOriginal($user_session_comp, $user_session, $job_reference_final[0]['id']);
+
+    //New Format Start
+
+    foreach ($cust_original_order_pdf_lfp as $original_lfp) {
+        $message .= '<div style="float:left;width: 95%;margin-top: 10px;">';
+        $message .= '<div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;font-weight:bold;"> OPTION&nbsp;' . $original_lfp['options'] . '&nbsp;- Details</div>';
+        if ($original_lfp['size'] == 'CUSTOM') {
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Custom Size:&nbsp;' . $original_lfp['size_custom'] . '</div>';
+        }
+        if ($original_lfp['output'] == 'BOTH') {
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Color Page Numbers:&nbsp;' . $original_lfp['output_both_page'] . '</div>';
+        }
+        if ($original_lfp['special_inc'] != '') {
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original_lfp['special_inc'] . '</div>';
+        }
+        if ($original_lfp['ftp_link'] != "0") {
+            $link = ($original_lfp['ftp_link'] != '0') ? $original_lfp['ftp_link'] : '';
+            $user_name_ftp = ($original_lfp['user_name'] != '0') ? $original_lfp['user_name'] : '';
+            $password = ($original_lfp['password'] != '0') ? $original_lfp['password'] : '';
+            if ($original_lfp['use_same_alt'] == "0") {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">File Option: Provide Link to a File</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">FTP Link:&nbsp;' . $link . '</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">User Name:&nbsp;' . $user_name_ftp . '</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Password:&nbsp;' . $password . '</div>';
+            } else {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">File Option: Provide Link to a File</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Use same file as Option&nbsp;' . $original_lfp['use_same_alt'] . '</div>';
+            }
+        }
+
+        if ($original_lfp['upload_file'] != "0") {
+            if ($original_lfp['use_same_alt'] == "0") {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">File Option: Upload a file</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;"><a href="http://cipldev.com/supply-new.sohorepro.com/uploads/' . $original['upload_file'] . '" target="_blank">' . $original['upload_file'] . '</a></div>';
+            } else {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">File Option: Upload a file</div>';
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Use same file as Option&nbsp;' . $original_lfp['use_same_alt'] . '</div>';
+            }
+        }
+
+        if ($original_lfp['drop_off_381'] != "0") {
+            if ($original_lfp['use_same_alt'] == "0") {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Drop-Off Option:&nbsp;' . $original_lfp['drop_off_381'] . '</div>';
+            } else {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Drop-Off Option:&nbsp;Use same file as Option&nbsp;' . $original_lfp['use_same_alt'] . '</div>';
+            }
+        }
+
+        if ($original_lfp['schedule_pickup'] != "0") {
+            if (($original_lfp['schedule_pickup'] == "ASAP") && ($original_lfp['pick_up_time'] == "ASAP")) {
+                $pickup_details = $original_lfp['schedule_pickup'];
+            } else {
+                $pickup_details = $original_lfp['schedule_pickup'] . '&nbsp;' . $original_lfp['pick_up_time'];
+            }
+            if ($original_lfp['use_same_alt'] == "0") {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Pickup Option:&nbsp;' . $pickup_details . '</div>';
+            } else {
+                $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Pickup Option:&nbsp;Use same file as Option&nbsp;' . $original_lfp['use_same_alt'] . '</div>';
+            }
+        }
+        
+        //Alternate Start
+        
+        if ($original_lfp['schedule_place'] != "0") {
+           
+            $address_dtls    = SelectLastEnteredAddress($original_lfp['address_book_id']);
+            $address_3       = ($address_dtls[0]['address_3'] != '') ? $address_dtls[0]['address_3'].'<br>' : '';
+            $address_string  = $address_dtls[0]['company_name'].'<br>'.$address_dtls[0]['address_1'].'<br>'.$address_dtls[0]['address_2'].'<br>'.$address_3.$address_dtls[0]['city'].',&nbsp;'.StateName($address_dtls[0]['state']).'&nbsp;'.$address_dtls[0]['zip'];
+
+            $option_sechdule = ($original_lfp['schedule_place'] == 'my_office') ? '<span style="font-weight: bold">My Office</span>' : '<br><span style="font-weight: bold">Alternate:</span><br>'.$address_string;
             
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;"><span style="font-weight: bold">Schedule a Pick-up Option:</span>&nbsp;' . $option_sechdule . '</div>';
             

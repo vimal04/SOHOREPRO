@@ -3544,7 +3544,14 @@ function EnteredLFPPrimary($comp_id, $user_id) {
     return $value;
 }
 
-
+function EnteredLFPPrimaryPdf($comp_id, $user_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."'";
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function LastFileOptionEnteredLFP($company_id, $user_id){
     $plotting_set = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0' ORDER BY option_id DESC LIMIT 1" ;
     $set = mysql_query($plotting_set);
