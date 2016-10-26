@@ -360,8 +360,8 @@ if ($_POST['everything_return'] == '1') {
               foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
                     <?php if($title_lfp>0){ ?>
                   <div class="def_class" style=";margin-left: 23px;margin-top: 10px;color: #34A853;font-weight: bold; font-size: 17px;">
-                Mounting & Lamination
-            </div>
+                         Mounting & Lamination
+                    </div>
                 
             
             <div style="width: 95%;float: left;margin-left: 25px;">                    
@@ -426,17 +426,18 @@ if ($_POST['everything_return'] == '1') {
                         
  
                             <?php
+                            //print_r($original_service_lfp);
                            
                             foreach ($original_service_lfp as $entered) {
                       
                                 
-                                if ($entered['mal_splns'] != ''){
+                                if ($entered['mal_splns'] != '0' AND $entered['mal_splns'] != ''){
                                 ?>
                                 
                     <div style="float:left;width: 100%;font-weight: bold;color: #000;margin-top: 7px;"> OPTION <?php echo $entered['option_id']; ?></div>
                     <div style="width: 98%;float: left;border: 1px solid #F99B3E;padding: 5px;">   
                      
-                            <?php if ($entered['mal_splns'] != '') {  ?> 
+                            <?php if ($entered['mal_splns'] != '0') {  ?> 
                             <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
                                     Special Instructions
@@ -452,11 +453,11 @@ if ($_POST['everything_return'] == '1') {
                         </div>
                         <?php
                                }
-                    }}
+                    }
                             ?>
                         <!-- Options Details End -->
                 
-                </div>
+                    </div> <?php } ?>
             <!-- Mounting and lamination end -->
             
             <?php

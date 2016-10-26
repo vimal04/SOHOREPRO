@@ -795,9 +795,9 @@ if(count($cust_original_order) > "0"){
                 <?php
                             //$enteredPlot = EnteredPlotRecipients($company_id_view_plot, $user_id_add_set);
                           //  $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
-                            $i = 1;
+                            $i = 0;
                           //  print_r($number_of_lfp);
-                            foreach ($number_of_lfp as $entered) {
+                            foreach ($number_of_lfp as $entered) {  $i++;
                                 $rowColor = ($i % 2 != 0) ? '#ffeee1' : '#fff6f0';
                                 $binding = strtoupper($entered['binding']);
                                 $folding = strtoupper($entered['folding']);
@@ -811,7 +811,7 @@ if(count($cust_original_order) > "0"){
                                 //if (($entered['spl_instruction'] != '') OR  ($entered['size'] == 'Custom') OR ($entered['output'] == 'Both') OR ($entered['drop_off'] != '0') OR ($entered['pick_up_time'] != '0')){
                                 ?>
                                 
-                    <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['options']; ?></div>
+                    <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $i; ?></div>
                     <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">   
                         <?php
                         if ($entered['size'] == 'CUSTOM') {
@@ -982,14 +982,14 @@ if(count($cust_original_order) > "0"){
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">File Options</div>  
                                     <div style="float: left;width: 65%;margin-left: 10px;margin-top: 7px;">Use same file as Option <?php echo $entered['use_same_alt']; ?></div>                                                    
                                 </div>
-                           <?php }} ?>
-                        </div>
+                            <?php }  }?>
+                        </div> <?php }  ?>
                     
                     <!--------------Mounting--------------------->
                      <?php
               foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
                     <?php if($title_lfp>0){ ?>
-                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: Mounting & Lamination</div>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: MOUNTING & LAMINATING</div>
                 <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
                     <?php
                     //$cust_needed_originals  = $cust_original_order[0]['origininals'];
@@ -1003,10 +1003,25 @@ if(count($cust_original_order) > "0"){
 //                        echo '<pre>';
 //                        print_r($cust_original_order);
 //                        echo '</pre>';
-                         $j=1;
-                        foreach ($number_of_lfp as $original){ 
-                        if($original['ml_active']==1){ $title_lfp ="1"; }}
-                     if($title_lfp>0){ 
+                        $i = 1; $j=1;
+                    foreach ($original_service_lfp as $original){ if($original['ml_active']==1){
+                       if($j==1){ 
+                       
+                        ?>
+                        <tr bgcolor="#BFC5CD">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      <?php }
+                      
+                      
                                 $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
                                 $cust_needed_sets       = $original['print_of_each'];
                                 $cust_order_type        = "LFP";  
@@ -1025,18 +1040,10 @@ if(count($cust_original_order) > "0"){
                         else{
                             $ml_type="Both";
                         }
-                        ?>
-                        <tr bgcolor="#BFC5CD">
-                          <td style="font-weight: bold;">Option</td> 
-                        <td style="font-weight: bold;">Originals</td> 
-<!--                        <td style="font-weight: bold;">Like Originals</td> -->
-                        <td style="font-weight: bold;">Order Type</td>                            
-                        <td style="font-weight: bold;">L</td>
-                         <td style="font-weight: bold;">W</td>
-                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
-                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
-                        <td style="font-weight: bold;">Grommets</td>
-                        </tr>
+                      
+                      ?>
+                      
+                      
                       
                         <tr bgcolor="#F8F8F8">
                            <td><?php echo $original['option_id']; ?></td>
@@ -1052,20 +1059,16 @@ if(count($cust_original_order) > "0"){
                        <?php 
                     $i++;
                     $j=2;
-                    }         
+                        } }         
                     ?>
                     </table>
-                   
-                </div> <?php
-                $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
-                foreach($enteredPlot as $entered){
+                      </div>
+              <?php
+              //  $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
+                foreach($original_service_lfp as $entered){
                          if ($entered['mal_splns'] != '') { ?>
-                       <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['options']; ?></div>
-                    <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">  <?php
-                    
-                   
-                      
-                            ?> 
+                       <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['option_id']; ?></div>
+                    <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">
                             <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Special Instructions
@@ -1075,19 +1078,19 @@ if(count($cust_original_order) > "0"){
                                     <?php echo $entered['mal_splns']; ?>
                                 </div>
                             </div>
-                            <?php
-                     } ?>
+                    
                     </div>
                         <?php
-                    } }
-                           }
+                } } ?> 
+                       <?php     }
                             ?>
+                        </div> 
                 </div>
                 </div>
             </div>
 
 <!-- LFP Original End -->
-<?php }if(count($number_of_fap) > "0"){ ?>
+<?php }   if(count($number_of_fap) > "0"){ ?>
 
 <!-- FAP Original Start -->
         
@@ -1144,10 +1147,10 @@ if(count($cust_original_order) > "0"){
                         </tr>
                         <?php
 //                        echo '<pre>';
-//                        print_r($cust_original_order);
+                       // print_r($number_of_fap);
 //                        echo '</pre>';
                         
-                        foreach ($number_of_fap as $original){
+                        foreach ($number_of_fap as $original){ $i=1;
                                 $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
                                 $cust_needed_sets       = $original['poe'];
                                 $cust_order_type        = "LFP";  
@@ -1165,7 +1168,7 @@ if(count($cust_original_order) > "0"){
                             <td><?php echo ucfirst($media); ?></td>
                         </tr>
                         <?php
-                        }
+                   $i++;     }
                         ?>
                     </table>
                    
@@ -1174,9 +1177,9 @@ if(count($cust_original_order) > "0"){
                 
                 <?php
                             //$enteredPlot = EnteredPlotRecipients($company_id_view_plot, $user_id_add_set);
-                            $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
+                           // $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
                             $i = 1;
-                            foreach ($enteredPlot as $entered) {
+                            foreach ($number_of_fap as $entered) {
                                 $rowColor = ($i % 2 != 0) ? '#ffeee1' : '#fff6f0';
                                 $binding = strtoupper($entered['binding']);
                                 $folding = strtoupper($entered['folding']);
@@ -1190,7 +1193,7 @@ if(count($cust_original_order) > "0"){
                                 //if (($entered['spl_instruction'] != '') OR  ($entered['size'] == 'Custom') OR ($entered['output'] == 'Both') OR ($entered['drop_off'] != '0') OR ($entered['pick_up_time'] != '0')){
                                 ?>
                                 
-                    <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['options']; ?></div>
+                    <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $i; ?></div>
                     <div style="width: 90%;float: left;border: 1px solid #BFC5CD;padding: 5px;margin-left: 30px;">   
                         <?php
                         if ($entered['size'] == 'Custom') {
@@ -1201,7 +1204,7 @@ if(count($cust_original_order) > "0"){
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
                                     <input type="hidden" name="size_custom_details" id="size_custom_details" value="<?php echo $entered['custome_details']; ?>" />
-                                    <?php echo $entered['custome_details']; ?>
+                                    <?php echo $entered['size_custom']; ?>
                                 </div>
                             </div>
                             <?php
@@ -1219,7 +1222,7 @@ if(count($cust_original_order) > "0"){
                             </div>
                             <?php
                         }
-                        if ($entered['spl_instruction'] != '') {
+                        if ($entered['special_instruction'] != '') {
                             ?> 
                             <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
@@ -1227,7 +1230,7 @@ if(count($cust_original_order) > "0"){
                                 </div>
                                 <div style="padding-top: 3px;width: 100%;float: left;">
                                     <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['spl_instruction']; ?>" />
-                                    <?php echo $entered['spl_instruction']; ?>
+                                    <?php echo $entered['special_instruction']; ?>
                                 </div>
                             </div>
                             <?php
@@ -1288,32 +1291,22 @@ if(count($cust_original_order) > "0"){
                                 </div>
                             <?php } ?>
                             <?php } ?>
-                            <?php if ($entered['drop_off'] != '0') {
-                                     if($entered['use_same_alt'] == '0'){
+                            <?php if ($entered['dropoff_val'] != '0') {
+                                    
                                 ?>
                                 <div style="width: 22%;float: left;border: 1px solid #BFC5CD;">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Drop-off Option
                                     </div>
                                     <div style="padding-top: 3px;width: 100%;float: left;">
-                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off']; ?>" />
-                                        <?php echo $entered['drop_off']; ?>
+                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['dropoff_val']; ?>" />
+                                        <?php echo $entered['dropoff_val']; ?>
                                     </div>
                                 </div>
-                            <?php }  else {?>
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;">
-                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
-                                        Drop-off Option
-                                    </div>
-                                    <div style="padding-top: 3px;width: 100%;float: left;">
-                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off']; ?>" />
-                                        Use same file as Option <?php echo $entered['use_same_alt']; ?>
-                                    </div>
-                                </div>
-                            <?php }}if ($entered['ftp_link'] != '0') {
-                                $link       = ($entered['ftp_link'] != '0') ? $entered['ftp_link'] : '';
-                                $user_name  = ($entered['user_name'] != '0') ? $entered['user_name'] : '';
-                                $password   = ($entered['password'] != '0') ? $entered['password'] : '';
+                            <?php }  if ($entered['ftp_link_val'] != '0') {
+                                $link       = ($entered['ftp_link_val'] != '0') ? $entered['ftp_link_val'] : '';
+                                $user_name  = ($entered['user_name_val'] != '0') ? $entered['user_name_val'] : '';
+                                $password   = ($entered['pass_word_val'] != '0') ? $entered['pass_word_val'] : '';
                                 if($entered['use_same_alt'] == '0'){
                             ?>
                                 <div style="width: 45%;float: left;border: 1px solid #BFC5CD;">
@@ -1692,7 +1685,7 @@ if(count($cust_original_order) > "0"){
                 <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Send to: </div>
                 
                 <div style="float: left;width: 33%;margin-left: 30px;">  
-                    <?php
+                    <?php 
                     if(($entered_needed_sets[0]['shipp_id'] != 'P1') && ($entered_needed_sets[0]['shipp_id'] != 'P2')){
                     $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
                     $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
@@ -2305,7 +2298,8 @@ if(count($cust_original_order) > "0"){
                 <div style="float: left;width: 33%;margin-left: 30px;">  
                     <?php 
                     if(($entered_needed_sets[0]['shipp_id'] != 'P1') && ($entered_needed_sets[0]['shipp_id'] != "P2")){
-                    $cust_add = getCustomeInfo($entered_needed_sets[0]['shipp_id']);
+                   $cust_add = getCustomeInfo($entered_needed_sets[0]['shipp_id']);
+                  
                     $cust_add_2 = ($cust_add[0]['comp_business_address2'] != '') ? $cust_add[0]['comp_business_address2']. '<br>'  : '';
                     $attention_ev   =   ($_SESSION['attention_every'] != '') ? 'Attention:&nbsp;'.$_SESSION['attention_every'].'<br>' : '';
                     $tel_eve       =   ($_SESSION['tel_every'] != '') ? 'Tel:&nbsp;'.$_SESSION['tel_every'].'<br>' : '';
@@ -2564,8 +2558,8 @@ if(count($cust_original_order) > "0"){
 //                        echo '<pre>';
 //                        print_r($number_of_fap);
 //                        echo '</pre>';
-                        
-                        foreach ($number_of_fap as $original){
+                        $i=0;
+                        foreach ($number_of_fap as $original){ $i++;
                                 $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
                                 $cust_needed_sets       = $original['poe'];
                                 $cust_order_type        = "LFP";  
