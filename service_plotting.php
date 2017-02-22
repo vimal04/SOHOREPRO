@@ -1804,7 +1804,7 @@ function update_cust_page_details(ID){
 
                                                         <div style="width: 60%;float: left;border: 1px #F99B3E solid;margin-left: 20px;height: auto;">
                                                             <div style="float: left;width: 45%;margin-left: 30px;border: 0px #F99B3E solid;margin-top: 30px;">
-                                                                <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" />My Office
+                                                                <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" checked />My Office
                                                             </div>
                                                             <div style="float: left;width: 45%;border: 0px #F99B3E solid;margin-top: 30px;">
                                                                 <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="alternate();" id="alternate" value="alternate" />Alternative
@@ -2235,7 +2235,7 @@ function update_cust_page_details(ID){
                                 
                                 <div style="width: 60%;float: left;border: 1px #F99B3E solid;margin-left: 20px;height: auto;">
                                     <div style="float: left;width: 45%;margin-left: 30px;border: 0px #F99B3E solid;margin-top: 30px;">
-                                        <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" />My Office
+                                        <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" checked />My Office
                                     </div>
                                     <div style="float: left;width: 45%;border: 0px #F99B3E solid;margin-top: 30px;">
                                         <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="alternate();" id="alternate" value="alternate" />Alternative
@@ -2695,7 +2695,7 @@ function update_cust_page_details(ID){
                                 
                                 <div style="width: 60%;float: left;border: 1px #F99B3E solid;margin-left: 20px;height: auto;">
                                     <div style="float: left;width: 45%;margin-left: 30px;border: 0px #F99B3E solid;margin-top: 30px;">
-                                        <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" />My Office
+                                        <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" checked />My Office
                                     </div>
                                     <div style="float: left;width: 45%;border: 0px #F99B3E solid;margin-top: 30px;">
                                         <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="alternate();" id="alternate" value="alternate" />Alternative
@@ -2884,7 +2884,7 @@ function update_cust_page_details(ID){
              
                     
               <div style="float:left;width:100%;text-align:right;margin-top: 10px;">                  
-                  <input class="addproductActionLink" value="Save to Cart and Continue" style="cursor: pointer; float: right; font-size: 12px; padding: 1.5px; width: 180px; margin-right: 14px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;margin-top: -1px !important;" type="button" onclick="return validate_plotting_cont_pre();" />
+                  <input class="addproductActionLink" value="Save and Continue" style="cursor: pointer; float: right; font-size: 12px; padding: 1.5px; width: 180px; margin-right: 14px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;margin-top: -1px !important;" type="button" onclick="return validate_plotting_cont_pre();" />
                   <input class="addNewOrderSet" value="Add Set" style="float:right;cursor: pointer;font-size:12px; padding:1.5px; width: 100px;margin-top:-51px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;margin-right: 10px;" type="button" onclick="return validate_plotting();" />
               </div> 
               </span>

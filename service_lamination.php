@@ -544,8 +544,9 @@ width: 17px;
                                                     <div style="background-color:#FFFFFF" class="serviceOrderSetWapper" setindex="0">
                                                         <div class="serviceOrderSetWapperInternal">
                                                             <div class="serviceOrderSetDIV">
+                                                                
                                                                 <div>
-                                                                    <label>Originals<span class="ref_div_star">*</span></label>
+                                                                    <label>Original<span class="ref_div_star">*</span></label>
                                                                     <input class="order_0_set1_0_original k-input kdText " style="width:70px;" id="original_lam" name="original_lam" type="number" min="1">
                                                                 </div>
                                                                 <div style="width: 100%;float: left;">
@@ -564,22 +565,23 @@ width: 17px;
                                                                 </div>
                                                                 
                                                                 <div id="ass_option" style="width: 100%;float: left;background-color: #F6F2F2;padding: 5px;">
-                                                                    <div style="clear:both;"><label>Mounting<span id="mounting_req" style="color: red;display: none;">*</span></label>
+                                                                  
+                                                                    <div style="clear:both;"><label>Mounting<span class="mounting_req" style="color: red;display: none;">*</span></label>
                                                                     <div class="drop" style="margin-right:0px;margin-left:0px;height:2px;">
                                                                         <div style="float:left;margin-right:0px;">
-                                                                            <select class="order_0_set1_0_mounting kdSelect " style="width:150px;" id="mounting_select" name="mounting_select" onchange="return restrict_number();">
+                                                                            <select class="mounting_select_f kdSelect " style="width:150px;" id="mounting_select" name="mounting_select" onchange="return restrict_number();">
                                                                                 <option value="none" selected="selected">None</option>
-                                                                                <option value="FoamBoard 3/16 White">FoamBoard 3/16 White</option>
-                                                                                <option value="3309">FoamBoard 3/16 Black</option>
-                                                                                <option value="FoamBoard 3/16 Black">FoamBoard 1/2 White</option>
-                                                                                <option value="FoamBoard 1/2 Black">FoamBoard 1/2 Black</option>
-                                                                                <option value="GatorBoard 3/16 White">GatorBoard 3/16 White</option>
-                                                                                <option value="GatorBoard 3/16 Black">GatorBoard 3/16 Black</option>
-                                                                                <option value="GatorBoard 1/2 White">GatorBoard 1/2 White</option>
-                                                                                <option value="GatorBoard 1/2 Black">GatorBoard 1/2 Black</option>
-                                                                                <option value="Plasti-Cor  WHITE">Plasti-Cor  WHITE</option>
-                                                                                <option value="Illustration Board 1/8 White">Illustration Board 1/8 White</option>
-                                                                                <option value="Illustration Board 1/8 Black">Illustration Board 1/8 Black</option>                                                                                
+                                                                                        <option value="3308">FoamBoard 3/16 White</option>
+                                                                                        <option value="3309">FoamBoard 3/16 Black</option>
+                                                                                        <option value="3315">FoamBoard 1/2 White</option>
+                                                                                        <option value="3316">FoamBoard 1/2 Black</option>
+                                                                                        <option value="3311">GatorBoard 3/16 White</option>
+                                                                                        <option value="3312">GatorBoard 3/16 Black</option>
+                                                                                        <option value="3317">GatorBoard 1/2 White</option>
+                                                                                        <option value="3318">GatorBoard 1/2 Black</option>
+                                                                                        <option value="3319">Plasti-Cor  WHITE</option>
+                                                                                        <option value="3313">Illustration Board 1/8 White</option>
+                                                                                        <option value="3313">Illustration Board 1/8 Black</option>                                                                                
                                                                             </select>
                                                                         </div>
                                                                         <div class="dropdown_selector">
@@ -590,15 +592,15 @@ width: 17px;
                                                                         
                                                                 </div>
                                                                 <div>
-                                                                    <label>Lamination<span id="laminating_req" style="color: red;display: none;">*</span></label>
+                                                                    <label>Lamination<span class="laminating_req" style="color: red;display: none;">*</span></label>
                                                                     <div class="drop" style="margin-right:0px;margin-left:0px;height:2px;">
                                                                         <div style="float:left;margin-right:0px;">
-                                                                            <select class="order_0_set1_0_lamination kdSelect " style="width:150px;" id="lamination_select" onchange="return lamination_value_change();" name="lamination_select">
+                                                                            <select class="lamination_select_f kdSelect " style="width:150px;" id="lamination_select" onchange="return lamination_value_change();" name="lamination_select">
                                                                                 <option value="none" selected="selected">None</option>
-                                                                                <option value="Lamination Pouch,7mil 9x12 Gloss">Lamination Pouch,7mil 9x12 Gloss</option>
-                                                                                <option value="Lamination Pouch,7mil 12x18 Gloss">Lamination Pouch,7mil 12x18 Gloss</option>
-                                                                                <option value="Lamination, 3mil Satin">Lamination, 3mil Satin</option>
-                                                                                <option value="Lamination, 3mil Gloss">Lamination, 3mil Gloss</option>                                                                               
+                                                                                <option value="3317">Lamination Pouch,7mil 9x12 Gloss</option>
+                                                                                <option value="3317">Lamination Pouch,7mil 12x18 Gloss</option>
+                                                                                <option value="3319">Lamination, 3mil Satin</option>
+                                                                                <option value="3319">Lamination, 3mil Gloss</option>                                                                                 
                                                                             </select>
                                                                         </div>                                                                        
                                                                     </div>                                                                            
@@ -834,7 +836,7 @@ width: 17px;
              beforeSend: loadStart,
              complete: loadStop,
              success: function(option)
-             {                            
+             {                         
                 $('#ass_option').hide();
                 $('#booklet').html(option);
                 $("#size_custom_div").hide();
@@ -890,287 +892,11 @@ width: 17px;
         
    }
    
-   function active_mount()
-   {
-       $("#lamination_select").attr('disabled', true);
-       $("#mounting_select").attr('disabled', false);
-       $("#mounting_req").show();
-       $("#laminating_req").hide();
-   }
    
-   function active_lamin()
-   {   
-       $("#mounting_select").attr('disabled', true);
-       $("#lamination_select").attr('disabled', false);
-       $("#mounting_req").hide();
-       $("#laminating_req").show();
-   }
+  
    
-    function active_both()
-   {   
-       $("#mounting_select").attr('disabled', false);
-       $("#lamination_select").attr('disabled', false);
-       $("#mounting_req").show();
-       $("#laminating_req").show();
-   }
    
-   function lamination_value_change()
-   {
-       $("#width_values").val("");
-       $("#length_values").val("");
-       var lamination_value = $("#lamination_select").val();
-       if(lamination_value == "3319"){
-           $("#width_values").attr("max","40");
-           $("#length_values").attr("max","");
-           
-           $("#width_val_set").val("40");
-           $("#length_val_set").val("");
-           
-       }else if(lamination_value == "3320"){
-           $("#width_values").attr("max","40");
-           $("#length_values").attr("max","");
-           
-           $("#width_val_set").val("40");
-           $("#length_val_set").val("");
-       }else{
-           $("#width_values").attr("max","48");
-           $("#length_values").attr("max","96");
-           
-           $("#width_val_set").val("48");
-           $("#length_val_set").val("96");
-       }
-   }
-   
-   function restrict_number()
-   {
-       $("#width_values").val("");
-       $("#length_values").val("");
-       var mounting_value = $("#mounting_select").val();
-       if((mounting_value == "11") || (mounting_value == "22")){
-           $("#width_values").attr("max","30");
-           $("#length_values").attr("max","40");
-           
-           $("#width_val_set").val("30");
-           $("#length_val_set").val("40");
-       }else{
-           $("#width_values").attr("max","48");
-           $("#length_values").attr("max","96");
-           
-           $("#width_val_set").val("48");
-           $("#length_val_set").val("96");
-       }
-   }
-   
-  function validate_plotting()
-  {  
-   $("body").append("<div class='modal-overlay'></div>");  
-    var jobreference        = document.getElementById("jobref").value;
-    
-    var check_val           = document.getElementById("plotting_check").checked;
-    var check_val_0         = document.getElementById("plotting_check_0").checked;
-    //var plotting_check_jk   = document.getElementsByName("plotting_check").checked;
-    
-    var plotting_check      = (check_val == true) ? '1' : '0';
-    
-    var original            = document.getElementById("original").value;
-    var print_ea            = document.getElementById("print_ea").value;
-    var size                = document.getElementById("size").value;
-    var output              = document.getElementById("output").value;
-    var media               = document.getElementById("media").value;
-    var binding             = document.getElementById("binding").value;
-    var folding             = document.getElementById("folding").value;
-    var special_instruction = document.getElementById("special_instruction").value;
-    var size_custom         = document.getElementById("size_custom").value;
-    var output_both         = document.getElementById("output_both").value;
-    
-    var date_for_alt        = document.getElementById("date_for_alt").value;
-    var date_for_alt_arc    = document.getElementById("date_for_alt_arc").value;
-    if(date_for_alt != ''){
-        var date_for_alt_val    = date_for_alt;
-    }else if(date_for_alt_arc != ''){
-        var date_for_alt_val    = date_for_alt_arc;
-    }else{
-        var date_for_alt_val    = '0';
-    }
-    
-    var time_for_alt        =  document.getElementById("time_for_alt").value;
-    var time_for_alt_arc    =  document.getElementById("time_for_alt_arc").value;
-    if(time_for_alt != ''){
-        var time_for_alt_val    =  time_for_alt;
-    }else if(time_for_alt_arc != ''){
-        var time_for_alt_val    =  time_for_alt_arc;
-    }else{
-        var time_for_alt_val    =  '0';
-    }
-    
-    var drop_chk_val_0          =   document.getElementById("drop_val").value;
-    var drop_chk_val_1          =   document.getElementById("drop_val_1").value;
-    
-    var drop_chk_arc_val_0      =   document.getElementById("drop_val_arc").value;
-    var drop_chk_arc_val_1      =   document.getElementById("drop_val_arc_1").value;
-    
-    var drop_chk_1          =   document.getElementById("drop_val").checked;
-    var drop_chk_2          =   document.getElementById("drop_val_1").checked;
-    var drop_chk_arc_1      =   document.getElementById("drop_val_arc").checked;
-    var drop_chk_arc_2      =   document.getElementById("drop_val_arc_1").checked;
-    
-    var drop_off_select_val =   document.getElementById("drop_off_select_val").value;
-    
-    if(drop_off_select_val == '1'){
-        if(drop_chk_1 == true){
-            var drop_val            =   drop_chk_val_0;
-        }else if(drop_chk_2 == true){
-            var drop_val            =   drop_chk_val_1;
-        }else if(drop_chk_arc_1 == true){
-            var drop_val            =   drop_chk_arc_val_0;
-        }else if(drop_chk_arc_2 == true){
-            var drop_val            =   drop_chk_arc_val_1;
-        }
-    }else{
-            var drop_val            =   '0';
-    }
-    
-    var ftp_link            =   document.getElementById("ftp_link").value;
-    var user_name           =   document.getElementById("user_name").value;
-    var password            =   document.getElementById("pass_word").value;
-    
-    var ftp_link_val        =   (ftp_link != '') ? ftp_link : '0';
-    var user_name_val       =   (user_name != '') ? user_name : '0';
-    var password_val        =   (password != '') ? password : '0';
-        
-    var size_custom_val     =  (size_custom != '') ? size_custom : '0';
-    var output_both_val     =  (output_both != '') ? output_both : '0';
-    
-    var size_custom         = (size == 'Custom') ? document.getElementById("size_custom").value : '0';
-    
-    if(jobreference == ''){
-        alert('Please enter the Job Reference');
-        document.getElementById("jobref").focus();
-        return false;
-    }
-    
-    if($('input[name=plotting_check]:checked').length<=0)
-    {
-        alert('Please select the job option');
-        document.getElementById("plotting_check").focus();
-        return false;
-    }
-    
-    if(print_ea == ''){
-        alert('Please enter the Print');
-        document.getElementById("print_ea").focus();
-        return false;
-    }  
-//    if(output == 'Both'){
-//        if(special_instruction == ''){
-//        alert('Please enter the special instructions');
-//        document.getElementById("special_instruction").focus();
-//        return false;  
-//        }      
-//    }
-    if(size == 'Custom'){
-       if(size_custom == ''){
-        alert('Please enter the custom size');
-        document.getElementById("size_custom").focus();
-        return false;  
-        }      
-    }
-    if (jobreference != '')
-    {
-        $.ajax
-                ({
-                    type: "POST",
-                    url: "add_plotting_sets.php",
-                    data: "service_plotting_add=1&job_reference="+encodeURIComponent(jobreference)+
-                          "&original="+encodeURIComponent(original)+"&print_ea="+encodeURIComponent(print_ea)+
-                          "&size="+encodeURIComponent(size)+"&output="+encodeURIComponent(output)+
-                          "&media="+encodeURIComponent(media)+
-                          "&binding="+encodeURIComponent(binding)+"&folding="+encodeURIComponent(folding)+
-                          "&plot_arch="+encodeURIComponent(plotting_check)+"&special_instruction="+encodeURIComponent(special_instruction)+
-                          "&size_custom_val="+encodeURIComponent(size_custom_val)+"&output_both_val="+encodeURIComponent(output_both_val)+
-                          "&pickup_date="+encodeURIComponent(date_for_alt_val)+"&pickup_time="+encodeURIComponent(time_for_alt_val)+
-                          "&drop_val="+encodeURIComponent(drop_val)+"&ftp_link_val="+encodeURIComponent(ftp_link_val)+
-                          "&user_name_val="+encodeURIComponent(user_name_val)+"&password_val="+encodeURIComponent(password_val)+"&size_custom="+encodeURIComponent(size_custom),
-                    beforeSend: loadStart,
-                    complete: loadStop,
-                    success: function(option)
-                    {                           
-                        $('#sets_all').slideDown();
-                        $('#sets_all').html(option);
-                        $('#continue_ok').val('1');
-                        $( ".modal-overlay" ).remove();
-                    }
-                });
-    }
-    
-  }   
 
-function validate_binding_cont()
-{    
-    var jobref                          = document.getElementById("jobref").value;
-    
-    var binding_main_option             = document.getElementById("binding_main_option").value;
-    var binding_child_option            = document.getElementById("binding_child_option").value;
-    
-    var front_main_option               = document.getElementById("front_main_option").value;
-    var binding_child_option_front      = document.getElementById("binding_child_option_front").value;
-    
-    var back_main_option                = document.getElementById("back_main_option").value;
-    var binding_child_option_back       = document.getElementById("binding_child_option_back").value;
-    
-    var nob                             = document.getElementById("nob").value;
-    
-    var cutting_option                  = document.getElementById("cutting_option").value;
-    var special_instruction_cutting     = document.getElementById("special_instruction_cutting").value;
-    
-       
-    var custome_instruction             = document.getElementById("custome_instruction").value;
-    
-    var special_instruction             = document.getElementById("special_instruction").value;
-    
-    
-    var size_1                          = document.getElementById("size_1").checked;
-    var size_1_val                      = (size_1 == true) ? document.getElementById("size_1").value : "0";
-    
-    var size_2                          = document.getElementById("size_2").checked;
-    var size_2_val                      = (size_2 == true) ? document.getElementById("size_2").value : "0";
-    
-    var size_3                          = document.getElementById("size_3").checked;
-    var size_3_val                      = (size_3 == true) ? document.getElementById("size_3").value : "0";
-    
-    var size_4                          = document.getElementById("size_4").checked;
-    var size_4_val                      = (size_4 == true) ? custome_instruction : "0";
-   
-    if (jobref != '')
-    {
-         $.ajax
-                ({
-                    type: "POST",
-                    url: "add_cutting_sets.php",
-                    data: "service_cutting_add=1&job_reference="+encodeURIComponent(jobref)+
-                          "&binding_main_option="+encodeURIComponent(binding_main_option)+"&binding_child_option="+encodeURIComponent(binding_child_option)+
-                          "&front_main_option="+encodeURIComponent(front_main_option)+"&binding_child_option_front="+encodeURIComponent(binding_child_option_front)+
-                          "&back_main_option="+encodeURIComponent(back_main_option)+
-                          "&binding_child_option_back="+encodeURIComponent(binding_child_option_back)+"&nob="+encodeURIComponent(nob)+
-                          "&cutting_option="+encodeURIComponent(cutting_option)+"&special_instruction_cutting="+encodeURIComponent(special_instruction_cutting)+
-                          "&custome_instruction="+encodeURIComponent(custome_instruction)+"&special_instruction="+encodeURIComponent(special_instruction)+
-                          "&size_1_val="+encodeURIComponent(size_1_val)+"&size_2_val="+encodeURIComponent(size_2_val)+
-                          "&size_3_val="+encodeURIComponent(size_3_val)+"&size_4_val="+encodeURIComponent(size_4_val),
-                    beforeSend: loadStart,
-                    complete: loadStop,
-                    success: function(option)
-                    {         
-                        if(option == true){
-                        window.location = "add_recipients_binding.php";
-                        }
-                    }
-                });
-    }else{
-        alert('Please enter reference value');
-        $("#jobref").focus();
-        return false;
-    }
-}
 
 
 function loadStart() {
@@ -1181,69 +907,13 @@ function loadStop() {
 $('#loading').hide();
 }
 
-function use_same_set()
-{   
-    var use_same = document.getElementById('use_same_check_box').checked;     
-    if(use_same == true){
-    $("#use_same").slideDown(1000);
-    $(".check").slideUp();
-    $("#options_arch").slideUp();
-    }else{
-    $(".check").slideDown();
-    $("#options_arch").slideUp();
-    }
-}
+
 
 function ready_now(){
     alert("All orders placed online are assumed to be for today and available for collection immediately.  If you wish to       place an order for another date and time, or for today but       at a later time, please check the box at the left and then enter below a date and time for collection.");
 }
 
 
-function delete_added_job(ID)
-{
-     var ok_to_proceed = confirm('Are you sure?');
-    
-    if(ok_to_proceed == true){     
-    $.ajax
-                ({
-                    type: "POST",
-                    url: "add_plotting_sets.php",
-                    data: "service_plotting_add=0&delete_set_id=" + ID,
-                    beforeSend: loadStart,
-                    complete: loadStop,
-                    success: function(option)
-                    {                            
-                        $('#sets_all').slideDown();
-                        $('#sets_all').html(option);
-                    }
-                });
-            }else{
-                return false;
-            }
-}
-
-function delete_option(ID)
-{
-    var ok_to_proceed = confirm('Are you sure?');
-    
-    if(ok_to_proceed == true){        
-    $.ajax
-                ({
-                    type: "POST",
-                    url: "get_recipients.php",
-                    data: "recipients=delete_set&delete_set_id=" + ID,
-                    beforeSend: loadStart,
-                    complete: loadStop,
-                    success: function(option)
-                    {                            
-                        window.location = "service_plotting.php";
-
-                    }
-                });
-            }else{
-                return false;
-            }
-}
     
  $(function() {
 $("#jobref").keyup(function()
@@ -1296,21 +966,7 @@ function get_reference(auto_ref,ID,COMP_ID)
 //        });
     }
     
-function view_plot_values()
-{
-    $('#set_form').hide(750);
-    $('#set_values').show(750);
-    $("#view_butt").hide(150); 
-    $("#go_set").show(150); 
-}
 
-function go_set_form()
-{    
-    $("#view_butt").show(150); 
-    $("#go_set").hide(150);
-    $('#set_form').show(750);
-    $('#set_values').hide(750);
-}
 
 function asap()
 {
@@ -1349,38 +1005,11 @@ function close_asap()
     $("#asap_popup").slideUp("slow"); 
 }
 
-function active_plot()
-{
-    $("#options_plott").slideDown();
-    $("#options_arch").slideUp();
-    $("#alt_ops").slideDown();
-    $("#pick_ops").slideUp();  
-    $("#use_same_check_box").slideDown();
-    $("#use_same_check_box_spn").slideDown();
-}
 
-function active_plot_new()
-{
-    var use_same_check_box = document.getElementById("use_same_check_box").checked;
-    if(use_same_check_box != true){
-    $("#options_plott").slideDown();
-    }
-    $("#options_arch").slideUp();
-    $("#alt_ops").slideDown();
-    $("#pick_ops").slideUp();  
-    $("#use_same_check_box").slideDown();
-    $("#use_same_check_box_spn").slideDown();
-}
 
-function active_arch()
-{
-    $("#options_arch").slideDown();
-    $("#options_plott").slideUp();
-    $("#alt_ops").slideUp();
-    $("#pick_ops").slideDown();
-    $("#use_same_check_box").slideUp();
-    $("#use_same_check_box_spn").slideUp();
-}
+
+
+
  
  function show_date_picker(ID)
 {  
@@ -1411,160 +1040,7 @@ function drop_sohorepro()
     $("#drop_off_select_val").val('1');
 }
 
-function get_child_option()
-{
-    var binding_main_option = $("#binding_main_option").val();   
-    var default_option      = '<option value="N/A">N/A</option>';  
-    $.ajax
-        ({
-        type: "POST",
-        url: "get_binding_option.php",
-        data: "binding_main_option="+binding_main_option,
-        success: function(option)
-        {
-            if(option != ''){
-            $("#binding_child_option").html(option);
-            }else{
-            $("#binding_child_option").html(default_option);    
-            }
-        }
-    });
-    
-}
 
-function get_child_option_front()
-{
-    var binding_main_option = $("#front_main_option").val();   
-    var default_option      = '<option value="N/A">N/A</option>'; 
-    $.ajax
-        ({
-        type: "POST",
-        url: "get_binding_option.php",
-        data: "binding_main_option="+binding_main_option,
-        success: function(option)
-        {
-            if(option != ''){
-            $("#binding_child_option_front").html(option);
-            }else{
-            $("#binding_child_option_front").html(default_option);    
-            }
-        }
-    });    
-}
-
-function get_child_option_back()
-{
-    var binding_main_option = $("#back_main_option").val();   
-    var default_option      = '<option value="N/A">N/A</option>'; 
-    $.ajax
-        ({
-        type: "POST",
-        url: "get_binding_option.php",
-        data: "binding_main_option="+binding_main_option,
-        success: function(option)
-        {
-            if(option != ''){
-            $("#binding_child_option_back").html(option);
-            }else{
-            $("#binding_child_option_back").html(default_option);    
-            }
-        }
-    });
-    
-}
-
-
-function cutting_spl_inc()
-{
-    var cutting_option = $("#cutting_option").val();
-       
-    if(cutting_option == '1'){
-        $("#cutting_spl_instructions").slideDown();
-        $("#special_instruction_cutting").focus();
-    }else{
-        $("#cutting_spl_instructions").slideUp();
-    }
-    
-    
-}
-
-function custome_size()
-{    
-    var custom_size_check = document.getElementById("size_4").checked;
-    if(custom_size_check == true){
-        $("#custome_size_instruction").slideDown();
-        $("#custome_instruction").focus();
-    }else{
-        $("#custome_size_instruction").slideUp();
-    }
-}
-
-function custome_size_1()
-{
-    var custom_size_1 = document.getElementById("size_1").checked;
-    if(custom_size_1 == true){
-        $("#fron_back").fadeIn();
-    }else{
-        $("#fron_back").fadeOut();
-    }
-}
-
-function custome_size_2()
-{
-    var custom_size_2 = document.getElementById("size_2").checked;
-    if(custom_size_2 == true){
-        $("#fron_back").fadeIn();
-        $(".black_f").show();
-        $(".white_f").show();
-        $(".black_b").show();
-        $(".white_b").show();
-    }else{        
-        $(".black_f").hide();
-        $(".white_f").hide();
-        $(".black_b").hide();
-        $(".white_b").hide();
-        $("#fron_back").fadeOut();
-    }
-}
-
-
-function custome_size_3()
-{
-    var custom_size_3 = document.getElementById("size_3").checked;
-    if(custom_size_3 == true){
-        $("#fron_back").fadeIn();
-        $(".black_f").show();
-        $(".white_f").show();
-        $(".black_b").show();
-        $(".white_b").show();
-        
-        $(".two_f").hide();
-        $(".three_f").hide();
-        $(".four_f").hide();
-        $(".five_f").hide();
-        
-        $(".two_b").hide();
-        $(".three_b").hide();
-        $(".four_b").hide();
-        $(".five_b").hide();
-    }else{        
-        $(".black_f").hide();
-        $(".white_f").hide();
-        $(".black_b").hide();
-        $(".white_b").hide();
-        
-        $(".two_f").show();
-        $(".three_f").show();
-        $(".four_f").show();
-        $(".five_f").show();
-        
-        $(".two_b").show();
-        $(".three_b").show();
-        $(".four_b").show();
-        $(".five_b").show();
-        $("#fron_back").fadeOut();        
-    }
-}
 
 function show_date_picker_arch()
 {    
@@ -1597,40 +1073,169 @@ function drop_sohorepro_arch()
     $("#drop_val_arc_1").val('307 7th Ave, 5th Floor');
 }
 
-
-
+function active_mount()
+   {
+       $('.lamination_select option[value="none"]').prop('selected', 'selected');
+        
+       $(".lamination_select").attr('disabled', true);
+       $(".mounting_select").attr('disabled', false);
+        
+       $("#lamination_select").attr('disabled', true);
+       $("#mounting_select").attr('disabled', false);
+       
+       $(".mounting_req").show();
+       $(".laminating_req").hide();
+   }
+   
+   function active_lamin()
+   {   $('.mounting_select option[value="none"]').prop('selected', 'selected');
+       
+       $(".mounting_select").attr('disabled', true);
+       $(".lamination_select").attr('disabled', false);
+       
+        $("#mounting_select").attr('disabled', true);
+       $("#lamination_select").attr('disabled', false);
+       
+       $(".mounting_req").hide();
+       $(".laminating_req").show();
+   }
+   
+    function active_both()
+   {   
+       $(".mounting_select").attr('disabled', false);
+       $(".lamination_select").attr('disabled', false);
+       
+       $("#mounting_select").attr('disabled', false);
+       $("#lamination_select").attr('disabled', false);
+       
+       $(".mounting_req").show();
+       $(".laminating_req").show();
+   }
+   
+   function lamination_value_change()
+   { 
+       $("#width_values").val("");
+       $("#length_values").val("");
+       var lamination_value_f = $(".lamination_select").val();
+       var lamination_value = $("#lamination_select").val();
+       if((lamination_value == "3319") || (lamination_value_f == "3319")){
+           $("#width_values").attr("max","40");
+           $("#length_values").attr("max","");
+           
+           $("#width_val_set").val("40");
+           $("#length_val_set").val("");  
+           
+       }else if((lamination_value == "3320") || (lamination_value_f == "3320")){
+           $("#width_values").attr("max","40");
+           $("#length_values").attr("max","");
+           
+           $("#width_val_set").val("40");
+           $("#length_val_set").val("");
+       }else{
+           $("#width_values").attr("max","48");
+           $("#length_values").attr("max","96");
+           
+           $("#width_val_set").val("48");
+           $("#length_val_set").val("96");
+       }
+   }
+   
+ function restrict_number()
+   {
+       $("#width_values").val("");
+       $("#length_values").val("");
+       var mounting_value_f = $("#mounting_select").val();
+         var mounting_value = $(".mounting_select").val();
+       if((mounting_value == "11") || (mounting_value == "22") || (mounting_value_f == "11") || (mounting_value_f == "22")){
+           $("#width_values").attr("max","30");
+           $("#length_values").attr("max","40");
+           
+           $("#width_val_set").val("30");
+           $("#length_val_set").val("40");
+       }else{
+           $("#width_values").attr("max","48");
+           $("#length_values").attr("max","96");
+           
+           $("#width_val_set").val("48");
+           $("#length_val_set").val("96");
+       }
+   }
 function continue_mounting()
     {
         var job_reference       =   $("#jobref").val();
         
         var original_lam        =   $("#original_lam").val();
         var all_books           =   $("#all_books").val();
-        var mounting            =   $("#mount_lam_check").val();
-        var laminating          =   $("#mount_lam_check_0").val();
-        var mount_lam_both      =   $("#mount_lam_check_1").val();
         
-        var mounting_select     =   $("#mounting_select").val();
-        var lamination_select   =   $("#lamination_select").val();
+        var mount_lam_1          =       document.getElementById("mount_lam_check").checked;
+        var mount_lam_2          =       document.getElementById("mount_lam_check_0").checked;
+        var mount_lam_3          =       document.getElementById("mount_lam_check_1").checked;
+        
+         if(mount_lam_1 == true){
+                            var mount_lam            =       "M";
+                           }else if(mount_lam_2 == true){
+                            var mount_lam            =       "L";
+                           }else if(mount_lam_3 == true){
+                            var mount_lam            =       "Both";
+                           }
+                        
+       // var org_count = $("#mount_count").val();
+    
+     //  alert(org_count);
+       //var i;
+       var mount_data = [];
+   $(".mounting_select option:selected").each(function(){
+      
+      var v = $(this).text();
+       //console.log(v);
+       mount_data = ({mount_name: $(this).text(), value: $(this).val()});
+       //alert(v);
+   });
+  // var ser_mount = $.param(mount_data);
+  mount_data = $.map(mount_data);
+   console.log(mount_data);
+        var mounting_select     =   $("#mounting_select_1 option:selected").text();
+        var lamination_select   =   $("#lamination_select_1 option:selected").text();
         
         var width_values        =   $("#width_values").val();
         var length_values       =   $("#length_values").val();
-        var grommets            =   $("#grommets").val();        
-        var mount_lam_spl       =   $("#mount_lam_spl").val();
+        var grommets            =   $("#grommets").val();      
         
-        var pick                =   $("#pick").val();
-        var dropoff             =   $("#dropoff").val();
+     
+        var mount_lam_spl       =   $("#mount_lam_spl").val();
+     
         
         var pickup_date         =   $("#date_for_alt").val();
         var pickup_time         =   $("#time_for_alt").val();
         
-        
+         var my_office           = document.getElementById("my_office").value;
+         var alternate           = document.getElementById("alternate").value;
+         var address_book_se     = document.getElementById("address_book_se").value;  
+         var my_office_1         = document.getElementById("my_office").checked;
+         var alternate_1         = document.getElementById("alternate").checked;
+    
+    if(my_office_1 == true){
+        var my_office_alt       = my_office;
+        var address_book_se_val = "0"; 
+    }else if(alternate_1 == true){
+        var my_office_alt   = alternate;
+        var address_book_se_val = address_book_se; 
+    }else{
+        var my_office_alt   = "0";
+        var address_book_se_val = "0"; 
+    }
+    
+    
+    
          if (job_reference != '')
         {
         $.ajax
                 ({
                     type: "POST",
                     url: "add_mounting_sets.php",
-                    data: "all_mounting_sets=1",
+                    data: "all_mounting_sets=1&job_reference="+encodeURIComponent(job_reference)+
+                           "&mount_data="+mount_data,
+                           
                     beforeSend: loadStart,
                     complete: loadStop,
                     success: function(option)

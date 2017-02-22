@@ -10,6 +10,8 @@ $sort_jrn_img = ($_REQUEST['sort'] == 'jna') ? 'down' : 'up';
 $sort_prc = ($_REQUEST['sort'] == 'pa') ? 'pd' : 'pa';
 $sort_prc_img = ($_REQUEST['sort'] == 'pa') ? 'down' : 'up';
 
+$sort_status = ($_REQUEST['sort'] == 'sa') ? 'sd' : 'sa';
+$sort_status_img = ($_REQUEST['sort'] == 'sa') ? 'down' : 'up';
 
 $page = 1; //Default page
 $limit = 25; //Records per page
@@ -22,9 +24,19 @@ if ($_GET['limite']) {
     $limit = $_GET['limite'];
 }
 
-$Orders = getOrdersAll($_REQUEST['sort'], $start, $limit);
-$rows = count(OrdersCount());
+$search = '';
+if(isset($_REQUEST['search_val']))
+{
+    $search = $_REQUEST['search_val'];
+}
 
+$filter_by_customer     = $_GET["cus_type_fil"];
+$admin_added            = ($_GET["admin_added"] != '') ? $_GET["admin_added"] : '';
+
+//echo $filter_by_customer."-".$admin_added;
+
+$Orders = getOrdersAllFilter($_REQUEST['sort'], $start, $limit,$search,$filter_by_customer,$admin_added);
+$rows = count(OrdersCountFilter($search,$filter_by_customer,$admin_added));
 
 if ($_GET['tax_status']) {
 
@@ -177,6 +189,23 @@ if ($_GET['tax_status']) {
                 overflow-y: auto;
                 left: 45%;
             }
+             #result_search_orders
+        {
+            background-color: #f3f3f3;
+            border-top: 0 none;
+            box-shadow: 0 0 5px #ccc;
+            display: none;
+            margin-top: 0;
+            overflow: hidden;
+            padding: 10px;
+            position: absolute;
+            right: 650px;
+            text-align: left;
+            top: 186px;
+            width: 280px;
+            height: 200px;
+            overflow-y: auto;
+        }
             .inv_desc span{               
                 float: left;
                 margin-top: 10px;
@@ -282,7 +311,7 @@ if ($_GET['tax_status']) {
                                 </table></td>
                             <td width="3" align="left" valign="top" bgcolor="#FFFFFF"></td>
                             <td width="759" align="left" valign="top" bgcolor="#FFFFFF">
-                                <table width="759" border="0" cellspacing="0" cellpadding="0">
+                                <table class="page_table" width="759" border="0" cellspacing="0" cellpadding="0">
                                     <tr>
                                         <td height="48" align="center" valign="middle" bgcolor="#5f5f5f" class="heading">
                                             ADMINISTRATOR PAGE
@@ -342,12 +371,60 @@ if ($_GET['tax_status']) {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td align="left" valign="top"><table width="759" border="0" cellspacing="0" cellpadding="0">
+                                        <td align="right" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td height="38" align="left" valign="middle" class="add_title">Search</td>
+                                                </tr>
+                                                <tr>
+                                                    <td height="60" align="left" valign="top" bgcolor="#f6f6f6" class="form_bg">
+                                                        <?php
+                                                        $search_values = ($_GET['cus_id'] != '') ? getCompName($_GET['cus_id']) : $_REQUEST['search_val'];
+                                                        ?>
+                                                        <form name="new_supercategory" id="new_supercategory" method="post" action=""  onsubmit="return load_userinfo()" >
+                                                            <input type="hidden" name="search_cus" value="1" />
+                                                            <input type="hidden" name="new_cat" value="1" />       
+                                                            <table  border="0" cellspacing="0" cellpadding="0" >
+                                                                <tr style="float:left;">
+                                                                    <td width="160" height="60" align="right" valign="middle">
+<!--                                                                        <input class="input_text" type="text" name="search_val" id="search_val" autocomplete="off" onkeyup="return autosuggession1();" type="text" value="<?php echo $search_values; ?>" placeholder=" Order Number, Customer, Job Reference" style="width:300px !important; margin-left: 25px;" >-->
+                                                                         <input class="input_text" type="text" name="search_val" id="search_val" autocomplete="off" type="text" value="<?php echo $search_values; ?>" placeholder=" Order Number, Customer, Job Reference" style="width:300px !important; margin-left: 25px;" >
+                                                                        <div id="result_search_orders">
+                                                                        </div>
+                                                                    </td>
+                                                                    <td width="210" height="60" align="center" valign="middle" style="padding-left: 10px;">
+                                                                        <input type="submit" name="search" class="search_cus" id="search_cus" value="Search" />
+                                                                        
+                                                                    </td>
+                                                                    <td style="font-size: 14px;padding-right: 10px;">
+                                                                        Filter By :
+                                                                    </td>
+                                                                    <td>
+                                                                        <select style="webkit-border-radius: 5px;-moz-border-radius: 5px;border-radius: 5px;padding: 5px;" name="filter_by_type" id="filter_by_type" onchange="return filter_by_type_change();" >
+                                                                            <option value="0">Select Type</option>
+                                                                            <option value="type_1" <?php if($_GET['admin_added'] == '1'){ ?> selected="selected" <?php } ?>>ACCOUNT</option>
+                                                                            <option value="type_2" <?php if($_GET['admin_added'] == '2'){ ?> selected="selected" <?php } ?>>CASH</option>
+                                                                            <option value="type_3" <?php if($_GET['admin_added'] == '3'){ ?> selected="selected" <?php } ?>>CASH-EXEMPT</option>
+                                                                        </select>
+                                                                    </td>
+                                                                </tr>
+                                                                
+                                                                
+                                                            </table>
+                                                        </form>
+                                                    </td>
+                                                    
+                                                </tr>
+                                            </table></td>
+                                    </tr>
+                                    <tr>
+                                        <td align="left" valign="top">
+                                            <table class="total_order_table" width="759" border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
                                                     <td width="258" valign="middle" height="28" bgcolor="#f99b3e" align="center" class="td_brdr"><a style="text-decoration: none; color: #fff;" href="open_orders.php?sort=<?php echo $sort_jrn; ?>">ORDER NUMBER&nbsp;<img src="images/<?php echo $sort_jrn_img; ?>.png"  alt="" width="10px" height="5px"/></a></td>
                                                     <td width="120" height="28" align="center" valign="middle" class="td_brdr" bgcolor="#f99b3e"><a style="text-decoration: none; color: #fff;" href="open_orders.php?sort=<?php echo $sort_date; ?>">DATE &nbsp;<img src="images/<?php echo $sort_date_img; ?>.png"  alt="" width="10px" height="5px"/></a></td>                
                                                     <td width="189" height="28" align="center" valign="middle" class="td_brdr" bgcolor="#f99b3e"><a style="text-decoration: none; color: #fff;" href="open_orders.php?sort=<?php echo $sort_prc; ?>">Customer&nbsp;<img src="images/<?php echo $sort_prc_img; ?>.png"  alt="" width="10px" height="5px"/></a></td>
                                                     <td width="258" valign="middle" height="28" bgcolor="#f99b3e" align="center" class="td_brdr"><a style="text-decoration: none; color: #fff;" href="open_orders.php?sort=<?php echo $sort_jrn; ?>">JOB REFERENCE&nbsp;<img src="images/<?php echo $sort_jrn_img; ?>.png"  alt="" width="10px" height="5px"/></a></td>                
+                                                <td width="258" valign="middle" height="28" bgcolor="#f99b3e" align="center" class="td_brdr"><a style="text-decoration: none; color: #fff;" href="open_orders.php?sort=<?php echo $sort_status; ?>">STATUS&nbsp;<img src="images/<?php echo $sort_status_img; ?>.png"  alt="" width="10px" height="5px"/></a></td>  
                                                 </tr>
                                                 <?php
                                                 $i = 1;
@@ -384,6 +461,13 @@ if ($_GET['tax_status']) {
                                                         }
                                                         $tax = ($tax_line * ($price[0]['sub_total'] / 100));
                                                         $grand_tot = ($price[0]['sub_total'] + $tax);
+                                                      //  PRINT_R($order);
+                                                        if($order['closed_status']=="1"){
+                                                            $Cus_status = "Closed";
+                                                        }
+                                                        else{
+                                                            $Cus_status = "Open";
+                                                        }
                                                         ?>
 
                                                         <tr class="trigger"  id="<?php echo $id; ?>"> 
@@ -391,14 +475,15 @@ if ($_GET['tax_status']) {
                                                             <td width="176" height="36" align="center" bgcolor="<?php echo $rowColor1; ?>"  valign="middle"><?php echo $date; ?></td>                                    
                                                             <td width="109" height="36" align="center" bgcolor="<?php echo $rowColor; ?>"   valign="middle"><span id="customer_name_<?php echo $id; ?>"><?php echo $customer; ?></span></td>                
                                                             <td width="210" height="36" align="center" bgcolor="<?php echo $rowColor1; ?>"  valign="middle"><span class="refj_<?php echo $id; ?>" id="<?php echo $id; ?>"><?php echo $order_id; ?></span></td>
+                                                            <td width="210" height="36" align="center" bgcolor="<?php echo $rowColor; ?>"  valign="middle"><span class="status_<?php echo $id; ?>" id="<?php echo $id; ?>"><?php echo $Cus_status; ?></span></td>
                                                             </t>
                                                             <?php
                                                             $toggle_id = viewOrders($id);
                                                             $ord_id = $toggle_id[0]['order_id'];
                                                             ?>           
                                                         <tr class="toggle test_<?php echo $ord_id; ?>">
-                                                            <td colspan="4" align="center">                      
-                                                                <table width="755" align="center" cellspacing="0" cellpadding="0" style="margin:10px 0px; padding: 10px; border: 2px solid #F99B3E;">
+                                                            <td colspan="5" align="center">                      
+                                                                <table class="single_order_table" width="755" align="center" cellspacing="0" cellpadding="0" style="margin:10px 0px; padding: 10px; border: 2px solid #F99B3E;">
                                                                     <?php
                                                                     $sql_id = mysql_query("SELECT id,order_id,created_date,order_number,customer_name,customer_company,staff_id,cash_customer FROM sohorepro_order_master WHERE id = '" . $ord_id . "'");
                                                                     $object = mysql_fetch_assoc($sql_id);
@@ -458,8 +543,8 @@ if ($_GET['tax_status']) {
                                                                                 </tr>                            
                                                                             </table>
                                                                         </td>
-                                                                        <td width="30%" align="center">
-                                                                        <span style="cursor: pointer;background: #F99B3E;color: #FFF;float: left;padding: 5px 20px;margin-top: 5px;border-radius: 5px;text-decoration: none;margin-right: 15px;margin-left: 5px;" onclick="return change_customer('<?php echo $object['id']; ?>');">
+                                                                        <td  width="30%" align="center">
+                                                                        <span class="change_cus_<?php echo $id;?>"style="<?php if($Cus_status=='Closed'){?>display: none; <?php }?>cursor: pointer;background: #F99B3E;color: #FFF;float: left;padding: 5px 20px;margin-top: 5px;border-radius: 5px;text-decoration: none;margin-right: 15px;margin-left: 5px;" onclick="return change_customer('<?php echo $object['id']; ?>');">
                                                                                 CHANGE COMPANY
                                                                         </span>
                                                                         </td>
@@ -488,11 +573,11 @@ if ($_GET['tax_status']) {
                                                                 <div id="inline_edit">                                        
                                                                     <table width="735" align="center" cellspacing="0" cellpadding="0" border="0">
                                                                         <tr style="color:#fff;">                               
-                                                                            <td width="285" align="left" valign="middle" bgcolor="#f68210" class="brdr pad_lft">Product Detail</td>
+                                                                            <td<?php if($Cus_status=='Closed'){?> colspan="2" <?php }?> width="285" align="left" valign="middle" bgcolor="#f68210" class="brdr pad_lft prd_detail_head">Product Detail</td>
                                                                             <td width="50" align="center" valign="middle" bgcolor="#f68210"  class="brdr">Quantity</td>
                                                                             <td width="75" align="center" valign="middle" bgcolor="#f68210"  class="brdr pad_rght">Unit Cost</td>
                                                                             <td width="85" align="center" valign="middle" bgcolor="#f68210" class="brdr pad_rght">Line Cost</td>                                
-                                                                            <td width="15" align="center" valign="middle" bgcolor="#f68210"  class="brdr pad_rght">Action</td>
+                                                                            <td  <?php if($Cus_status=='Closed'){?> style="display:none" <?php }?>class="action-cls_<?php echo $id;?>" width="15" align="center" valign="middle" bgcolor="#f68210"  class="brdr pad_rght">Action</td>
                                                                         </tr>
                                                                         <?php
                                                                         $view_orders = viewOrders($id);
@@ -513,18 +598,19 @@ if ($_GET['tax_status']) {
                                                                             $sub_name_pre = (getsubN($sub_id) != '') ? getsubN($sub_id) : '';
                                                                             $sub_name = ($sub_name != '') ? '>>' . $sub_name_pre : $sub_name_pre;
                                                                             ?>
-                                                                            <tr class="inline" id="<?php echo $id; ?>" onclick="return inline_prod_edit('<?php echo $id . '_' . $ord_id; ?>');">
+                                                                        <tr class="inline product_item_<?php echo $ord_id_t; ?>" id="<?php echo $id; ?>" prod_val='<?php echo $id . '_' . $ord_id; ?>' <?php if($Cus_status=='Open'){?>onclick="return inline_prod_edit('<?php echo $id . '_' . $ord_id; ?>');" <?php }?>> 
+                                                                        
                                                                             <span class="jass" id="<?php echo $id; ?>" style="display: none;"></span>
                                                                             <span class="order_id_t_<?php echo $id; ?>" id="<?php echo $ord_id_t; ?>" style="display: none;"></span>
                                                                             <input type="text" id="h_<?php echo $id; ?>_<?php echo $ord_id; ?>" style="display: none;" value="<?php echo getpid($prod_id, $ord_id); ?>" />                                
-                                                                            <td width="285" align="left" valign="middle" bgcolor="<?php echo $rowColor1; ?>" class="brdr pad_lft">
+                                                                            <td <?php if($Cus_status=='Closed'){?> colspan="2" <?php }?>width="285" align="left" valign="middle" bgcolor="<?php echo $rowColor1; ?>" class="brdr pad_lft prd_detail_val">
                                                                                 <span class="product_<?php echo $id; ?>_<?php echo $ord_id; ?>"><?php echo $ord['product_name']; ?></span><input type="text" class="inline-text-prod product_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" id="product_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" value="<?php echo str_replace('"', "''", $ord['product_name']); ?>" style="display: none;" /></br>
                                                                                 <span class="trail" style="font-size: 11px;color: #2a9be3;"><?php echo $super_name . $cat_name . $sub_name; ?></span>
                                                                             </td>
                                                                             <td width="50" align="center" valign="middle" bgcolor="<?php echo $rowColor; ?>"  class="brdr"><span class="quantity_<?php echo $id; ?>_<?php echo $ord_id; ?>"><?php echo $ord['product_quantity']; ?></span><input type="text" class="inline-text quantity_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" id="quantity_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" value="<?php echo $ord['product_quantity']; ?>" style="display: none;"/></td>
-                                                                            <td width="75" align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>"  class="brdr pad_rght"><span class="price_<?php echo $id; ?>_<?php echo $ord_id; ?>"><?php echo '$' . $ord['product_price']; ?></span><input type="text" class="inline-text price_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" id="price_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" value="<?php echo $ord['product_price']; ?>" style="display: none;"/></td>                                
-                                                                            <td width="85" align="left" valign="middle" bgcolor="<?php echo $rowColor; ?>" class="brdr pad_rght"><span class="line_cost_<?php echo $id; ?>_<?php echo $ord_id; ?>"><?php echo '$' . number_format(($ord['product_quantity'] * $ord['product_price']), 2, '.', ''); ?></span></td>                                                                                                
-                                                                            <td width="15" align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>"  class="brdr pad_rght"><img src="images/like_icon.png"  alt="Update" title="Update" width="22" height="22" class="mar_lft updater update_<?php echo $id; ?>_<?php echo $ord_id; ?>" onclick="return update_dedails('<?php echo $id; ?>', '<?php echo $ord_id; ?>');"  style="display: none; margin-left: 0px;"/><a href="open_orders.php?delete_id=<?php echo $id; ?>&ord_id=<?php echo $ref_serial; ?>" onclick="return confirm('Are you delete this product of this order?');"><img src="images/del.png" class="delete_<?php echo $id; ?>_<?php echo $ord_id; ?>"  alt="Delete Product" title="Delete Product" width="22" height="22" class="mar_lft"/></a></td>
+                                                                            <td width="75" align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>"  class="brdr pad_rght"><span class="price_<?php echo $id; ?>_<?php echo $ord_id; ?>"><?php echo '$' . number_format($ord['product_price'], 2, '.', ','); ?></span><input type="text" class="inline-text price_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" id="price_txt_<?php echo $id; ?>_<?php echo $ord_id; ?>" value="<?php echo $ord['product_price']; ?>" style="display: none;"/></td>                                
+                                                                            <td width="85" align="center" valign="middle" bgcolor="<?php echo $rowColor; ?>" class="brdr pad_rght"><span class="line_cost_<?php echo $id; ?>_<?php echo $ord_id; ?>"><?php echo '$' . number_format(($ord['product_quantity'] * $ord['product_price']), 2, '.', ','); ?></span></td>                                                                                                
+                                                                            <td <?php if($Cus_status=='Closed'){?> style="display:none" <?php }?>class="action-cls_<?php echo $ord_id_t;?>" width="15" align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>"  class="brdr pad_rght"><img src="images/like_icon.png"  alt="Update" title="Update" width="22" height="22" class="mar_lft updater update_<?php echo $id; ?>_<?php echo $ord_id; ?>" onclick="return update_dedails('<?php echo $id; ?>', '<?php echo $ord_id; ?>');"  style="display: none; margin-left: 0px;"/><a href="open_orders.php?delete_id=<?php echo $id; ?>&ord_id=<?php echo $ref_serial; ?>" onclick="return confirm('Are you delete this product of this order?');"><img src="images/del.png" class="delete_<?php echo $id; ?>_<?php echo $ord_id; ?>"  alt="Delete Product" title="Delete Product" width="22" height="22" class="mar_lft"/></a></td>
                                                                             </tr> 
 
 
@@ -533,9 +619,11 @@ if ($_GET['tax_status']) {
                                                                         }
                                                                         ?> 
                                                                         <!-- Add Product  Button Start -->
+                                                                         <?php //if($Cus_status=='Closed'){?>
                                                                         <tr> 
-                                                                            <td colspan="5" style="padding-top: 5px;"><a class="add_pro" href="aptor.php?ord_id=<?php echo $ref_serial; ?>&ship_id=<?php echo $ship_id ?>" style="cursor: pointer;"><b>+</b>Add Products</a></td> 
-                                                                        </tr>                            
+                                                                            <td class="add_prod_<?php echo $ord_id_t; ?>" colspan="5" style="padding-top: 5px;<?php if($Cus_status=='Closed'){?>display:none;<?php } ?>"><a class="add_pro" href="aptor.php?ord_id=<?php echo $ref_serial; ?>&ship_id=<?php echo $ship_id ?>" style="cursor: pointer;"><b>+</b>Add Products</a></td> 
+                                                                        </tr>               
+                                                                         <?php // } ?>
                                                                         <!-- Add Product  Button End -->
                                                                         <!---TAX START-->
                                                                         <tr>
@@ -583,17 +671,17 @@ if ($_GET['tax_status']) {
                                                                                 <table align="right" width="240" border="0" cellspacing="0" cellpadding="0">
                                                                                     <tr>
                                                                                         <td height="30" align="left" valign="middle" class="pad_lft_j brdr1">Sub Total</td>
-                                                                                        <td width="100" height="30" align="right" valign="middle" bgcolor="#FAFAFA" class="pad_rght_j brdr1  brdr-lft_j"><span class="line_<?php echo $ord_id; ?>" ><?php echo '$' . number_format($price[0]['sub_total'], 2, '.', ''); ?></span></td>
+                                                                                        <td width="100" height="30" align="right" valign="middle" bgcolor="#FAFAFA" class="pad_rght_j brdr1  brdr-lft_j"><span class="line_<?php echo $ord_id; ?>" ><?php echo '$' . number_format($price[0]['sub_total'], 2, '.', ','); ?></span></td>
                                                                                         <td>&nbsp;</td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td height="30" align="left" valign="middle" class="pad_lft_j brdr1 brdr-top_j">Tax</td>
-                                                                                        <td width="100" height="30" align="right" valign="middle" bgcolor="#FAFAFA" class="pad_rght_j brdr1 brdr-top_j brdr-lft_j"><span class="tax_<?php echo $ord_id; ?>"><?php echo '$' . number_format($tax, 2, '.', ''); ?></span></td>
+                                                                                        <td width="100" height="30" align="right" valign="middle" bgcolor="#FAFAFA" class="pad_rght_j brdr1 brdr-top_j brdr-lft_j"><span class="tax_<?php echo $ord_id; ?>"><?php echo '$' . number_format($tax, 2, '.', ','); ?></span></td>
                                                                                         <td><?php if ($tax_status == '1') { ?><a href="open_orders.php?tax_status=<?php echo $ord_id; ?>" onclick="return confirm('Are you remove the tax in this order?');"><img src="images/del.png"  alt="Remove Tax" title="Remove Tax" width="22" height="22" class="mar_lft"/></a><?php } ?></td>
                                                                                     </tr>
                                                                                     <tr>
                                                                                         <td height="30" align="left" valign="middle" class="pad_lft_j brdr1 brdr-top">Total</td>
-                                                                                        <td width="100" height="30" align="right" valign="middle" bgcolor="#FAFAFA" class="pad_rght_j brdr1 brdr-top_j brdr-lft_j"><span class="lineJassim_<?php echo $ord_id; ?>"><?php echo '$' . number_format(($price[0]['sub_total'] + $tax), 2, '.', ''); ?></span></td>
+                                                                                        <td width="100" height="30" align="right" valign="middle" bgcolor="#FAFAFA" class="pad_rght_j brdr1 brdr-top_j brdr-lft_j"><span class="lineJassim_<?php echo $ord_id; ?>"><?php echo '$' . number_format(($price[0]['sub_total'] + $tax), 2, '.', ','); ?></span></td>
                                                                                         <td>&nbsp;</td>
                                                                                     </tr>
                                                                                 </table>
@@ -604,7 +692,10 @@ if ($_GET['tax_status']) {
                                                                         <tr>
                                                                             <td colspan="6">
                                                                                 <div style="width:100%;float:left;">
+                                                                                      <?php if($Cus_status=='Open'){?>  
                                                                                 <span style="cursor: pointer;background: #F99B3E;color: #FFF;float: left;padding: 5px 20px;margin-top: 5px;border-radius: 5px;" onclick="return send_mail_update_order('<?php echo $ref_serial; ?>', '<?php echo $ship_id; ?>');">Email Updated Order</span>
+                                                                                
+                                                                                      <?php } ?>
                                                                                 <!--<span class="confirm_mail_<?php echo $ref_serial; ?> none" id="mail_to_<?php echo $ref_serial; ?>" style="float: left;margin-top: 10px;margin-left: 10px;color: #029F5A;"><a href="" class="mail_to_<?php echo $ref_serial; ?>" >Go to Email Application</a></span>-->
                                                                                 <span class="confirm_mail_<?php echo $ref_serial; ?> none" id="confirm_mail_<?php echo $ref_serial; ?>" style="float: left;margin-top: 10px;margin-left: 10px;color: #029F5A;">New order email sent..</span>
 
@@ -648,7 +739,8 @@ if ($_GET['tax_status']) {
                                         </tr>              
                                     <?php } ?>
 
-                                </table></td>
+                                </table>
+                             </td>
                         </tr>
                         <tr align="right">
                             <td><?php echo Paginations($limit, $page, 'open_orders.php?page=', $rows); ?></td>
@@ -715,6 +807,57 @@ if ($_GET['tax_status']) {
 //            }
 //    }
 
+function load_userinfo()
+    {
+        //alert('Jassim');
+        var search_val = $("#search_val").val();
+        if (search_val == '') {
+            document.getElementById('search_val').focus();
+            $("#msg1").html('Enter the search value');
+            return false;
+        }
+             //return true;
+
+//    var search_val = $( "#search_val" ).val();
+//    
+//    if(search_val != '')  
+//     {
+//      $.ajax
+//      ({
+//         type: "POST",
+//             url: "load_user.php",
+//             data: "search_val="+search_val,
+//             success: function(option)
+//             {
+//                 $('#load_userdata').html(option);
+//             }
+//      });
+//     }
+    }
+ function autosuggession1()
+    {// alert("df");
+        var searc_name = $("#search_val").val();
+        var dataString = 'search_orders=' + encodeURIComponent(searc_name);
+        if (searc_name != '')
+        {
+            $.ajax({
+                type: "POST",
+                url: "auto_customer_fill.php",
+                data: dataString,
+                cache: false,
+                success: function(html)
+                {
+                    if (html != '') {
+                        $("#result_search_orders").html(html).show();
+                    } else {
+                        $("#result_search_orders").hide();
+                    }
+                }
+            });
+        } else {
+            $("#result_search_orders").hide();
+        }
+    }
     function logingAlertPop()
     {
         closeloading(); // fadeout loading
@@ -1218,6 +1361,13 @@ if ($_GET['tax_status']) {
                 $(".invoice_freq_type").val('0');
             }
             
+            
+//            $(".inline-click").on('click',function (){ //alert("test");
+//                 var val = $(this).attr('prod_val');
+//             //    alert(val);
+//            inline_prod_edit(val);
+//                
+//            });
     function close_order_now(ORD_ID){
         var ays         =  confirm('Are you sure?');
         if(ays == true){
@@ -1235,10 +1385,32 @@ if ($_GET['tax_status']) {
                        if(option == true){
                         $("#close_status_"+ORD_ID).html("Ready to Invoice");
                         $("#close_status_"+ORD_ID).css("background", "#DA4530");                      
+                        $(".status_"+ORD_ID).html("Closed");
+                        $(".action-cls_"+ORD_ID).hide();
+                        $(".add_prod_"+ORD_ID).hide();
+                         $(".change_cus_"+ORD_ID).hide();
+                         $(".prd_detail_head").attr("colspan","2");
+                         $(".prd_detail_val").attr("colspan","2");
+                        
+                       $(".product_item_"+ORD_ID).removeAttr('onclick');
                         }else{
                         $("#close_status_"+ORD_ID).html("Close Order");
-                        $("#close_status_"+ORD_ID).css("background", "#F99B3E");     
+                        $("#close_status_"+ORD_ID).css("background", "#F99B3E"); 
+                        $(".status_"+ORD_ID).html("Open");
+                        
+                        $( ".inline" ).each(function() {
+                          var value =  $(this).attr('prod_val');
+                          var vl =  "inline_prod_edit('" + value + "')";
+                        $(this).attr('onclick',vl);
+                       });
+                       
+                         $(".action-cls_"+ORD_ID).show();
+                         $(".add_prod_"+ORD_ID).show();
+                         $(".change_cus_"+ORD_ID).show();
+                         $(".prd_detail_head").removeAttr("colspan");
+                         $(".prd_detail_val").removeAttr("colspan");
                         }
+                    //     location.reload();
                    }
                }); 
         }

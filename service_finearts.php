@@ -1068,15 +1068,15 @@ color: red;
                     $user_id_add_set        = $_SESSION['sohorepro_userid'];
                     $company_id_view_plot   = $_SESSION['sohorepro_companyid']; 
                     $check_plotting         = EnteredPlotttingFineArts($company_id_view_plot, $user_id_add_set);
-                    $check_plotting_needed  = PlottingNeededSetWithoutOrderId($company_id_view_plot, $user_id_add_set);   
+                    $check_plotting_needed  = FAPNeededSetWithoutOrderId($company_id_view_plot, $user_id_add_set);   
                     $check_plotting_files   = UploadFileExist($company_id_view_plot, $user_id_add_set);
                     if(count($check_plotting) > 0){
-                        $delete_empty = "DELETE FROM sohorepro_fine_arts_sets WHERE company_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' ";
+                        $delete_empty = "DELETE FROM sohorepro_fine_arts_sets WHERE company_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' AND order_id = '0'";
                         mysql_query($delete_empty);
                     }
                     
                     if(count($check_plotting_needed) > 0){
-                        $delete_empty = "DELETE FROM sohorepro_sets_needed WHERE comp_id = '".$company_id_view_plot."' AND usr_id = '".$user_id_add_set."' AND order_id = '0'";
+                        $delete_empty = "DELETE FROM sohorepro_service_fap_sets_needed WHERE company_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' AND order_id = '0'";
                         mysql_query($delete_empty);
                     }
                     
@@ -1103,6 +1103,7 @@ color: red;
                         <div style="float:right;font-weight: bold;">
                             Option - 1                           
                         </div>
+                        <input type="hidden" id="option_value" value="1" name="option_value">
                         <input type="hidden" name="optint_count_check" id="optint_count_check" value="0" />
                         </label>  
                         <div style="background-color:#FFFFFF" class="serviceOrderSetWapper" setindex="0">
@@ -1511,6 +1512,7 @@ color: red;
         var print_ea                    =   $("#print_ea").val();
         var size                        =   $("#size").val();
         var output                      =   $("#output").val();
+        var option                      =   $("#option_value").val();
         var order_0_set1_0_media        =   $("#order_0_set1_0_media").val();
         
         var size_custom                 =   $("#size_custom").val();
@@ -1549,6 +1551,7 @@ color: red;
                 url: "add_sets_fine_arts.php",
                 data: "add_fine_arts_services=1&job_reference="+encodeURIComponent(job_reference)+
                       "&original="+original+"&print_ea="+print_ea+"&size="+size+
+                      "&option="+option+
                       "&output="+output+"&order_0_set1_0_media="+order_0_set1_0_media+"&size_custom="+size_custom+
                       "&output_both="+output_both+"&dropoff_val="+dropoff_val+"&ftp_link_val="+ftp_link_val+
                       "&user_name_val="+user_name_val+"&pass_word_val="+pass_word_val+"&special_instruction="+special_instruction+
@@ -1573,6 +1576,7 @@ color: red;
         var print_ea                    =   $("#print_ea").val();
         var size                        =   $("#size").val();
         var output                      =   $("#output").val();
+          var option                      =   $("#option_value").val();
         var order_0_set1_0_media        =   $("#order_0_set1_0_media").val();
         
         var size_custom                 =   $("#size_custom").val();
@@ -1611,6 +1615,7 @@ color: red;
                 url: "save_and_continue.php",
                 data: "add_fine_arts_services=99&job_reference="+encodeURIComponent(job_reference)+
                       "&original="+original+"&print_ea="+print_ea+"&size="+size+
+                      "&option="+option+
                       "&output="+output+"&order_0_set1_0_media="+order_0_set1_0_media+"&size_custom="+size_custom+
                       "&output_both="+output_both+"&dropoff_val="+dropoff_val+"&ftp_link_val="+ftp_link_val+
                       "&user_name_val="+user_name_val+"&pass_word_val="+pass_word_val+"&special_instruction="+special_instruction+

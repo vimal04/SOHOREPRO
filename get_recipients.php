@@ -13,12 +13,27 @@ error_reporting(0);
 // 4 - Decrease the Available Sets
 // Made the Repository 
 
+ $user_session_comp = $_SESSION['sohorepro_companyid'];
+    $user_session = $_SESSION['sohorepro_userid'];
+    
+ $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+ $number_of_lfp          = EnteredLFPPrimary($user_session_comp, $user_session);
+ $number_of_fap          = EnteredPlotttingFineArts($user_session_comp, $user_session);
+ 
+ 
 if ($_POST['recipients'] == '1') {
-
+if($cust_original_order){
+    
+    ?>
+        <div class="def_class" style=";margin-bottom: 10px;margin-top: 10px;color: #4285F4;font-weight: bold; font-size: 17px;">
+                PLOTTING &amp; ARCHITECTURAL COPIES
+            </div>
+        <?php
     $user_session_comp = $_SESSION['sohorepro_companyid'];
     $user_session = $_SESSION['sohorepro_userid'];
 
     $entered_needed_sets = NeededSets($user_session_comp, $user_session);
+    $number_of_sets = EnteredPlotttingPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     if (count($entered_needed_sets) > 0) {
         $r = 1;
         foreach ($entered_needed_sets as $entered_sets) {
@@ -35,9 +50,15 @@ if ($_POST['recipients'] == '1') {
             $arch_folding = ($entered_sets['arch_folding'] == '0') ? '' : ',' . $entered_sets['arch_folding'];
             $needen_sets = ($entered_sets['plot_needed'] != '0') ? $entered_sets['plot_needed'] : $entered_sets['arch_needed'];
             $type = ($entered_sets['plot_needed'] != '0') ? 'Plotting on Bond' : 'Architectural Copies';
+            
+            $option_count_pac = NeededSetsDynamic($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$entered_sets['option_id']);
             ?>    
+<!--<div style="width: 48%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo ($entered_sets['option_id']); ?></div>
+            <div style="width: 48%;float: left;text-align: right;font-weight: bold;font-size: 15px;"><?php echo ($entered_sets['option_id']) . '&nbsp;of&nbsp;' . count($number_of_sets); ?></div>-->
             <div style="border: 2px #F99B3E solid;padding-bottom: 20px;margin-bottom : 5px;width: 100%;float: left;" class="shaddows">
                 <div style="width: 100%;float: left;margin-top: 10px;">
+                    
+                    
                     <div style="float: left;width: 48%;margin-left: 10px;font-weight: bold;">RECIPIENT <?php echo $r; ?></div>
                     <div style="float: right;width: 20%;font-weight: bold;">
                         <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;" onclick="return edit_recipient('<?php echo $entered_sets['id']; ?>');">Edit</span>
@@ -209,14 +230,22 @@ if ($_POST['recipients'] == '1') {
     $number_of_sets = EnteredPlotttingPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $rem_avl_options = AvlOptionsRemaining($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $remaining_sets = RemainingSets($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+   $remaining_sets_n = RemainingSetsAfter($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $con_class = 1;
-    foreach ($remaining_sets as $current_opt) {
+    ?>
+        <input type="hidden" id="toal_option_pac" name="toal_option_pac" value="<?php echo count($remaining_sets_n); ?>">
+    <?php
+    foreach ($remaining_sets_n as $current_opt) {
         $total_sets_5 = EnteredPlotttingPrimary195($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $current_opt['id']);
         ?>
+
+<form name="pac_form_data_<?php echo $current_opt['options']; ?>" id="pac_form_data_<?php echo $current_opt['options']; ?>" method="POST">
+
+<input type="hidden" id="option_inc_id_<?php echo $current_opt['options']; ?>" name="option_inc_id_<?php echo $current_opt['options']; ?>" value="<?php echo $current_opt['id'];?>">
         <div id="optiond_dynamic_<?php echo $current_opt['options']; ?>" style="width:100%;float: left;">
             <div style="width: 100%;float: left;border: 0px #F99B3E solid;margin-bottom: 5px;color: #FA8526;">            
-                <div style="width: 15%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['options']; ?></div>
-                <div style="width: 48%;float: left;text-align: left;font-weight: bold;font-size: 15px;"><?php echo $current_opt['options'] . '&nbsp;of&nbsp;' . count($number_of_sets); ?></div>
+<!--                <div style="width: 15%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['options']; ?></div>-->
+                <div style="width: 48%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['options'] . '&nbsp;of&nbsp;' . count($number_of_sets); ?></div>
             </div>
             <input type="hidden" name="tot_avl_options" id="tot_avl_options" value="<?php echo count($number_of_sets); ?>" />
             <input type="hidden" name="rem_avl_options" id="rem_avl_options" value="<?php echo count($rem_avl_options); ?>" />
@@ -269,7 +298,7 @@ if ($_POST['recipients'] == '1') {
                                         <tr bgcolor="#ffeee1">
                                             <td>Plotting on Bond</td>
                                             <td><?php echo $entered['origininals']; ?></td>
-                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="avl_sets_8" id="avl_sets_<?php echo $current_opt['options']; ?>" class="avl_sets"  value="<?php echo ($entered['print_ea'] - $needed_sets); ?>" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_avl_plot('8', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '1', '<?php echo $current_opt['options']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_avl_dis('<?php echo $i; ?>', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '<?php echo $type; ?>', '<?php echo $entered['id']; ?>', '<?php echo $current_opt['options']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
+                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="avl_sets_8" id="avl_sets_<?php echo $current_opt['options']; ?>" class="avl_sets"  value="<?php echo ($entered['print_ea'] - $needed_sets); ?>" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_avl_plot('8', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '1', '<?php echo $current_opt['options']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_avl('<?php echo $i; ?>', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '<?php echo $type; ?>', '<?php echo $entered['id']; ?>', '<?php echo $current_opt['options']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
                                             <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="need_sets_8" id="need_sets_<?php echo $current_opt['options']; ?>" class="need_sets" value="1" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_dy('<?php echo $current_opt['options']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_dy('<?php echo $current_opt['options']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
                                             <td><?php echo $entered['size']; ?><input type="hidden" name="size_sets_<?php echo $i; ?>" id="size_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['size']; ?>" /></td>
                                             <td style="text-transform: uppercase;"><?php echo $entered['output']; ?><input type="hidden" name="output_sets_<?php echo $i; ?>" id="output_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['output']; ?>" /></td>
@@ -289,7 +318,7 @@ if ($_POST['recipients'] == '1') {
                                         <tr bgcolor="#ffeee1">
                                             <td>Architectural Copies</td>
                                             <td><?php echo $available_order[0]['origininals']; ?></td>
-                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="avl_sets_8" id="avl_sets_<?php echo $current_opt['options']; ?>" class="avl_sets"  value="<?php echo ($entered['print_ea'] - $needed_sets); ?>" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_avl_plot('8', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '1', '<?php echo $current_opt['options']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_avl_dis('<?php echo $i; ?>', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '<?php echo $type; ?>', '<?php echo $entered['id']; ?>', '<?php echo $current_opt['options']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
+                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="avl_sets_8" id="avl_sets_<?php echo $current_opt['options']; ?>" class="avl_sets"  value="<?php echo ($entered['print_ea'] - $needed_sets); ?>" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_avl_plot('8', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '1', '<?php echo $current_opt['options']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_avl('<?php echo $i; ?>', '<?php echo $user_id_add_set; ?>', '<?php echo $company_id_view_plot; ?>', '<?php echo $type; ?>', '<?php echo $entered['id']; ?>', '<?php echo $current_opt['options']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
                                             <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="need_sets_8" id="need_sets_<?php echo $current_opt['options']; ?>" class="need_sets" value="1" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_dy('<?php echo $current_opt['options']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_dy('<?php echo $current_opt['options']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
                                             <td><?php echo $entered['size']; ?><input type="hidden" name="size_sets_<?php echo $i; ?>" id="size_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['size']; ?>" /></td>
                                             <td style="text-transform: uppercase;"><?php echo $entered['output']; ?><input type="hidden" name="output_sets_<?php echo $i; ?>" id="output_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['output']; ?>" /></td>
@@ -464,14 +493,14 @@ if ($_POST['recipients'] == '1') {
                     </div>
 
                     <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
-                        <input type="hidden" name="all_exist_date" id="all_exist_date" value="<?php echo $all_date_exist; ?>" />
+                        <input type="hidden" name="all_exist_date" class="all_exist_date" id="all_exist_date" value="<?php echo $all_date_exist; ?>" />
                         <div style="float:left;margin-right: 5px;margin-top: 10px;width: 100%;">
                             <span style="font-weight: bold;">When Needed:  </span>
                         </div>
                         <div style="width: 34%;float: left;"> 
 
                             <div style="width: 100%;float: left;border: 1px #F99B3E solid;padding: 6px;height: 30px;border-bottom: 0px;text-align: center;">
-                                <span id="asap_status_<?php echo $current_opt['options']; ?>" class="asap_orange" onclick="return asap_dynamic('<?php echo $current_opt['options']; ?>');">ASAP</span> 
+                                <span id="asap_status_<?php echo $current_opt['options']; ?>" class="asap_orange" onclick="return asap_dynamic_new('<?php echo $current_opt['options']; ?>');">ASAP</span> 
                             </div>
 
                             <div style="width: 100%;float: left;border: 1px #F99B3E solid;padding: 6px;height: 30px;">
@@ -548,19 +577,1459 @@ if ($_POST['recipients'] == '1') {
                 </div>
             </div>
         </div>
+</form>
         <div style="width:100%;float:left;">
             <hr style="border: 0;border-bottom: 3px dashed #ccc;background: #999;margin-bottom: 10px;">
         </div>
-        <div style="width:100%;float: left;">         
-            <div style="float:right;">            
-                <input id="last_sc" class="<?php echo $con_class; ?>" value="Save and Continue" style="<?php if ($con_class != count($number_of_sets)) { ?>display: none;<?php } ?>cursor: pointer;font-size: 12px; padding: 1.5px; width: 135px; margin-right: 14px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;margin-top: -0px !important;" type="button" onclick="return continue_recipient();" />
-            </div>
-        </div>
+        
 
         <?php
-        $con_class++;
+       // $con_class++;
+    } ?>
+
+
+<?php 
+
+}
+if($number_of_lfp){
+     
+    
+    ?>
+        <div class="def_class" style=";margin-bottom: 10px;margin-top: 10px;color: #34A853;font-weight: bold; font-size: 17px;">
+                LARGE FORMAT COLOR &amp; BW
+            </div>
+        
+        <?php 
+        $remaining_sets_new = EnteredLFPPrimaryRec($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $entered_needed_sets = NeededSetsLFP($user_session_comp, $user_session);
+    if (count($entered_needed_sets) > 0) {
+        $r = 1;
+        foreach ($entered_needed_sets as $entered_sets) {
+            if ($entered_sets['shipp_id'] == "P1") {
+                $shipp_add = AddressBookPickupSohoCap("P1");
+            } elseif ($entered_sets['shipp_id'] == "P2") {
+                $shipp_add = AddressBookPickupSohoCap("P2");
+            } else {
+                $shipp_add = SelectIdAddressService($entered_sets['shipp_id']);
+            }
+           
+            $needen_sets = $entered_sets['print_of_need'];
+            $type = 'LFP';
+            ?>    
+            <div style="border: 2px #F99B3E solid;padding-bottom: 20px;margin-bottom : 5px;width: 100%;float: left;" class="shaddows">
+                <div style="width: 100%;float: left;margin-top: 10px;">
+                    <div style="float: left;width: 48%;margin-left: 10px;font-weight: bold;">RECIPIENT <?php echo $r; ?></div>
+                    <div style="float: right;width: 20%;font-weight: bold;">
+                        <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;" onclick="return edit_recipient('<?php echo $entered_sets['id']; ?>');">Edit</span>
+                        <span title="Delete Recipient" alt="Delete Recipient" style="font-weight: bold;cursor: pointer;background: #D84B36;color: #FFF;padding: 2px 8px;border-radius: 5px;margin-top: 3px;font-weight: bold;" onclick="return delete_recipient('<?php echo $entered_sets['id']; ?>');">Delete</span>
+                    </div>
+
+                    <div style="float: left;width: 100%;margin-left: 30px;margin-top: 10px;font-weight: bold;">Send to: </div>
+                    <div style="float: left;width: 100%;margin-left: 30px;">  
+                        <?php
+                        $comp_name = ($shipp_add[0]['company_name'] == '') ? '' : $shipp_add[0]['company_name'] . '<br>';
+                        $add_1 = ($shipp_add[0]['address_1'] == '') ? '' : $shipp_add[0]['address_1'] . '<br>';
+                        $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                        $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                        //echo $shipp_add[0]['company_name'] . '<br>' . $shipp_add[0]['address_1'] . ',<br>' . $add_2 . $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'].'<br>'.'Attention to:  '.$entered_sets['attention_to'];
+                        if (($entered_sets['shipp_id'] == "P1") || ($entered_sets['shipp_id'] == "P2")) {
+                            echo $shipp_add[0]['address'];
+                        } else {
+                            ?>                    
+                            <span style="width:100%;float: left;"><?php echo $comp_name; ?></span>
+                            <span style="width:100%;float: left;">Attention:  <?php echo $entered_sets['attention_to']; ?></span>
+                            <?php if ($entered_sets['contact_ph'] != "") { ?>
+                                <span style="width:100%;float: left;">Contact:  <?php echo $entered_sets['contact_ph']; ?></span>
+                            <?php } ?>
+                            <?php if ($add_1 != '') { ?>
+                                <span style="width:100%;float: left;"><?php echo $add_1; ?></span>
+                            <?php }if ($add_2 != '') { ?>
+                                <span style="width:100%;float: left;"><?php echo $add_2; ?></span>
+                            <?php }if ($add_3 != '') { ?>
+                                <span style="width:100%;float: left;"><?php echo $add_3; ?></span>
+                            <?php } ?>
+                            <span style="width:100%;float: left;"><?php echo $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip']; ?></span>
+                        <?php } ?>
+                    </div>
+                    <!-- Address Show End -->
+
+                    <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST:</div>
+                    <div style="float: left;width: 90%;margin-left: 30px;margin-top: 5px;">
+
+                        <table border="1" style="width: 100%;">
+                            <tr bgcolor="#F99B3E">
+                                <td style="font-weight: bold;">Sets</td> 
+                                <td style="font-weight: bold;">Order Type</td>                            
+                                <td style="font-weight: bold;">Size</td>
+                                <td style="font-weight: bold;">Output</td>
+                                <td style="font-weight: bold;">Media</td>
+                                <td style="font-weight: bold;">Binding</td>
+                                
+                            </tr>
+                            <tr bgcolor="#ffeee1">
+                                <td><?php echo $needen_sets; ?></td>
+                                <td><?php echo $type; ?></td>                            
+                                <td><?php echo $entered_sets['size']; ?></td>
+                                <td style="text-transform: uppercase;"><?php echo $entered_sets['output']; ?></td>
+                                <td><?php echo $entered_sets['media']; ?></td>
+                                <td>
+                                    <span onclick="return edit_binding('<?php echo $entered_sets['id']; ?>');" id="binding_<?php echo $entered_sets['id']; ?>" style="cursor: pointer;"><?php echo $entered_sets['binding']; ?></span>
+                                    <select class="binding_select_<?php echo $entered_sets['id']; ?>" id="binding_select_<?php echo $entered_sets['id']; ?>" onchange="return change_binding('<?php echo $entered_sets['id']; ?>');" style="width: 65px;display:none;">
+                                        <option value="None" <?php if ($entered_sets['binding'] == 'NONE') { ?> selected="selected" <?php } ?>>None</option>                                      
+                                        <option value="Bind All" <?php if ($entered_sets['binding'] == 'BIND ALL') { ?> selected="selected" <?php } ?>>Bind All</option>                          
+                                        <option value="Bind by Discipline" <?php if ($entered_sets['binding'] == 'BIND BY DISCIPLINE') { ?> selected="selected" <?php } ?>>Bind by Discipline</option>
+                                        <option value="Screw Post" <?php if ($entered_sets['binding'] == 'SCREW POST') { ?> selected="selected" <?php } ?>>Screw Post</option>
+                                    </select>
+                                </td>
+                               
+                            </tr>
+                        </table>
+
+                                            <!--   1. <?php // echo $entered_sets['plot_needed'] . '&nbsp;Sets Plotting on Bond,' . $entered_sets['size'] . ',' . $entered_sets['output'] . $plot_binding . $plot_folding;     ?></br>-->
+                        <!--   2. <?php // echo  $entered_sets['arch_needed'].'&nbsp;Sets Plotting on Bond,'. $entered_sets['arch_size'].','.$entered_sets['arch_output'].$arch_binding.$arch_folding;       ?> -->
+                    </div>   
+
+
+                    <?php
+                    if ($entered_sets['size'] == 'CUSTOM') {
+                        ?>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                            <div style="font-weight: bold;width: 100%;float: left;">
+                                Custom Size Details :
+                            </div>
+                            <div style="width: 100%;float: left;">                    
+                                <?php echo $entered_sets['size_custom']; ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <?php
+                    if ($entered_sets['output'] == 'BOTH') {
+                        ?>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                            <div style="font-weight: bold;width: 100%;float: left;">
+                                Color Page Numbers :
+                            </div>
+                            <div style="width: 100%;float: left;">                    
+                                <?php echo $entered_sets['output_both_page']; ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    
+                          <!--------------Mounting--------------------->
+                   <?php
+              foreach ($remaining_sets_new as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">M&amp;L ORDER</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($remaining_sets_new as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#F99B3E">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#ffeee1">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']=="0") echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div>
+                    <?php } ?>
+
+                    <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                        <?php
+                        $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+                        ?>
+                        <span style="font-weight: bold;">When Needed:  </span><?php echo $entered_sets['shipp_date'] . $date_asap; ?>            
+                    </div>        
+                    <?php
+                    if ($entered_sets['delivery_type'] != '0') {
+                        ?>
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            <span style="font-weight: bold;">Send Via: </span>
+                        </div>
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            <?php
+                            if ($entered_sets['delivery_type'] == '1') {
+                                $delivery_type = 'Next Day Air';
+                            } elseif ($entered_sets['delivery_type'] == '2') {
+                                $delivery_type = 'Two Day Air';
+                            } elseif ($entered_sets['delivery_type'] == '3') {
+                                $delivery_type = 'Three Day Air';
+                            } elseif ($entered_sets['delivery_type'] == '4') {
+                                $delivery_type = 'Ground';
+                            }
+
+                            $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                            $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                            $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+
+                            echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                            ?>
+                        </div>
+                    <?php } else { ?>                            
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            <span style="font-weight: bold;">Send Via: </span>
+                        </div>
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            SOHO TO ARRANGE DELIVERY
+                        </div>    
+                    <?php } ?>   
+                    <?php
+                    if ($entered_sets['spl_inc'] != '') {
+                        ?>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Special Instructions: </div>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                            <?php echo $entered_sets['spl_inc']; ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php
+            $r++;
+        }
     }
-} elseif ($_POST['recipients'] == '9') {
+    ?>
+
+    <?php
+    $current_option_all = CurrentOptionAll($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+//    $update_allset      =   "UPDATE sohorepro_plotting_set SET all_sets = '1' WHERE id = '".$current_option_all[0]['id']."'";
+//    mysql_query($update_allset);
+    $current_option = CurrentOption($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $number_of_sets = EnteredLFPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $rem_avl_options = EnteredLFPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $remaining_sets = EnteredLFPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+   $remaining_sets_new = EnteredLFPPrimaryRec($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $con_class = 1;
+    ?>
+           <input type="hidden" id="toal_option_lfp" name="toal_option_pac" value="<?php echo count($remaining_sets_new); ?>">
+        <?php
+    foreach ($remaining_sets_new as $current_opt) {
+        $total_sets_5 = EnteredPlotttingPrimary195($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $current_opt['id']);
+        ?>
+
+<form id="lfp_form_data_<?php echo $current_opt['option_id']; ?>" name="lfp_form_data_<?php echo $current_opt['option_id']; ?>" method="POST">
+ 
+<input type="hidden" id="option_inc_id_lfp_<?php echo $current_opt['option_id']; ?>" name="option_inc_id_lfp" value="<?php echo $current_opt['id'];?>">
+        <div id="lfp_optiond_dynamic_<?php echo $current_opt['option_id']; ?>" style="width:100%;float: left;">
+            <div style="width: 100%;float: left;border: 0px #F99B3E solid;margin-bottom: 5px;color: #FA8526;">            
+<!--                <div style="width: 15%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['option_id']; ?></div>-->
+                <div style="width: 48%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['option_id'] . '&nbsp;of&nbsp;' . count($number_of_sets); ?></div>
+            </div>
+            <input type="hidden" name="lfp_tot_avl_options" id="lfp_tot_avl_options" value="<?php echo count($number_of_sets); ?>" />
+            <input type="hidden" name="lfp_rem_avl_options" id="lfp_rem_avl_options" value="<?php echo count($rem_avl_options); ?>" />
+            <input type ="hidden" name="lfp_needed_count" value="<?php echo count($entered_needed_sets); ?>">
+            <div style="border: 1px #F99B3E solid;margin-bottom: 20px;padding-bottom: 20px;width: 100%;float: left;">
+                <div style="width: 100%;float: left;margin-top: 10px;">
+                    <div style="float: left;width: 48%;margin-left: 10px;font-weight: bold;">RECIPIENT <?php echo '1'//$total_sets_5;    ?></div>
+                    <div style="float: right;width: 20%;font-weight: bold;cursor: pointer;" title="Delete Recipient" alt="Delete Recipient" onclick="return delete_recipient_empty();"><span style="background: #D84B36;color: #FFF;padding: 2px 8px;border-radius: 5px;margin-top: 3px;font-weight: bold;">Delete</span></div>
+
+                    <?php
+                    $user_id_add_set = $_SESSION['sohorepro_userid'];
+                    $company_id_view_plot = $_SESSION['sohorepro_companyid'];
+                    ?>
+                    <!-- Address Show End -->
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+                        <div id="sets_grid_new">
+                            <table border="1" style="width: 100%;">
+                                <tr bgcolor="#F99B3E">
+                                    <td style="font-weight: bold;">Order Type</td>
+                                    <td style="font-weight: bold;">Originals</td>
+                                    <td style="font-weight: bold;">Available Sets</td>
+                                    <td style="font-weight: bold;">Sets Needed</td>
+                                    <td style="font-weight: bold;">Size</td>
+                                    <td style="font-weight: bold;">Output</td>
+                                    <td style="font-weight: bold;">Media</td>
+                                    <td style="font-weight: bold;">Binding</td>
+                                  
+                                </tr> 
+                                <?php
+                                // $enteredPlot = EnteredPlotRecipients($company_id_view_plot, $user_id_add_set);
+                                $enteredPlot = EnteredLFPRecipientsCurrentOption($current_opt['id']);
+//                        echo '<pre>';
+//                        print_r($enteredPlot);
+//                        echo '</pre>';
+                                $i = 1;
+                                foreach ($enteredPlot as $entered) {
+                                    $rowColor = ($i % 2 != 0) ? '#ffeee1' : '#fff6f0';
+                                    $binding = $entered['binding'];
+                                    //$type = ($entered['plot_arch'] == '1') ? '1' : '0';
+                                   // $available_order = ($entered['plot_arch'] == '1') ? EnteredPlotRecipientsCount($company_id_view_plot, $user_id_add_set, '1') : EnteredPlotRecipientsCount($company_id_view_plot, $user_id_add_set, '0');
+                                    $needed_sets =  LFPNeededNew($company_id_view_plot, $user_id_add_set, $entered['option_id']);
+                                    $plot_exist = EnteredPlotRecipientsCount($company_id_view_plot, $user_id_add_set, '1');
+                                    $copy_exist = EnteredPlotRecipientsCount($company_id_view_plot, $user_id_add_set, '0');
+
+                               
+                                        ?>
+                                        <input type="hidden" id="option_id_<?php echo $current_opt['option_id']; ?>" value="<?php echo $entered['option_id']; ?>" />
+<!--                                        <input type="hidden" id="option_type_<?php echo $current_opt['option_id']; ?>" value="<?php echo $type; ?>" />-->
+                                        <input type ="hidden" name="option_id_lfp" value="<?php echo $current_opt['option_id'];?>">
+                                        <input type ="hidden" name="lfp_set_id" value="<?php echo $entered['id'];?>">
+                                        <tr bgcolor="#ffeee1">
+                                            <td>LFP</td>
+                                            <td><input type="hidden" name="lfp_org" id="lfp_org" value="<?php echo $entered['original']; ?>"><?php echo $entered['original']; ?></td>
+                                            <td><input type="hidden" name="lfp_avl_org" value="<?php echo ($entered['print_of_each'] - $needed_sets); ?>"><input style="width: 25px;float: left;padding: 2px;" type="text" name="avl_sets_8" id="lfp_avl_sets_<?php echo $current_opt['option_id']; ?>" class="avl_sets"  value="<?php echo ($entered['print_of_each'] - $needed_sets); ?>" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_avl_lfp('<?php echo $current_opt['option_id']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_avl_lfp('<?php echo $current_opt['option_id']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
+                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="need_sets_8" id="lfp_need_sets_<?php echo $current_opt['option_id']; ?>" class="need_sets" value="1" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_needed_lfp('<?php echo $current_opt['option_id']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_needed_lfp('<?php echo $current_opt['option_id']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
+                                            <td><?php echo $entered['size']; ?><input type="hidden" name="size_sets_<?php echo $i; ?>" id="size_sets_<?php echo $current_opt['option_id']; ?>" value="<?php echo $entered['size']; ?>" /></td>
+                                            <td style="text-transform: uppercase;"><?php echo $entered['output']; ?><input type="hidden" name="output_sets_<?php echo $i; ?>" id="output_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['output']; ?>" /></td>
+                                            <td><?php echo $entered['media']; ?><input type="hidden" name="media_sets_<?php echo $i; ?>" id="media_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['media']; ?>" /></td>
+                                            <td><?php echo $binding; ?><input type="hidden" name="binding_sets_<?php echo $i; ?>" id="binding_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $binding; ?>" /></td>
+                                            
+                                        </tr>
+                             
+
+                         
+
+                                    <?php
+                                    $i++;
+                                }
+                                ?>
+                            </table>
+                        </div>
+
+                        <div style="width: 98%;float: left;border: 1px solid #F99B3E;padding: 5px;">   
+                        <?php
+                        if ($entered['size'] == 'CUSTOM') {
+                            ?>
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                    Custom Size Details
+                                </div>
+                                <div style="padding-top: 3px;width: 100%;float: left;">
+                                    <input type="hidden" name="size_custom_details" id="size_custom_details" value="<?php echo $entered['size_custom']; ?>" />
+                                    <?php echo $entered['size_custom']; ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        if ($entered['output'] == 'BOTH') {
+                            ?>
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                    Color Page Numbers
+                                </div>
+                                <div style="padding-top: 3px;width: 100%;float: left;">
+                                    <input type="hidden" name="output_page_details" id="output_page_details" value="<?php echo $entered['output_both_page']; ?>" />
+                                    <?php echo $entered['output_both_page']; ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        if ($entered['special_inc'] != '') {
+                            ?> 
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                    Special Instructions
+                                </div>
+                                <div style="padding-top: 3px;width: 100%;float: left;">
+                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['special_inc']; ?>" />
+                                    <?php echo $entered['special_inc']; ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        //if ($entered['plot_arch'] == '0') {
+                            if ($entered['schedule_pickup'] != '0') {
+                                $pickup_option = ($entered['schedule_pickup'] == "ASAP") ? $entered['schedule_pickup'] : $entered['schedule_pickup'] . ' ' . $entered['pick_up_time'];
+                                ?>
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Schedule a Pickup
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="pick_up_time" id="pick_up_time" value="<?php echo $entered['pick_up_time']; ?>" />
+                                        <?php echo $pickup_option; ?>
+                                    </div>
+                                </div>
+                            <?php }if ($entered['drop_off_381'] != '0') { ?>
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Drop-off Option
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['drop_off_381']; ?>" />
+                                        <?php echo $entered['drop_off_381']; ?>
+                                    </div>
+                                </div>
+                            <?php
+                            }
+                        //}
+                        ?>
+                        </div>
+        <!--                <div id="edit_address_<?php echo $current_opt['options']; ?>" style="width:98%;float: left;text-align: right;display: none;">
+                            <span style="background: #007F2A;color: #FFF;padding: 2px 8px;border-radius: 5px;margin-top: 3px;font-weight: bold;cursor: pointer;" onclick="return edit_recipient_address('<?php echo $current_opt['options']; ?>');">EDIT</span>
+                        </div>-->
+                        <?php
+                        $all_days_off = AllDayOff();
+                        foreach ($all_days_off as $days_off_split) {
+                            $all_days_in[] = $days_off_split['date'];
+                        }
+                        $all_date = implode(",", $all_days_in);
+                        $all_date_exist = str_replace("/", "-", $all_date);
+                        ?>
+
+                    </div>
+
+                        <!--------------Mounting--------------------->
+                   <?php
+              foreach ($remaining_sets_new as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">M&amp;L ORDER</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($remaining_sets_new as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#F99B3E">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#ffeee1">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']=="0") echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div>
+                 <?php  
+                  
+              //  $enteredPlot = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
+                foreach($remaining_sets_new as $entered){
+                         if ($entered['mal_splns'] != '') { ?>
+                       <div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;margin-left: 30px;"> OPTION <?php echo $entered['option_id']; ?></div>
+                    <div style="width: 90%;float: left;border: 1px solid #F99B3E;padding: 5px;margin-left: 30px;">
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                    Special Instructions
+                                </div>
+                                <div style="padding-top: 3px;width: 100%;float: left;">
+                                    <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['mal_splns']; ?>" />
+                                    <?php echo $entered['mal_splns']; ?>
+                                </div>
+                            </div>
+                    
+                    </div>
+                        <?php
+                    } } }?> 
+                    
+                    
+                    
+                    <div style="float: left;width: 33%;margin-left: 30px;border: 1px #F99B3E solid;margin-top: 17px;font-weight: bold;padding:3px;">Send to: 
+                        <?php
+                        $address_book = AddressBookCompanyService($_SESSION['sohorepro_companyid']);
+                        ?>
+                        <select  name="address_book_rp" id="address_book_rp_lfp_<?php echo $current_opt['option_id']; ?>" class="remove_current" style="width: 75% !important;" onchange="return show_address_dynamic_nmjk_lfp('<?php echo $current_opt['option_id']; ?>');">
+                            <option value="0">Address Book</option>
+                            <option value="<?php echo $address_book[0]['id']; ?>">Return Everything To My Office</option>
+                            <option value="P1">Pickup @ 381 Broome St</option>
+                            <option value="P2">Pickup @ 307 7th Ave, 5th Flr</option>
+                            <option class="select-dash" disabled="disabled">-----------------------------------------</option>
+                            <?php
+                            foreach ($address_book as $address) {
+                                ?>                                                                                        
+                                <option value="<?php echo $address['id']; ?>" ><?php echo $address['company_name']; ?></option>
+                                <?php
+                            }
+                            ?>
+                            <option value="NEW-MULTI" style="font-weight: bold;background-color: #CCC;"><span style="font-weight: bold;">Add New Address</span></option>
+                        </select>
+                    </div>
+                    <!-- Address Show Start -->
+                    <div id="show_address_lfp_<?php echo $current_opt['option_id']; ?>" style="float: left;width: 40%;height: 80px !important;padding: 6px;border: 0px #F99B3E solid;margin-top: 10px;font-weight: bold;">
+
+
+
+
+                    </div>
+
+                    <div id="jumbalakka_nmj_<?php echo $current_opt['option_id']; ?>" style="float: left;width: 100%;margin-top: 25px;">   
+                        <div style="float: left;width: 39%;">
+                            &nbsp;
+                        </div>
+                        <!-- Attention To Start -->
+                        <div style="float: left;width: 30%;">
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: right;width: 100%;font-weight: bold;">Attention to:   </div>
+                            </div>
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: right;width: 100%;">
+                                    <div id="show_address_att" style="float: left;width: 90%;border: 1px #F99B3E solid;padding: 5px;height: 25px;">
+                                        <input type="text" name="shipp_att" id="shipp_att_lfp_<?php echo $current_opt['option_id']; ?>" value="" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Attention To End -->
+                        <!-- Contact Phone Start -->
+                        <div style="float: left;width: 30%;">
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: left;width: 61%;font-weight: bold;">Contact Phone:   </div>
+                            </div>
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: right;width: 100%;">
+                                    <div id="show_contact_phone" style="float: left;width: 90%;border: 1px #F99B3E solid;padding: 5px;height: 25px;">
+                                        <input type="text" name="contact_ph" id="lfp_contact_ph_<?php echo $current_opt['option_id']; ?>" onfocus="return contact_phone_dynamic('<?php echo $current_opt['option_id']; ?>');"  value="" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Contact Phone End -->
+                    </div>
+
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+                        <input type="hidden" name="all_exist_date" id="lfp_all_exist_date" value="<?php echo $all_date_exist; ?>" />
+                        <div style="float:left;margin-right: 5px;margin-top: 10px;width: 100%;">
+                            <span style="font-weight: bold;">When Needed:  </span>
+                        </div>
+                        <div style="width: 34%;float: left;"> 
+
+                            <div style="width: 100%;float: left;border: 1px #F99B3E solid;padding: 6px;height: 30px;border-bottom: 0px;text-align: center;">
+                                <span id="lfp_asap_status_<?php echo $current_opt['option_id']; ?>" class="asap_orange" onclick="return asap_dynamic_lfp('<?php echo $current_opt['option_id']; ?>');">ASAP</span> 
+                            </div>
+
+                            <div style="width: 100%;float: left;border: 1px #F99B3E solid;padding: 6px;height: 30px;">
+                                <input class="picker_icon" value="" type="text" name="lfp_date_needed" id="lfp_date_needed_<?php echo $current_opt['option_id']; ?>" style="width: 75px;" onclick="return date_reveal_lfp('<?php echo $current_opt['option_id']; ?>');" />
+                                <input  name="lfp_time_needed" id="lfp_time_picker_icon_<?php echo $current_opt['option_id']; ?>" value="" type="text" style="width: 75px;margin-left: 4px;" class="time time_picker_icon" alt="Time Picker" title="Time Picker" onclick="return show_time_lfp('<?php echo $current_opt['option_id']; ?>');" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+
+                        <div style="width: 265px;margin-right: 10px;float: left;margin-right: 10px;">
+
+                            <div style="padding: 10px 20px;background: #EFEFEF;border-radius: 5px;width: 225px;margin-right: 10px;float: left;">
+                                <input type="checkbox" name="arrange_del" id="lfp_arrange_del_<?php echo $current_opt['option_id']; ?>" checked style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px;" onclick="uncheck_delivery_dynamic_lfp('<?php echo $current_opt['option_id']; ?>');" /><span style="text-transform: uppercase;">Soho to arrange delivery</span>
+                            </div>
+
+                        </div>
+                        <div style="width: 265px;margin-right: 10px;float: left;margin-right: 10px;">
+
+                            <div style="padding: 10px 20px;background: #EFEFEF;border-radius: 5px;width: 225px;float: left;">
+                                <input type="checkbox" name="preffer_del" id="lfp_preffer_del_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px;" onclick="check_prefer_delivery_dynamic_lfp('<?php echo $current_opt['option_id']; ?>');" /><span style="text-transform: uppercase;">Use My Carrier</span>
+                            </div>
+
+                            <div id="lfp_preffered_info_<?php echo $current_opt['option_id']; ?>" style="width: 91%;display: none;border: 1px #F99B3E solid;padding: 5px;float: left;margin-left: 5px;margin-top: 5px;">
+                                <ul>                                       
+                                    <ul>
+                                        <li>
+                                            <span style="font-weight: bold;">Delivery:  </span>
+                                            <select  name="delivery_comp_<?php echo $current_opt['option_id']; ?>" id="lfp_delivery_comp_<?php echo $current_opt['option_id']; ?>" style="width: 45% !important;" onchange="return show_address_();">                    
+                                                <option value="1">Next Day Air</option>
+                                                <option value="2">Two Day Air</option>
+                                                <option value="3">Three Day Air</option>
+                                                <option value="4">Ground</option>
+                                            </select>
+                                        </li>                    
+                                        <li id="shipp_collection">
+                                            <label><span style="font-weight: bold;">Shipping Company:  </span></label>
+                                            <span><input type="radio" name="shipp_comp" id="lfp_shipp_comp_1_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px !important;" value="FedEx" onclick="return field_color_dynamic_lfp('<?php echo $current_opt['option_id']; ?>');" /><img src="images/fedex_small.png" style="border:0px;" title="FedEx" alt="FedEx" /></span>
+                                            <span><input type="radio" name="shipp_comp" id="lfp_shipp_comp_2_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px !important;" value="UPS" onclick="return field_color_dynamic_lfp('<?php echo $current_opt['option_id']; ?>');" /><img src="images/ups_small.png" style="border:0px;" title="UPS" alt="UPS" /></span>
+                                            <span><input type="radio" name="shipp_comp" id="lfp_shipp_comp_3_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px !important;" value="Other" onclick="return field_color_dynamic_lfp('<?php echo $current_opt['option_id']; ?>');" /><input type="text" placeholder="Other" name="other_shipp_type" id="other_shipp_type_<?php echo $current_opt['option_id']; ?>"  onclick="return other_shipp_type();" style="width: 80px;"></span>
+                                        </li>
+                                        <li>
+                                            <span style="font-weight: bold;">Account #: </span> <input type="text" name="lfp_bill_number" id="lfp_bill_number_<?php echo $current_opt['option_id']; ?>" style="width: 50% !important;margin-bottom: 0px !important;" onkeyup="return update_current_option('<?php echo $current_opt['option_id']; ?>');"  />
+                                        </li>
+                                    </ul>
+                                    <!--<li>
+                                            <span style="font-weight: bold;">Account #  :</span> <input type="text" name="bill_number" id="bill_number" style="width: 50% !important;margin-bottom: 0px !important;" />
+                                        </li>-->
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div style="float: left;width:100%;margin-top: 10px;">
+                        <div style="font-weight: bold;float: left;width:55%;margin-left: 25px;">
+                            Special Instructions:  
+                        </div>
+                        <div style="float: left;width:40%;text-align: right;">
+                            <div style="float:right;margin-right: 12px;">
+                                <input id="add_recipients" value="Add Recipient" style="margin-left: 5px;float:left;cursor: pointer;font-size:12px; padding:1.5px; width: 100px;margin-top:-51px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;" type="button" onclick="return add_recipients_lfp_dynamic('<?php echo $current_opt['option_id']; ?>', '<?php echo $current_opt['id']; ?>');"  />
+                            </div>                    
+                        </div>                
+                    </div>
+
+
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+                        <textarea name="lfp_spl_recipient" id="lfp_spl_recipient_<?php echo $current_opt['option_id']; ?>" rows="3" cols="18" style="width: 200px;height: 40px;"></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</form>
+        <div style="width:100%;float:left;">
+            <hr style="border: 0;border-bottom: 3px dashed #ccc;background: #999;margin-bottom: 10px;">
+        </div> <?php
+    
+}}
+           
+        
+    if($number_of_fap){
+   ?>
+        <div class="def_class" style=";margin-bottom: 10px;margin-top: 10px;color: #EA4335;font-weight: bold; font-size: 17px;">
+                FINE ART PRINTING
+            </div>
+        <?php
+    $user_session_comp = $_SESSION['sohorepro_companyid'];
+    $user_session = $_SESSION['sohorepro_userid'];
+
+    $entered_needed_sets = NeededSetsFAP($user_session_comp, $user_session);
+   // $number_of_sets = EnteredPlotttingPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    if (count($entered_needed_sets) > 0) {
+        $r = 1;
+        foreach ($entered_needed_sets as $entered_sets) {
+            if ($entered_sets['shipp_id'] == "P1") {
+                $shipp_add = AddressBookPickupSohoCap("P1");
+            } elseif ($entered_sets['shipp_id'] == "P2") {
+                $shipp_add = AddressBookPickupSohoCap("P2");
+            } else {
+                $shipp_add = SelectIdAddressService($entered_sets['shipp_id']);
+            }
+          
+            $needen_sets = $entered_sets['print_of_need'];
+          
+            
+            $option_count_pac = NeededSetsDynamic($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$entered_sets['option_id']);
+            ?>    
+<!--<div style="width: 48%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo ($entered_sets['option_id']); ?></div>
+            <div style="width: 48%;float: left;text-align: right;font-weight: bold;font-size: 15px;"><?php echo ($entered_sets['option_id']) . '&nbsp;of&nbsp;' . count($number_of_sets); ?></div>-->
+            <div style="border: 2px #F99B3E solid;padding-bottom: 20px;margin-bottom : 5px;width: 100%;float: left;" class="shaddows">
+                <div style="width: 100%;float: left;margin-top: 10px;">
+                    
+                    
+                    <div style="float: left;width: 48%;margin-left: 10px;font-weight: bold;">RECIPIENT <?php echo $r; ?></div>
+                    <div style="float: right;width: 20%;font-weight: bold;">
+                        <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;" onclick="return edit_recipient('<?php echo $entered_sets['id']; ?>');">Edit</span>
+                        <span title="Delete Recipient" alt="Delete Recipient" style="font-weight: bold;cursor: pointer;background: #D84B36;color: #FFF;padding: 2px 8px;border-radius: 5px;margin-top: 3px;font-weight: bold;" onclick="return delete_recipient('<?php echo $entered_sets['id']; ?>');">Delete</span>
+                    </div>
+
+                    <div style="float: left;width: 100%;margin-left: 30px;margin-top: 10px;font-weight: bold;">Send to: </div>
+                    <div style="float: left;width: 100%;margin-left: 30px;">  
+                        <?php
+                        $comp_name = ($shipp_add[0]['company_name'] == '') ? '' : $shipp_add[0]['company_name'] . '<br>';
+                        $add_1 = ($shipp_add[0]['address_1'] == '') ? '' : $shipp_add[0]['address_1'] . '<br>';
+                        $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                        $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                        //echo $shipp_add[0]['company_name'] . '<br>' . $shipp_add[0]['address_1'] . ',<br>' . $add_2 . $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'].'<br>'.'Attention to:  '.$entered_sets['attention_to'];
+                        if (($entered_sets['shipp_id'] == "P1") || ($entered_sets['shipp_id'] == "P2")) {
+                            echo $shipp_add[0]['address'];
+                        } else {
+                            ?>                    
+                            <span style="width:100%;float: left;"><?php echo $comp_name; ?></span>
+                            <span style="width:100%;float: left;">Attention:  <?php echo $entered_sets['attention_to']; ?></span>
+                            <?php if ($entered_sets['contact_ph'] != "") { ?>
+                                <span style="width:100%;float: left;">Contact:  <?php echo $entered_sets['contact_ph']; ?></span>
+                            <?php } ?>
+                            <?php if ($add_1 != '') { ?>
+                                <span style="width:100%;float: left;"><?php echo $add_1; ?></span>
+                            <?php }if ($add_2 != '') { ?>
+                                <span style="width:100%;float: left;"><?php echo $add_2; ?></span>
+                            <?php }if ($add_3 != '') { ?>
+                                <span style="width:100%;float: left;"><?php echo $add_3; ?></span>
+                            <?php } ?>
+                            <span style="width:100%;float: left;"><?php echo $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip']; ?></span>
+                        <?php } ?>
+                    </div>
+                    <!-- Address Show End -->
+
+                    <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST:</div>
+                    <div style="float: left;width: 90%;margin-left: 30px;margin-top: 5px;">
+
+                        <table border="1" style="width: 100%;">
+                            <tr bgcolor="#F99B3E">
+                                <td style="font-weight: bold;">Sets</td> 
+                                                         
+                                <td style="font-weight: bold;">Size</td>
+                                <td style="font-weight: bold;">Output</td>
+                                <td style="font-weight: bold;">Media</td>
+                                
+                            </tr>
+                            <tr bgcolor="#ffeee1">
+                                <td><?php echo $needen_sets; ?></td>
+                                                          
+                                <td><?php echo $entered_sets['size']; ?></td>
+                                <td style="text-transform: uppercase;"><?php echo $entered_sets['output']; ?></td>
+                                <td><?php echo $entered_sets['media']; ?></td>
+                               
+                            </tr>
+                        </table>
+
+                                            <!--   1. <?php // echo $entered_sets['plot_needed'] . '&nbsp;Sets Plotting on Bond,' . $entered_sets['size'] . ',' . $entered_sets['output'] . $plot_binding . $plot_folding;     ?></br>-->
+                        <!--   2. <?php // echo  $entered_sets['arch_needed'].'&nbsp;Sets Plotting on Bond,'. $entered_sets['arch_size'].','.$entered_sets['arch_output'].$arch_binding.$arch_folding;       ?> -->
+                    </div>   
+
+
+                    <?php
+                    if ($entered_sets['size'] == 'Custom') {
+                        ?>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                            <div style="font-weight: bold;width: 100%;float: left;">
+                                Custom Size Details :
+                            </div>
+                            <div style="width: 100%;float: left;">                    
+                                <?php echo $entered_sets['custome_details']; ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+                    <?php
+                    if ($entered_sets['output'] == 'Both') {
+                        ?>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                            <div style="font-weight: bold;width: 100%;float: left;">
+                                Color Page Numbers :
+                            </div>
+                            <div style="width: 100%;float: left;">                    
+                                <?php echo $entered_sets['output_page_number']; ?>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+
+                    <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                        <?php
+                        $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+                        ?>
+                        <span style="font-weight: bold;">When Needed:  </span><?php echo $entered_sets['shipp_date'] . $date_asap; ?>            
+                    </div>        
+                    <?php
+                    if ($entered_sets['delivery_type'] != '0') {
+                        ?>
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            <span style="font-weight: bold;">Send Via: </span>
+                        </div>
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            <?php
+                            if ($entered_sets['delivery_type'] == '1') {
+                                $delivery_type = 'Next Day Air';
+                            } elseif ($entered_sets['delivery_type'] == '2') {
+                                $delivery_type = 'Two Day Air';
+                            } elseif ($entered_sets['delivery_type'] == '3') {
+                                $delivery_type = 'Three Day Air';
+                            } elseif ($entered_sets['delivery_type'] == '4') {
+                                $delivery_type = 'Ground';
+                            }
+
+                            $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                            $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                            $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+
+                            echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                            ?>
+                        </div>
+                    <?php } else { ?>                            
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            <span style="font-weight: bold;">Send Via: </span>
+                        </div>
+                        <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                            SOHO TO ARRANGE DELIVERY
+                        </div>    
+                    <?php } ?>   
+                    <?php
+                    if ($entered_sets['spl_inc'] != '') {
+                        ?>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Special Instructions: </div>
+                        <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                            <?php echo $entered_sets['spl_inc']; ?>
+                        </div>
+                        <?php
+                    }
+                    ?>
+                </div>
+            </div>
+            <?php
+            $r++;
+        }
+    }
+    ?>
+
+    <?php
+    $current_option_all = CurrentOptionAll($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+//    $update_allset      =   "UPDATE sohorepro_plotting_set SET all_sets = '1' WHERE id = '".$current_option_all[0]['id']."'";
+//    mysql_query($update_allset);
+    $current_option = CurrentOption($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $number_of_sets = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $rem_avl_options = AvlOptionsRemaining($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $remaining_sets = RemainingSets($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+   $remaining_sets_fap = RemainingSetsAfterFAP($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $con_class = 1;
+    ?>
+        <input type="hidden" id="toal_option_fap" name="toal_option_pac" value="<?php echo count($remaining_sets_fap); ?>">
+    <?php
+    foreach ($remaining_sets_fap as $current_opt) {
+        $total_sets_5 = EnteredPlotttingPrimary195($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $current_opt['id']);
+        ?>
+
+<form name="fap_form_data_<?php echo $current_opt['option_id']; ?>" id="fap_form_data_<?php echo $current_opt['option_id']; ?>" method="POST">
+
+<input type="hidden" id="option_inc_id_fap_<?php echo $current_opt['option_id']; ?>" name="option_inc_id_fap_<?php echo $current_opt['option_id']; ?>" value="<?php echo $current_opt['id'];?>">
+        <div id="fap_optiond_dynamic_<?php echo $current_opt['option_id']; ?>" style="width:100%;float: left;">
+            <div style="width: 100%;float: left;border: 0px #F99B3E solid;margin-bottom: 5px;color: #FA8526;">            
+<!--                <div style="width: 15%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['option_id']; ?></div>-->
+                <div style="width: 48%;float: left;text-align: left;font-weight: bold;font-size: 15px;">OPTION <?php echo $current_opt['option_id'] . '&nbsp;of&nbsp;' . count($number_of_sets); ?></div>
+            </div>
+            <input type="hidden" name="tot_avl_options" id="tot_avl_options" value="<?php echo count($number_of_sets); ?>" />
+            <input type="hidden" name="rem_avl_options" id="rem_avl_options" value="<?php echo count($rem_avl_options); ?>" />
+            <input type ="hidden" name="fap_needed_count" value="<?php echo count($entered_needed_sets); ?>">
+            <div style="border: 1px #F99B3E solid;margin-bottom: 20px;padding-bottom: 20px;width: 100%;float: left;">
+                <div style="width: 100%;float: left;margin-top: 10px;">
+                    <div style="float: left;width: 48%;margin-left: 10px;font-weight: bold;">RECIPIENT <?php echo '1'//$total_sets_5;    ?></div>
+                    <div style="float: right;width: 20%;font-weight: bold;cursor: pointer;" title="Delete Recipient" alt="Delete Recipient" onclick="return delete_recipient_empty();"><span style="background: #D84B36;color: #FFF;padding: 2px 8px;border-radius: 5px;margin-top: 3px;font-weight: bold;">Delete</span></div>
+
+                    <?php
+                    $user_id_add_set = $_SESSION['sohorepro_userid'];
+                    $company_id_view_plot = $_SESSION['sohorepro_companyid'];
+                    ?>
+                    <!-- Address Show End -->
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+                        <div id="sets_grid_new">
+                            <table border="1" style="width: 100%;">
+                                <tr bgcolor="#F99B3E">
+                                    <td style="font-weight: bold;">Order Type</td>
+                                    <td style="font-weight: bold;">Originals</td>
+                                    <td style="font-weight: bold;">Available Sets</td>
+                                    <td style="font-weight: bold;">Sets Needed</td>
+                                    <td style="font-weight: bold;">Size</td>
+                                    <td style="font-weight: bold;">Output</td>
+                                    <td style="font-weight: bold;">Media</td>
+                                    
+                                </tr> 
+                                <?php
+                                // $enteredPlot = EnteredPlotRecipients($company_id_view_plot, $user_id_add_set);
+                                $enteredPlot = EnteredFAPRecipientsCurrentOption($current_opt['id']);
+                                  
+//                        echo '<pre>';
+//                        print_r($enteredPlot);
+//                        echo '</pre>';
+                                $i = 1;
+                                foreach ($enteredPlot as $entered) {
+                                    $rowColor = ($i % 2 != 0) ? '#ffeee1' : '#fff6f0';
+                                   
+                                    $needed_sets =  FAPNeededNew($company_id_view_plot, $user_id_add_set, $entered['option_id']);
+                                    
+
+                                   
+                                        ?>
+                                        <input type="hidden" id="fap_option_id_<?php echo $current_opt['option_id']; ?>" value="<?php echo $entered['option_id']; ?>" />
+                                          <input type ="hidden" name="option_id_fap" value="<?php echo $current_opt['option_id'];?>">
+                                        <input type ="hidden" name="fap_set_id" value="<?php echo $entered['id'];?>">
+                                        <tr bgcolor="#ffeee1">
+                                            <td>FAP</td>
+                                            <td><input type="hidden" name="fap_org" id="fap_org" value="<?php echo $entered['original']; ?>"><?php echo $entered['original']; ?></td>
+                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="avl_sets_8" id="fap_avl_sets_<?php echo $current_opt['option_id']; ?>" class="avl_sets"  value="<?php echo ($entered['poe'] - $needed_sets); ?>" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_qty_avl_fap('<?php echo $current_opt['option_id']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_qty_avl_fap('<?php echo $current_opt['option_id']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
+                                            <td><input style="width: 25px;float: left;padding: 2px;" type="text" name="need_sets_8" id="fap_need_sets_<?php echo $current_opt['option_id']; ?>" class="need_sets" value="1" /><div class="increse_act"><img src="images/plus_icon.png" style="cursor: pointer;" onclick="return increase_needed_fap('<?php echo $current_opt['option_id']; ?>');" title="Increase Quantity" alt="Increase Quantity" /><img src="images/minus_icon.png" style="cursor: pointer;" onclick="return decrease_needed_fap('<?php echo $current_opt['option_id']; ?>');" title="Decrease Quantity" alt="Decrease Quantity" /></div></td>
+                                            <td><?php echo $entered['size']; ?><input type="hidden" name="size_sets_<?php echo $i; ?>" id="size_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['size']; ?>" /></td>
+                                            <td style="text-transform: uppercase;"><?php echo $entered['output']; ?><input type="hidden" name="output_sets_<?php echo $i; ?>" id="output_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['output']; ?>" /></td>
+                                            <td><?php echo $entered['media']; ?><input type="hidden" name="media_sets_<?php echo $i; ?>" id="media_sets_<?php echo $current_opt['options']; ?>" value="<?php echo $entered['media']; ?>" /></td>
+                                           
+                                        </tr>
+                                   <?php
+                                    $i++;
+                                }
+                                ?>
+                            </table>
+                        </div>
+
+                        <div style="width: 99%;float: left;margin-top: 5px;">
+                            <?php
+                            if ($entered['size_custom'] == 'Custom') {
+                                ?>
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Custom Size Details
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="size_custom_details" id="size_custom_details" value="<?php echo $entered['size_custom']; ?>" />
+                                        <?php echo $entered['size_custom']; ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            if ($entered['output'] == 'Both') {
+                                ?>
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Color Page Numbers
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="output_page_details" id="output_page_details" value="<?php echo $entered['output_both']; ?>" />
+                                        <?php echo $entered['output_both']; ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            if ($entered['special_instruction'] != '') {
+                                ?> 
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Special Instructions
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="spl_instruction" id="spl_instruction" value="<?php echo $entered['special_instruction']; ?>" />
+                                        <?php echo $entered['special_instruction']; ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }//if ($entered['plot_arch'] == '0') {
+                            if ($entered['pick_up_time'] != '0') {
+                                if ($entered['pick_up_time'] != 'undefined') {
+                                    ?>
+                                    <div style="width: 22%;float: left;border: 1px solid #F99B3E;">
+                                        <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                            Schedule a Pickup
+                                        </div>
+                                        <div style="padding-top: 3px;width: 100%;float: left;">
+                                            <input type="hidden" name="pick_up_time" id="pick_up_time" value="<?php echo $entered['pick_up_time']; ?>" />
+                                            <?php
+                                            if ($entered['pick_up_time'] == 'ASAP') {
+                                                echo $entered['pick_up'];
+                                            } else {
+                                                echo $entered['pick_up'] . ' ' . $entered['pick_up_time'];
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            }if ($entered['dropoff_val'] != '0') {
+                                if ($entered['dropoff_val'] != 'undefined') {
+                                    ?>
+                                    <div style="width: 22%;float: left;border: 1px solid #F99B3E;">
+                                        <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                            Drop-off Option
+                                        </div>
+                                        <div style="padding-top: 3px;width: 100%;float: left;">
+                                            <input type="hidden" name="drop_off" id="drop_off" value="<?php echo $entered['dropoff_val']; ?>" />
+                                            <?php echo $entered['dropoff_val']; ?>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                            }
+                            // } 
+                            ?>
+                        </div>
+        <!--                <div id="edit_address_<?php echo $current_opt['options']; ?>" style="width:98%;float: left;text-align: right;display: none;">
+                            <span style="background: #007F2A;color: #FFF;padding: 2px 8px;border-radius: 5px;margin-top: 3px;font-weight: bold;cursor: pointer;" onclick="return edit_recipient_address('<?php echo $current_opt['options']; ?>');">EDIT</span>
+                        </div>-->
+                        <?php
+                        $all_days_off = AllDayOff();
+                        foreach ($all_days_off as $days_off_split) {
+                            $all_days_in[] = $days_off_split['date'];
+                        }
+                        $all_date = implode(",", $all_days_in);
+                        $all_date_exist = str_replace("/", "-", $all_date);
+                        ?>
+
+                    </div>
+
+                    <div style="float: left;width: 33%;margin-left: 30px;border: 1px #F99B3E solid;margin-top: 17px;font-weight: bold;padding:3px;">Send to: 
+                        <?php
+                        $address_book = AddressBookCompanyService($_SESSION['sohorepro_companyid']);
+                        ?>
+                        <select  name="address_book_rp" id="address_book_rp_fap_<?php echo $current_opt['option_id']; ?>" class="remove_current" style="width: 75% !important;" onclick="return add_prvious('<?php echo ($current_opt['option_id'] - 1); ?>');" onchange="return show_address_dynamic_nmjk_fap('<?php echo $current_opt['option_id']; ?>');">
+                            <option value="0">Address Book</option>
+                            <option value="<?php echo $address_book[0]['id']; ?>">Return Everything To My Office</option>
+                            <option value="P1">Pickup @ 381 Broome St</option>
+                            <option value="P2">Pickup @ 307 7th Ave, 5th Flr</option>
+                            <option class="select-dash" disabled="disabled">-----------------------------------------</option>
+                            <?php
+                            foreach ($address_book as $address) {
+                                ?>                                                                                        
+                                <option value="<?php echo $address['id']; ?>" ><?php echo $address['company_name']; ?></option>
+                                <?php
+                            }
+                            ?>
+                            <option value="NEW-MULTI" style="font-weight: bold;background-color: #CCC;"><span style="font-weight: bold;">Add New Address</span></option>
+                        </select>
+                    </div>
+                    <!-- Address Show Start -->
+                    <div id="show_address_fap_<?php echo $current_opt['option_id']; ?>" style="float: left;width: 40%;height: 80px !important;padding: 6px;border: 0px #F99B3E solid;margin-top: 10px;font-weight: bold;">
+
+
+
+
+                    </div>
+
+                    <div id="jumbalakka_nmj_<?php echo $current_opt['option_id']; ?>" style="float: left;width: 100%;margin-top: 25px;">   
+                        <div style="float: left;width: 39%;">
+                            &nbsp;
+                        </div>
+                        <!-- Attention To Start -->
+                        <div style="float: left;width: 30%;">
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: right;width: 100%;font-weight: bold;">Attention to:   </div>
+                            </div>
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: right;width: 100%;">
+                                    <div id="show_address_att" style="float: left;width: 90%;border: 1px #F99B3E solid;padding: 5px;height: 25px;">
+                                        <input type="text" name="shipp_att" id="shipp_att_fap_<?php echo $current_opt['option_id']; ?>" value="" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Attention To End -->
+                        <!-- Contact Phone Start -->
+                        <div style="float: left;width: 30%;">
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: left;width: 61%;font-weight: bold;">Contact Phone:   </div>
+                            </div>
+                            <div style="float: left;width: 100%;margin-top: 10px;">
+                                <div style="float: right;width: 100%;">
+                                    <div id="show_contact_phone" style="float: left;width: 90%;border: 1px #F99B3E solid;padding: 5px;height: 25px;">
+                                        <input type="text" class="contact_ph" name="contact_ph" id="contact_ph_fap_<?php echo $current_opt['option_id']; ?>" onfocus="return contact_phone_dynamic_1('<?php echo $current_opt['option_id']; ?>');"  value="" style="background-color: #F3FA2F; font-weight: bold; font-size: 20px !important;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Contact Phone End -->
+                    </div>
+
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+                        <input type="hidden" name="all_exist_date" class="all_exist_date" id="fap_all_exist_date" value="<?php echo $all_date_exist; ?>" />
+                        <div style="float:left;margin-right: 5px;margin-top: 10px;width: 100%;">
+                            <span style="font-weight: bold;">When Needed:  </span>
+                        </div>
+                        <div style="width: 34%;float: left;"> 
+
+                            <div style="width: 100%;float: left;border: 1px #F99B3E solid;padding: 6px;height: 30px;border-bottom: 0px;text-align: center;">
+                                <span id="fap_asap_status_<?php echo $current_opt['option_id']; ?>" class="asap_orange" onclick="return asap_dynamic_fap('<?php echo $current_opt['option_id']; ?>');">ASAP</span> 
+                            </div>
+
+                            <div style="width: 100%;float: left;border: 1px #F99B3E solid;padding: 6px;height: 30px;">
+                                <input class="picker_icon" value="" type="text" name="fap_date_needed" id="fap_date_needed_<?php echo $current_opt['option_id']; ?>" style="width: 75px;" onclick="return date_reveal_fap('<?php echo $current_opt['option_id']; ?>');" />
+                                <input id="fap_time_picker_icon_<?php echo $current_opt['option_id']; ?>" value="" type="text" name="fap_time_needed" style="width: 75px;margin-left: 4px;" class="time time_picker_icon" alt="Time Picker" title="Time Picker" onclick="return show_time_fap('<?php echo $current_opt['option_id']; ?>');" />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+
+                        <div style="width: 265px;margin-right: 10px;float: left;margin-right: 10px;">
+
+                            <div style="padding: 10px 20px;background: #EFEFEF;border-radius: 5px;width: 225px;margin-right: 10px;float: left;">
+                                <input type="checkbox" name="arrange_del" id="fap_arrange_del_<?php echo $current_opt['option_id']; ?>" checked style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px;" onclick="uncheck_delivery_dynamic_fap('<?php echo $current_opt['option_id']; ?>');" /><span style="text-transform: uppercase;">Soho to arrange delivery</span>
+                            </div>
+
+                        </div>
+                        <div style="width: 265px;margin-right: 10px;float: left;margin-right: 10px;">
+
+                            <div style="padding: 10px 20px;background: #EFEFEF;border-radius: 5px;width: 225px;float: left;">
+                                <input type="checkbox" name="preffer_del" id="fap_preffer_del_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px;" onclick="check_prefer_delivery_dynamic_fap('<?php echo $current_opt['option_id']; ?>');" /><span style="text-transform: uppercase;">Use My Carrier</span>
+                            </div>
+
+                            <div id="fap_preffered_info_<?php echo $current_opt['option_id']; ?>" style="width: 91%;display: none;border: 1px #F99B3E solid;padding: 5px;float: left;margin-left: 5px;margin-top: 5px;">
+                                <ul>                                       
+                                    <ul>
+                                        <li>
+                                            <span style="font-weight: bold;">Delivery:  </span>
+                                            <select  name="delivery_comp_<?php echo $current_opt['option_id']; ?>" id="fap_delivery_comp_<?php echo $current_opt['option_id']; ?>" style="width: 45% !important;" onchange="return show_address_();">                    
+                                                <option value="1">Next Day Air</option>
+                                                <option value="2">Two Day Air</option>
+                                                <option value="3">Three Day Air</option>
+                                                <option value="4">Ground</option>
+                                            </select>
+                                        </li>                    
+                                        <li id="shipp_collection">
+                                            <label><span style="font-weight: bold;">Shipping Company:  </span></label>
+                                            <span><input type="radio" name="shipp_comp" id="fap_shipp_comp_1_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px !important;" value="FedEx" onclick="return field_color_dynamic_fap('<?php echo $current_opt['option_id']; ?>');" /><img src="images/fedex_small.png" style="border:0px;" title="FedEx" alt="FedEx" /></span>
+                                            <span><input type="radio" name="shipp_comp" id="fap_shipp_comp_2_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px !important;" value="UPS" onclick="return field_color_dynamic_fap('<?php echo $current_opt['option_id']; ?>');" /><img src="images/ups_small.png" style="border:0px;" title="UPS" alt="UPS" /></span>
+                                            <span><input type="radio" name="shipp_comp" id="fap_shipp_comp_3_<?php echo $current_opt['option_id']; ?>" style="width: 10% !important;margin-bottom: 0px;margin-bottom: 0px !important;" value="Other" onclick="return field_color_dynamic_fap('<?php echo $current_opt['option_id']; ?>');" /><input type="text" placeholder="Other" name="other_shipp_type" id="fap_other_shipp_type_<?php echo $current_opt['option_id']; ?>"  onclick="return other_shipp_type_fap();" style="width: 80px;"></span>
+                                        </li>
+                                        <li>
+                                            <span style="font-weight: bold;">Account #: </span> <input type="text" name="fap_bill_number" id="fap_bill_number_<?php echo $current_opt['option_id']; ?>" style="width: 50% !important;margin-bottom: 0px !important;" />
+                                        </li>
+                                    </ul>
+                                    <!--<li>
+                                            <span style="font-weight: bold;">Account #  :</span> <input type="text" name="bill_number" id="bill_number" style="width: 50% !important;margin-bottom: 0px !important;" />
+                                        </li>-->
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                    <div style="float: left;width:100%;margin-top: 10px;">
+                        <div style="font-weight: bold;float: left;width:55%;margin-left: 25px;">
+                            Special Instructions:  
+                        </div>
+                        <div style="float: left;width:40%;text-align: right;">
+                            <div style="float:right;margin-right: 12px;">
+                                <input id="fap_add_recipients" value="Add Recipient" style="margin-left: 5px;float:left;cursor: pointer;font-size:12px; padding:1.5px; width: 100px;margin-top:-51px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;" type="button" onclick="return add_recipients_fap_dynamic('<?php echo $current_opt['option_id']; ?>', '<?php echo $current_opt['id']; ?>');"  />
+                            </div>                    
+                        </div>                
+                    </div>
+
+
+                    <div style="width: 95%;float: left;margin-left: 25px;margin-top: 10px;">
+                        <textarea name="fap_spl_recipient" id="fap_spl_recipient_<?php echo $current_opt['option_id']; ?>" rows="3" cols="18" style="width: 200px;height: 40px;"></textarea>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</form>
+        <div style="width:100%;float:left;">
+            <hr style="border: 0;border-bottom: 3px dashed #ccc;background: #999;margin-bottom: 10px;">
+        </div>
+        
+
+        <?php
+       // $con_class++;
+    } ?>
+
+
+<?php 
+
+} ?>   
+           
+   <div style="width:100%;float: left;">         
+            <div style="float:right;">            
+                <input id="last_sc" class="<?php echo $con_class; ?>" value="Save and Continue" style="cursor: pointer;font-size: 12px; padding: 1.5px; width: 135px; margin-right: 14px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;margin-top: -0px !important;" type="button" onclick="return continue_recipient_new();" />
+            </div>
+        </div> 
+<?php
+}
+//Add Recipient for LFP
+elseif($_POST['recipients'] =='lfp_add_rec'){
+   // print_r($_POST);
+    
+    extract($_POST);
+    if($lfp_avl_org<$avl_sets_8){
+        $print_of_each = $avl_sets_8 + $lfp_needed_count;
+          $sql_inc = "UPDATE sohorepro_service_lfp SET print_of_each = '" . $print_of_each . "' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND option_id = '" . $option_id_lfp . "' AND order_id = '0' ";
+          mysql_query($sql_inc);
+          //echo $sql_inc;
+    }
+    if($need_sets_8 == $avl_sets_8){
+       $avl_sets_8 = $lfp_needed_count + $need_sets_8 +1;
+        $sql_inc = "UPDATE sohorepro_service_lfp SET print_of_each = '" . $avl_sets_8 . "' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND option_id = '" . $option_id_lfp . "' AND order_id = '0' ";
+        mysql_query($sql_inc);
+    }
+           $query = "INSERT INTO sohorepro_service_lfp_sets_needed 
+               
+                                SET   
+                   
+                                company_id         = '" . $user_session_comp . "',
+                                user_id            = '" . $user_session . "',
+                                print_of_need      = '" . $need_sets_8 . "',
+                                option_id          = '" . $option_id_lfp . "',
+                                original          = '" . $lfp_org. "',
+                                size               = '" . $size_sets_1 . "',
+                                size_custom        = '" . $size_custom_details . "',
+                                output             = '" . $output_sets_1 . "',
+                                special_inc        = '" . $spl_instruction . "',
+                                output_both_page   = '" . $output_page_details . "',
+                                media              = '" . $media_sets_1 . "',
+                                binding            = '" . $binding_sets_1 . "',
+                                shipp_id        = '" . $address_book_rp . "',
+                                attention_to    = '" . $shipp_att . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $lfp_date_needed . "',
+                                shipp_time      = '" . $lfp_time_needed . "',    
+                                spl_inc         = '" . $lfp_spl_recipient . "',
+                                delivery_type   = '" . $delivery_comp . "',
+                                billing_number  = '" . $lfp_bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "' "; 
+         //  echo $query;
+           mysql_query($query);
+    
+}
+
+//Add Recipient for FAP
+elseif($_POST['recipients'] =='fap_add_rec'){
+    
+    
+    extract($_POST);
+   // print_r($_POST);
+    if($fap_org<$avl_sets_8){
+        $print_of_each = $avl_sets_8 + $fap_needed_count;
+          $sql_inc = "UPDATE sohorepro_fine_arts_sets SET poe = '" . $print_of_each . "' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND option_id = '" . $option_id_fap . "' AND order_id = '0' ";
+          mysql_query($sql_inc);
+          echo $sql_inc;
+    }
+    if($need_sets_8 == $avl_sets_8){
+       $avl_sets_8 = $fap_needed_count + $need_sets_8 + 1;
+        $sql_inc = "UPDATE sohorepro_fine_arts_sets SET poe = '" . $avl_sets_8 . "' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND option_id = '" . $option_id_fap . "' AND order_id = '0' ";
+         mysql_query($sql_inc);
+    }
+           $query = "INSERT INTO sohorepro_service_fap_sets_needed 
+               
+                                SET   
+                   
+                                company_id         = '" . $user_session_comp . "',
+                                user_id            = '" . $user_session . "',
+                                print_of_need      = '" . $need_sets_8 . "',
+                                option_id          = '" . $option_id_fap . "',
+                                original           = '" . $fap_org. "',
+                                size               = '" . $size_sets_1 . "',
+                                size_custom        = '" . $size_custom_details . "',
+                                output             = '" . $output_sets_1 . "',
+                                special_inc        = '" . $spl_instruction . "',
+                                output_both_page   = '" . $output_page_details . "',
+                                media              = '" . $media_sets_1 . "',
+                                shipp_id        = '" . $address_book_rp . "',
+                                attention_to    = '" . $shipp_att . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $fap_date_needed . "',
+                                shipp_time      = '" . $fap_time_needed . "',    
+                                spl_inc         = '" . $fap_spl_recipient . "',
+                                delivery_type   = '" . $delivery_comp . "',
+                                billing_number  = '" . $fap_bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "' "; 
+          echo $query;
+          mysql_query($query);
+    
+}
+elseif($_POST['recipients'] =='lfp_add_rec_cont'){
+   // print_r($_POST);
+    
+    extract($_POST);
+
+           $query = "INSERT INTO sohorepro_service_lfp_sets_needed 
+               
+                                SET   
+                   
+                                company_id         = '" . $user_session_comp . "',
+                                user_id            = '" . $user_session . "',
+                                print_of_need      = '" . $need_sets_8 . "',
+                                option_id          = '" . $option_id_lfp . "', 
+                                original           = '" . $lfp_org. "',    
+                                size               = '" . $size_sets_1 . "',
+                                size_custom        = '" . $size_custom_details . "',
+                                output             = '" . $output_sets_1 . "',
+                                special_inc        = '" . $spl_instruction . "',
+                                output_both_page   = '" . $output_page_details . "',
+                                media              = '" . $media_sets_1 . "',
+                                binding            = '" . $binding_sets_1 . "',
+                                shipp_id        = '" . $address_book_rp . "',
+                                attention_to    = '" . $shipp_att . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $lfp_date_needed . "',
+                                shipp_time      = '" . $lfp_time_needed . "',    
+                                spl_inc         = '" . $lfp_spl_recipient . "',
+                                delivery_type   = '" . $delivery_comp . "',
+                                billing_number  = '" . $lfp_bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "' "; 
+         //  echo $query;
+           mysql_query($query);
+    
+}
+
+
+elseif($_POST['recipients'] =='fap_add_rec_cont'){
+   // print_r($_POST);
+    
+    extract($_POST);
+//    if($lfp_avl_org<$avl_sets_8){
+//        $print_of_each = $avl_sets_8 + $lfp_needed_count;
+//          $sql_inc = "UPDATE sohorepro_service_lfp SET print_of_each = '" . $print_of_each . "' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND option_id = '" . $option_id_lfp . "' AND order_id = '0' ";
+//          mysql_query($sql_inc);
+//          //echo $sql_inc;
+//    }
+//    if($need_sets_8 == $avl_sets_8){
+//       $avl_sets_8 = $lfp_needed_count + $need_sets_8 +1;
+//        $sql_inc = "UPDATE sohorepro_service_lfp SET print_of_each = '" . $avl_sets_8 . "' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND option_id = '" . $option_id_lfp . "' AND order_id = '0' ";
+//        mysql_query($sql_inc);
+//    }
+           $query = "INSERT INTO sohorepro_service_fap_sets_needed 
+               
+                                SET   
+                   
+                                 company_id         = '" . $user_session_comp . "',
+                                user_id            = '" . $user_session . "',
+                                print_of_need      = '" . $need_sets_8 . "',
+                                option_id          = '" . $option_id_fap . "',
+                                original           = '" . $fap_org. "',
+                                size               = '" . $size_sets_1 . "',
+                                size_custom        = '" . $size_custom_details . "',
+                                output             = '" . $output_sets_1 . "',
+                                special_inc        = '" . $spl_instruction . "',
+                                output_both_page   = '" . $output_page_details . "',
+                                media              = '" . $media_sets_1 . "',
+                                shipp_id        = '" . $address_book_rp . "',
+                                attention_to    = '" . $shipp_att . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $fap_date_needed . "',
+                                shipp_time      = '" . $fap_time_needed . "',    
+                                spl_inc         = '" . $fap_spl_recipient . "',
+                                delivery_type   = '" . $delivery_comp . "',
+                                billing_number  = '" . $fap_bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "' "; 
+         //  echo $query;
+           mysql_query($query);
+    
+}
+elseif($_POST['recipients'] == '22_new_rec'){
+    $option_id = $_POST['option_id'];
+    $id =  $_POST['id'];
+  $user_session_comp = $_SESSION['sohorepro_companyid'];
+    $user_session = $_SESSION['sohorepro_userid'];
+    $update_recipient_set = "UPDATE sohorepro_plotting_set SET recipients_set = '1' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND order_id = '0' AND recipients_set = '0' AND options ='". $option_id ."' AND id ='". $id ."'";
+    mysql_query($update_recipient_set);
+   // echo $update_recipient_set;
+}
+elseif($_POST['recipients'] == '22_new_rec_lfp'){
+    $option_id = $_POST['option_id'];
+    $id =  $_POST['id'];
+   $user_session_comp = $_SESSION['sohorepro_companyid'];
+    $user_session = $_SESSION['sohorepro_userid'];
+    $update_recipient_set = "UPDATE sohorepro_service_lfp SET recipients_set = '1' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND order_id = '0' AND recipients_set = '0' AND option_id ='". $option_id ."' AND id ='". $id ."'";
+    mysql_query($update_recipient_set);
+   echo $update_recipient_set;
+}
+
+elseif($_POST['recipients'] == '22_new_rec_fap'){
+    $option_id = $_POST['option_id'];
+    $id =  $_POST['id'];
+   $user_session_comp = $_SESSION['sohorepro_companyid'];
+    $user_session = $_SESSION['sohorepro_userid'];
+    $update_recipient_set = "UPDATE sohorepro_fine_arts_sets SET recipients_set = '1' WHERE company_id = '" . $user_session_comp . "' AND user_id = '" . $user_session . "' AND order_id = '0' AND recipients_set = '0' AND option_id ='". $option_id ."' AND id ='". $id ."'";
+    mysql_query($update_recipient_set);
+   echo $update_recipient_set;
+}
+ elseif($_POST['recipients'] == 'cont_final'){
+     $pac_total =AvlOptionsRemaining($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     $lfp_total =AvlOptionsRemainingLFP($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     $fap_total =AvlOptionsRemainingFAP($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     
+     $pac_org_total = RemainingSets($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     $lfp_org_total = EnteredLFPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     $fap_org_total = EnteredFAPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     
+     
+     if( count($pac_org_total) == count($pac_total) && count($lfp_org_total) == count($lfp_total) && count($fap_org_total) == count($fap_total)){
+         echo "1";
+     }
+     else{
+         echo "0";
+     }
+     
+ }
+elseif ($_POST['recipients'] == '9') {
 
     $shipping_id_rec_pre = explode("_", $_POST['shipping_id_rec']);
     $shipping_id_rec = ($shipping_id_rec_pre[0] == "PEVERY") ? $shipping_id_rec_pre[1] : $_POST['shipping_id_rec'];
@@ -1343,7 +2812,88 @@ if ($_POST['recipients'] == '1') {
                                 shipp_comp_2    = '" . $shipp_comp_2_f . "',
                                 shipp_comp_3    = '" . $shipp_comp_3_f . "' WHERE rand_id = '" . $_SESSION['random_id'] . "' ";
     mysql_query($query);
-} elseif ($_POST['recipients'] == '22') {
+}
+elseif ($_POST['recipients'] == '22_new') {
+    $shipping_id_rec_pre = explode("_", $_POST['shipping_id_rec']);
+    $shipping_id_rec = ($shipping_id_rec_pre[0] == "PEVERY") ? $shipping_id_rec_pre[1] : $_POST['shipping_id_rec'];
+    $user_session = $_POST['user_session'];
+    $user_session_comp = $_POST['user_session_comp'];
+    $date_needed = $_POST['date_needed'];
+    $time_needed = $_POST['time_needed'];
+    $spl_recipient = ($_POST['spl_recipient'] == 'undefined') ? '' : $_POST['spl_recipient'];
+
+    $option_type = $_POST['option_type'];
+
+    $avl_sets_1 = $_POST['avl_sets_1'];
+    $need_sets_1 = ($option_type == '1') ? $_POST['need_sets_1'] : '0';
+
+    $size_sets_1 = $_POST['size_sets_1'];
+    $output_sets_1 = $_POST['output_sets_1'];
+    $media_sets_1 = $_POST['media_sets_1'];
+    $binding_sets_1 = $_POST['binding_sets_1'];
+    $folding_sets_1 = $_POST['folding_sets_1'];
+
+
+
+    $avl_sets_2 = $_POST['size_sets_2'];
+    $need_sets_2 = ($option_type == '0') ? $_POST['need_sets_1'] : '0';
+
+    $size_sets_2 = $_POST['size_sets_2'];
+    $output_sets_2 = $_POST['output_sets_2'];
+    $binding_sets_2 = $_POST['binding_sets_2'];
+    $folding_sets_2 = $_POST['folding_sets_2'];
+
+    $delivery_type = $_POST['delivery_type'];
+    $bill_number = $_POST['bill_number'];
+    $shipp_comp_1_f = $_POST['shipp_comp_1_f'];
+    $shipp_comp_2_f = $_POST['shipp_comp_2_f'];
+    $shipp_comp_3_f = $_POST['shipp_comp_3_f'];
+
+    $size_custom_details = $_POST['size_custom_details'];
+
+    $output_page_details = $_POST['output_page_details'];
+
+    $attention_to = $_POST['attention_to'];
+
+    $contact_ph = $_POST['contact_ph'];
+
+    $option_id = $_POST['option_id'];
+
+    $rand_id = randomPassword();
+
+    $query = "INSERT INTO sohorepro_sets_needed
+			SET     comp_id         = '" . $user_session_comp . "',
+                                usr_id          = '" . $user_session . "',
+                                plot_needed     = '" . $need_sets_1 . "',
+                                size            = '" . $size_sets_1 . "',
+                                option_id       = '" . $option_id . "',  
+                                custome_details     = '" . $size_custom_details . "',
+                                output              = '" . $output_sets_1 . "',
+                                output_page_number  = '" . $output_page_details . "',
+                                media               = '" . $media_sets_1 . "',  
+                                binding         = '" . $binding_sets_1 . "',
+                                folding         = '" . $folding_sets_1 . "',   
+                                arch_needed     = '" . $need_sets_2 . "',
+                                arch_size       = '" . $size_sets_2 . "',
+                                arch_output     = '" . $output_sets_2 . "',
+                                arch_binding    = '" . $binding_sets_2 . "',
+                                arch_folding    = '" . $folding_sets_2 . "',  
+                                shipp_id        = '" . $shipping_id_rec . "',
+                                attention_to    = '" . $attention_to . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $date_needed . "',
+                                shipp_time      = '" . $time_needed . "',    
+                                spl_inc         = '" . $spl_recipient . "',
+                                delivery_type   = '" . $delivery_type . "',
+                                billing_number  = '" . $bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "',
+                                rand_id         = '" . $rand_id . "' ";
+    $sql_result = mysql_query($query);
+    
+}
+elseif ($_POST['recipients'] == '22') {
 
     $shipping_id_rec_pre = explode("_", $_POST['shipping_id_rec']);
     $shipping_id_rec = ($shipping_id_rec_pre[0] == "PEVERY") ? $shipping_id_rec_pre[1] : $_POST['shipping_id_rec'];
@@ -4199,6 +5749,12 @@ if ($_POST['recipients'] == '1') {
 
     $select_fav = "UPDATE sohorepro_sets_needed SET order_id = '" . $order_id_service . "', ordered = '1' WHERE comp_id = '" . $_SESSION['sohorepro_companyid'] . "' AND usr_id = '" . $_SESSION['sohorepro_userid'] . "' AND ordered = '0' ";
     mysql_query($select_fav);
+    
+    $select_lfp = "UPDATE sohorepro_service_lfp_sets_needed SET order_id = '" . $order_id_service . "', ordered = '1' WHERE company_id = '" . $_SESSION['sohorepro_companyid'] . "' AND user_id = '" . $_SESSION['sohorepro_userid'] . "' AND ordered = '0' ";
+    mysql_query($select_lfp);
+    
+    $select_fap = "UPDATE sohorepro_service_fap_sets_needed SET order_id = '" . $order_id_service . "', ordered = '1' WHERE company_id = '" . $_SESSION['sohorepro_companyid'] . "' AND user_id = '" . $_SESSION['sohorepro_userid'] . "' AND ordered = '0' ";
+    mysql_query($select_fap);
 
     $upload_sql = "UPDATE sohorepro_upload_files_set SET order_id = '" . $order_id_service . "' WHERE comp_id = '" . $_SESSION['sohorepro_companyid'] . "' AND user_id = '" . $_SESSION['sohorepro_userid'] . "' AND order_id = '0' ";
     mysql_query($upload_sql);
@@ -4208,8 +5764,11 @@ if ($_POST['recipients'] == '1') {
     mysql_query($sql_plot);
     
     
-    $delete_empty = "UPDATE FROM sohorepro_service_lfp SET order_id ='1' WHERE company_id = '".$_SESSION['sohorepro_companyid']."' AND user_id = '".$_SESSION['sohorepro_userid']."' AND order_id = '0'";
+    $delete_empty = "UPDATE sohorepro_service_lfp SET order_id = '" . $order_id_service . "' WHERE company_id = '".$_SESSION['sohorepro_companyid']."' AND user_id = '".$_SESSION['sohorepro_userid']."' AND order_id = '0' ";
     mysql_query($delete_empty);
+    
+    $update_fap = "UPDATE sohorepro_fine_arts_sets SET order_id = '" . $order_id_service . "' WHERE company_id = '".$_SESSION['sohorepro_companyid']."' AND user_id = '".$_SESSION['sohorepro_userid']."' AND order_id = '0' ";
+    mysql_query($update_fap);
     
     
 
@@ -4218,7 +5777,22 @@ if ($_POST['recipients'] == '1') {
 
     //$mail_id = getActiveEmailOrder();
     $mail_id = getActiveEmailPAC();
+    
     $entered_needed_sets_final = SetsOrderedFinalize($job_reference_final[0]['id']);
+    
+    $entered_needed_sets_final_lfp = SetsOrderedFinalizeLFP($job_reference_final[0]['id']);
+    
+    $entered_needed_sets_final_fap = SetsOrderedFinalizeFAP($job_reference_final[0]['id']);
+     
+    if(count($entered_needed_sets_final)>0){
+        $finalize = $entered_needed_sets_final;
+    }
+    elseif(count($entered_needed_sets_final_lfp)>0){
+        $finalize = $entered_needed_sets_final_lfp;
+    }
+    else{
+        $finalize = $entered_needed_sets_final_fap;
+    }
     $total_sets = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
     $user_name = UserName($_SESSION['sohorepro_userid']);
     $customer_name = getCompName($_SESSION['sohorepro_companyid']);
@@ -4370,10 +5944,12 @@ if ($_POST['recipients'] == '1') {
     
     
     $html_5 .= '</table>';
+     $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    if(count($cust_original_order_pdf)>0){
     $html_5 .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES </div>';
     $html_5 .= '<table border="0" style="width: 100%;float: left;">';
 
-    $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+  //  $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
     $total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
     $cust_original_order_final_pdf = SetsOrderedFinalizeOriginal($job_reference_final[0]['id']);
     $upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -4432,11 +6008,7 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '<td><b>Color Page Numbers:</b>&nbsp;'.$original['output_both'].'</td>';
         $html_5 .= '</tr>';
         }
-        if ($original['spl_instruction'] != '') {
-        $html_5 .= '<tr>';
-        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original['spl_instruction'].'</td>';
-        $html_5 .= '</tr>';
-        }
+      
         if ($original['ftp_link'] != "0") {
             $link = ($original['ftp_link'] != '0') ? $original['ftp_link'] : '';
             $user_name_ftp = ($original['user_name'] != '0') ? $original['user_name'] : '';
@@ -4491,6 +6063,11 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '</tr>';
             }
         }
+          if ($original['spl_instruction'] != '') {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original['spl_instruction'].'</td>';
+        $html_5 .= '</tr>';
+        }
         if ($original['pick_up'] != "0") {
             if (($original['pick_up'] == "ASAP") && ($original['pick_up_time'] == "ASAP")) {
                 $pickup_details = $original['pick_up'];
@@ -4533,12 +6110,14 @@ if ($_POST['recipients'] == '1') {
                 
     }
     
+    }
     /*****---LFP Start *************/
-    
+     $cust_original_order_pdf_lfp = EnteredLFPMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+     if(count($cust_original_order_pdf_lfp)>0){
      $html_5 .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
     $html_5 .= '<table border="0" style="width: 100%;float: left;">';
 
-    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+   
     //$total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
    // $cust_original_order_final_pdf_lfp = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$_SESSION['ref_val']);
     //$upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -4550,7 +6129,7 @@ if ($_POST['recipients'] == '1') {
                         <td>Option</td> 
                             <td>Originals</td> 
                             <td>Sets</td> 
-                            <td>Order Type</td>                            
+                                                   
                             <td>Size</td>
                             <td>Output</td>
                             <td>Media</td>
@@ -4570,7 +6149,7 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
         $html_5 .= '<td>' . $original_pdf_lfp['original'] . '</td>';
         $html_5 .= '<td>' . $cust_needed_sets_lfp . '</td>';
-        $html_5 .= '<td>' . $cust_order_type_lfp . '</td>';
+      
         $html_5 .= '<td>' . $size_lfp . '</td>';
         $html_5 .= '<td style="text-transform: uppercase;">' . $output_lfp . '</td>';
         $html_5 .= '<td>' . ucfirst($media_lfp) . '</td>';
@@ -4597,11 +6176,7 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '<td><b>Color Page Numbers:</b>&nbsp;'.$original_lfp['output_both_page'].'</td>';
         $html_5 .= '</tr>';
         }
-        if ($original_lfp['special_inc'] != '') {
-        $html_5 .= '<tr>';
-        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original_lfp['special_inc'].'</td>';
-        $html_5 .= '</tr>';
-        }
+       
         if ($original_lfp['ftp_link'] != "0") {
             $link = ($original_lfp['ftp_link'] != '0') ? $original_lfp['ftp_link'] : '';
             $user_name_ftp = ($original_lfp['user_name'] != '0') ? $original_lfp['user_name'] : '';
@@ -4655,6 +6230,11 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '</td>';
         $html_5 .= '</tr>';
             }
+        }
+         if ($original_lfp['special_inc'] != '') {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original_lfp['special_inc'].'</td>';
+        $html_5 .= '</tr>';
         }
         if ($original_lfp['schedule_pickup'] != "0") {
             if (($original_lfp['schedule_pickup'] == "ASAP") && ($original_lfp['pick_up_time'] == "ASAP")) {
@@ -4785,13 +6365,16 @@ if ($_POST['recipients'] == '1') {
        
      } }
                    }}
+                   
+                   
+}         
     /*****---LFP End ************/
-     
-    
+     $original_service_fap   = EnteredFAPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+    if(count($original_service_fap)>0){
     $html_5 .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: FINE ART PRINTING </div>';
     $html_5 .= '<table border="0" style="width: 100%;float: left;">';
 
-  $original_service_fap   = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid']);
+  
 
     $html_5 .= '<tr style="background-color: #002369;color: #FFF;">
                     <td>Option</td>
@@ -4843,11 +6426,7 @@ if ($_POST['recipients'] == '1') {
         $html_5 .= '<td><b>Color Page Numbers:</b>&nbsp;'.$original['output_both'].'</td>';
         $html_5 .= '</tr>';
         }
-        if ($original['special_instruction'] != '') {
-        $html_5 .= '<tr>';
-        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original['special_instruction'].'</td>';
-        $html_5 .= '</tr>';
-        }
+     
         if ($original['ftp_link_val'] != "0") {
             $link = ($original['ftp_link'] != '0') ? $original['ftp_link_val'] : '';
             $user_name_ftp = ($original['user_name'] != '0') ? $original['user_name_val'] : '';
@@ -4891,7 +6470,7 @@ if ($_POST['recipients'] == '1') {
            /// if ($original['use_same_alt'] == "0") {
         $html_5 .= '<tr>';
         $html_5 .= '<td>';
-        $html_5 .= '<b>Drop-Off Option:</b>&nbsp;'.$original['drop_off'];
+        $html_5 .= '<b>Drop-Off Option:</b>&nbsp;'.$original['dropoff_val'];
         $html_5 .= '</td>';
         $html_5 .= '</tr>'; 
 //        } else {
@@ -4901,6 +6480,11 @@ if ($_POST['recipients'] == '1') {
 //        $html_5 .= '</td>';
 //        $html_5 .= '</tr>';
 //            }
+        }
+           if ($original['special_instruction'] != '') {
+        $html_5 .= '<tr>';
+        $html_5 .= '<td><b>Special Instructions:</b>&nbsp;'.$original['special_instruction'].'</td>';
+        $html_5 .= '</tr>';
         }
         if ($original['pick_up'] != "0") {
             if (($original['pick_up'] == "ASAP") && ($original['pick_up_time'] == "ASAP")) {
@@ -4942,7 +6526,7 @@ if ($_POST['recipients'] == '1') {
 //        }  
         //Alternate End
                 
-    }
+    }}
     /*********FAP End***********/
     
     $html_5 .= '<tr>';
@@ -4950,15 +6534,15 @@ if ($_POST['recipients'] == '1') {
     $html_5 .= '</tr>';
     $html_5 .= '<tr>';
     $html_5 .= '<td>';
-            if ($entered_needed_sets_pdf[0]['delivery_type_option'] == '1') {   
+            if ($finalize[0]['delivery_type_option'] == '1') {   
     $html_5 .= '<span style="float: left;width: 100%;margin-top: 7px;font-weight: bold;margin-bottom: 20px;">DELIVERY METHOD: RETURN EVERYTHING TO MY OFFICE</span>';
-    } elseif ($entered_needed_sets_pdf[0]['delivery_type_option'] == '2') {
+    } elseif ($finalize[0]['delivery_type_option'] == '2') {
     $html_5 .= '<span style="float: left;width: 100%;margin-top: 7px;font-weight: bold;margin-bottom: 20px;">DELIVERY METHOD: SEND EVERYTHING TO </span>';
-    } elseif ($entered_needed_sets_pdf[0]['delivery_type_option'] == '3') {
+    } elseif ($finalize[0]['delivery_type_option'] == '3') {
                 $pickup_from_soho_add = $_SESSION['pickup_from_soho_add'];
                 $address_caption = AddressBookPickupSoho($pickup_from_soho_add);
     $html_5 .= '<span style="float: left;width: 100%;margin-top: 7px;font-weight: bold;margin-bottom: 20px;">DELIVERY METHOD: WILL PICKUP FROM SOHO REPRO - '.$address_caption[0]['caption'].'</span>';
-    } elseif ($entered_needed_sets_pdf[0]['delivery_type_option'] == '0') {
+    } elseif ($finalize[0]['delivery_type_option'] == '0') {
     $html_5 .= '<span style="float: left;width: 100%;margin-top: 7px;font-weight: bold;margin-bottom: 20px;">DELIVERY METHOD: DISTRIBUTE TO ONE OR MORE LOCATIONS</span>';
     }
     $html_5 .= '</td>';   
@@ -4966,7 +6550,7 @@ if ($_POST['recipients'] == '1') {
     $html_5 .= '</table></br>';
    
     
-    if ($entered_needed_sets_pdf[0]['delivery_type_option'] == '1') {
+    if ($finalize[0]['delivery_type_option'] == '1') {
         $pdf->writeHTML($html_5, true, 0, true, 0);
         $pdf->lastPage();
         $pdf->AddPage();
@@ -5021,7 +6605,7 @@ if ($_POST['recipients'] == '1') {
     $html_retmo .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
     $html_retmo .= '<table border="0" style="width: 100%;float: left;">';
 
-    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $cust_original_order_pdf_lfp = EnteredLFPMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
     //$total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
    // $cust_original_order_final_pdf_lfp = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$_SESSION['ref_val']);
     //$upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -5128,11 +6712,12 @@ if ($_POST['recipients'] == '1') {
     $html_retmo .= '</table>';
                    }}     
     /******mounting end**/
-                   
+                   $original_service_fap   = EnteredFAPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+                   if($original_service_fap){
                    $html_retmo .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: FINE ART PRINTING </div>';
     $html_retmo .= '<table border="0" style="width: 100%;float: left;">';
 
-  $original_service_fap   = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid']);
+  
 
     $html_retmo .= '<tr style="background-color: #002369;color: #FFF;">
                     <td>Option</td>
@@ -5164,7 +6749,7 @@ if ($_POST['recipients'] == '1') {
         $html_retmo .= '</tr>';
     }
     $html_retmo .= '</table>';
-    
+                   }
     /**********FAP End*****/
         $html_retmo .= '<table>';
         
@@ -5243,18 +6828,22 @@ if ($_POST['recipients'] == '1') {
         $html_retmo .= '</table>';
         
         $pdf->writeHTML($html_retmo, true, 0, true, 0);
-    }elseif ($entered_needed_sets_final[0]['delivery_type_option'] == '2') {
+    }elseif ($finalize[0]['delivery_type_option'] == '2') {
+        
         $pdf->writeHTML($html_5, true, 0, true, 0);
         $pdf->lastPage();
         $pdf->AddPage();
+        
          $html_seto .= '<table style="width: 100%;float: left;margin-top: 10px;">';
           $html_seto .= '<tr><td>ORDER # ' .$order_sequence_pdf[0]['order_sequence'].'</td>';
           $html_seto .= ' </tr></table></br>';
          
+          $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+          if($cust_original_order_pdf){
            $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: PLOTTING & ARCHITECTURAL COPIES</div>';
     $html_seto .= '<table border="0" style="width: 100%;float: left;">';
 
-    $cust_original_order_pdf = EnteredPlotRecipientsMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
+    
     $total_plot_needed_pdf = SetsOrderedFinalizeCountOfSets($job_reference_final[0]['id']);
     $cust_original_order_final_pdf = SetsOrderedFinalizeOriginal($job_reference_final[0]['id']);
     $upload_file_exist_pdf = UploadFileExistFinalize($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $job_reference_final[0]['id']);
@@ -5294,15 +6883,20 @@ if ($_POST['recipients'] == '1') {
         $html_seto .= '</tr>';
     }
     $html_seto .= '</table>';
-        if (($entered_needed_sets_final[0]['shipp_id'] == 'P1') && ($entered_needed_sets_final[0]['shipp_id'] == 'P2')) {
-            $shipp_add = AddressBookPickupSohoCap($entered_needed_sets_final[0]['shipp_id']);
+        if (($finalize[0]['shipp_id'] == 'P1') && ($finalize[0]['shipp_id'] == 'P2')) {
+            $shipp_add = AddressBookPickupSohoCap($finalize[0]['shipp_id']);
         } else {
-            $shipp_add = editAddressServices($entered_needed_sets_final[0]['shipp_id']);
+            $shipp_add = editAddressServices($finalize[0]['shipp_id']);
         }
+        
+          }
+        $cust_original_order_pdf_lfp = EnteredLFPMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+        
+        if($cust_original_order_pdf_lfp){
          $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
     $html_seto .= '<table border="0" style="width: 100%;float: left;">';
 
-    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    
   
          
     $html_seto .= '<tr style="background-color: #002369;color: #FFF;">
@@ -5404,13 +6998,14 @@ if ($_POST['recipients'] == '1') {
                     $j=2;
        }  
     $html_retmo .= '</table>';
-                   }}     
+        }}    } 
     /******mounting end**/
-                   
+                    $original_service_fap   = EnteredFAPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+                    if($original_service_fap){
                    $html_seto .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: FINE ART PRINTING </div>';
     $html_seto .= '<table border="0" style="width: 100%;float: left;">';
 
-  $original_service_fap   = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid']);
+ 
 
     $html_seto .= '<tr style="background-color: #002369;color: #FFF;">
                     <td>Option</td>
@@ -5442,8 +7037,10 @@ if ($_POST['recipients'] == '1') {
         $html_seto .= '</tr>';
     }
     $html_seto .= '</table>';
-    
+                    }
+        
     /***********FAP End*************/
+                     $html_seto .= '<table>';
         $html_seto .= '<tr>';
         $html_seto .= '<td>&nbsp;</td>';
         $html_seto .= '<td>&nbsp;</td>';
@@ -5460,11 +7057,11 @@ if ($_POST['recipients'] == '1') {
         $html_seto .= '</tr>';
         
         $html_seto .= '<tr>';
-        if (($entered_needed_sets_final[0]['shipp_id'] != 'P1') && ($entered_needed_sets_final[0]['shipp_id'] != 'P2')) {
+        if (($finalize[0]['shipp_id'] != 'P1') && ($finalize[0]['shipp_id'] != 'P2')) {
             $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
             $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
-            $att = ($entered_needed_sets_final[0]['attention_to'] != "undefined") ? '<br>Attention:  ' . $entered_needed_sets_final[0]['attention_to'] : '';
-            $phone = ($entered_needed_sets_final[0]['contact_ph'] != "undefined") ? '<br>' . 'Contact:  ' . $entered_needed_sets_final[0]['contact_ph'] : '';
+            $att = ($finalize[0]['attention_to'] != "undefined") ? '<br>Attention:  ' . $finalize[0]['attention_to'] : '';
+            $phone = ($finalize[0]['contact_ph'] != "undefined") ? '<br>' . 'Contact:  ' . $finalize[0]['contact_ph'] : '';
             $html_seto .= '<td><b>To:</b><br>'. $shipp_add[0]['company_name'] . $att . $phone . '<br>' . $shipp_add[0]['address_1'] . '<br>' . $add_2 . $add_3 . $shipp_add[0]['city'] . '&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'] . '<br>' . $shipp_add[0]['phone'] . '</td>';
         } else {                    //echo $shipp_add[0]['address'];                        
             $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
@@ -5489,26 +7086,26 @@ if ($_POST['recipients'] == '1') {
         
         
         $html_seto .= '<table>';
-            if ($entered_needed_sets_pdf[0]['delivery_type'] != '0') {
+            if ($finalize[0]['delivery_type'] != '0') {
                 
                 $html_seto .= '<tr>';
                 $html_seto .= '<td style="font-weight: bold;">Send Via: </td>';
                 $html_seto .= '</tr>';
                 $html_seto .= '<tr>';
-                if ($entered_needed_sets_pdf[0]['delivery_type'] == '1') {
+                if ($finalize[0]['delivery_type'] == '1') {
                     $delivery_type = 'Next Day Air';
-                } elseif ($entered_needed_sets_pdf[0]['delivery_type'] == '2') {
+                } elseif ($finalize[0]['delivery_type'] == '2') {
                     $delivery_type = 'Two Day Air';
-                } elseif ($entered_needed_sets_pdf[0]['delivery_type'] == '3') {
+                } elseif ($finalize[0]['delivery_type'] == '3') {
                     $delivery_type = 'Three Day Air';
-                } elseif ($entered_needed_sets_pdf[0]['delivery_type'] == '4') {
+                } elseif ($finalize[0]['delivery_type'] == '4') {
                     $delivery_type = 'Ground';
                 }
-                $ship_type_1 = ($entered_needed_sets_pdf[0]['shipp_comp_1'] == '0') ? '' : $entered_needed_sets_pdf[0]['shipp_comp_1'];
-                $ship_type_2 = ($entered_needed_sets_pdf[0]['shipp_comp_2'] == '0') ? '' : $entered_needed_sets_pdf[0]['shipp_comp_2'];
-                $ship_type_3 = ($entered_needed_sets_pdf[0]['shipp_comp_3'] == '0') ? '' : $entered_needed_sets_pdf[0]['shipp_comp_3'];
+                $ship_type_1 = ($finalize[0]['shipp_comp_1'] == '0') ? '' : $finalize[0]['shipp_comp_1'];
+                $ship_type_2 = ($finalize[0]['shipp_comp_2'] == '0') ? '' : $finalize[0]['shipp_comp_2'];
+                $ship_type_3 = ($finalize[0]['shipp_comp_3'] == '0') ? '' : $finalize[0]['shipp_comp_3'];
                 $html_seto .= '<td>';
-                $html_seto .= $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_needed_sets_pdf[0]['billing_number'];
+                $html_seto .= $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $finalize[0]['billing_number'];
                 $html_seto .= '</td>';
                 $html_seto .= '</tr>';
             } else {
@@ -5523,7 +7120,7 @@ if ($_POST['recipients'] == '1') {
         $html_seto .= '</table>';
         
         $pdf->writeHTML($html_seto, true, 0, true, 0);
-    }elseif ($entered_needed_sets_final[0]['delivery_type_option'] == '3') {
+    }elseif ($finalize[0]['delivery_type_option'] == '3') {
         $pdf->writeHTML($html_5, true, 0, true, 0);
         $pdf->lastPage();
         $pdf->AddPage();
@@ -5584,7 +7181,7 @@ if ($_POST['recipients'] == '1') {
     $html_wpfsr .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST:  LARGE FORMAT COLOR & BW </div>';
     $html_wpfsr .= '<table border="0" style="width: 100%;float: left;">';
 
-    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $cust_original_order_pdf_lfp = EnteredLFPMultiOriginal($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
   
          
     $html_wpfsr .= '<tr style="background-color: #002369;color: #FFF;">
@@ -5687,11 +7284,11 @@ if ($_POST['recipients'] == '1') {
     $html_wpfsr .= '</table>';
                    }}     
     /******mounting end**/ 
-                   
+                   if($original_service_fap){
                    $html_wpfsr .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: FINE ART PRINTING </div>';
     $html_wpfsr .= '<table border="0" style="width: 100%;float: left;">';
 
-  $original_service_fap   = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid']);
+  $original_service_fap   = EnteredFAPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
 
     $html_wpfsr .= '<tr style="background-color: #002369;color: #FFF;">
                     <td>Option</td>
@@ -5723,7 +7320,7 @@ if ($_POST['recipients'] == '1') {
         $html_wpfsr .= '</tr>';
     }
     $html_wpfsr .= '</table>';
-    
+                   }
     /********FAP End*/
         $html_wpfsr .= '<table>';
         $html_wpfsr .= '<tr>';
@@ -5743,11 +7340,11 @@ if ($_POST['recipients'] == '1') {
 
 
         $html_wpfsr .= '<table><tr>';
-        $date_asap = ($entered_needed_sets_final[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_needed_sets_final[0]['shipp_time'] : '';
-        $html_wpfsr .= '<td><b>When Needed:</b>' . $entered_needed_sets_final[0]['shipp_date'] . $date_asap . '</td></tr>';
-        if ($entered_needed_sets_final[0]['spl_inc'] != '') {
+        $date_asap = ($original_service_fap[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $original_service_fap[0]['shipp_time'] : '';
+        $html_wpfsr .= '<td><b>When Needed:</b>' . $original_service_fap[0]['shipp_date'] . $date_asap . '</td></tr>';
+        if ($original_service_fap[0]['spl_inc'] != '') {
             $html_wpfsr .= '<tr>';
-            $html_wpfsr .= '<td>Special Instructions:<br>' . $entered_needed_sets_final[0]['spl_inc'] . '</td></tr>';            
+            $html_wpfsr .= '<td>Special Instructions:<br>' . $original_service_fap[0]['spl_inc'] . '</td></tr>';            
         }
         $html_wpfsr .= '</table>';  
         
@@ -5768,10 +7365,11 @@ if ($_POST['recipients'] == '1') {
 //        $pdf->AddPage();
 //        $pdf->writeHTML($html_5, true, 0, true, 0);
     }
-    elseif($entered_needed_sets_final[0]['delivery_type_option'] == '0'){
+    elseif($finalize[0]['delivery_type_option'] == '0'){
         $pdf->writeHTML($html_5, true, 0, true, 0);
         $pdf->lastPage();
         
+        if(count($entered_needed_sets_final)>0){
         $x  =   1;
         foreach ($entered_needed_sets_final as $entered_sets){
         $pdf->AddPage();
@@ -5938,11 +7536,375 @@ if ($_POST['recipients'] == '1') {
         $pdf->writeHTML($html_2, true, 0, true, 0);
         $x++;
         }
+    }
+        /************LFP***************/
+    if(count($entered_needed_sets_final_lfp)>0){
+        $y  =   1;
+        foreach ($entered_needed_sets_final_lfp as $entered_sets){
+        $pdf->AddPage();
+            if (($entered_sets['shipp_id'] == 'P1') && ($entered_sets['shipp_id'] == 'P2')) {
+                $shipp_add = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+            } else {
+                $shipp_add = SelectIdAddressService($entered_sets['shipp_id']);
+            }
+            
+            $needed_options = $entered_sets['option_id'];
+            $needed_sets = $entered_sets['print_of_need'];
+            $order_type = 'LFP';
+            $size = $entered_sets['size'];
+            $output  = $entered_sets['output'];
+            $binding  = $entered_sets['binding'];
+            $media  = $entered_sets['media'];
+            
+            
+        // create some HTML content
+            $html_lfp = '<table  border="0">';
+            $html_lfp .= '<tr>';
+            $html_lfp .= '<td>&nbsp;</td><td>&nbsp;</td>';
+            $html_lfp .= '</tr>';
+            $html_lfp .= '<tr>';
+            $html_lfp .= '<td style="font-weight: bold;">RECIPIENT ' . $y . '</td><td>&nbsp;</td>';
+            $html_lfp .= '</tr>';
+            
+            $html_lfp .= '<tr>';
+            $html_lfp .= '<td>&nbsp;</td>';
+            $html_lfp .= '<td>&nbsp;</td>';
+            $html_lfp .= '</tr>';
+
+            $html_lfp .= '<tr>';
+            if (($entered_needed_sets_final_lfp[0]['shipp_id'] != 'P1') && ($entered_needed_sets_final_lfp[0]['shipp_id'] != 'P2')) {
+                $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                $att = ($entered_needed_sets_final_lfp[0]['attention_to'] != "undefined") ? '<br>Attention:  ' . $entered_needed_sets_final_lfp[0]['attention_to'] : '';
+                $phone = ($entered_needed_sets_final_lfp[0]['contact_ph'] != "undefined") ? '<br>' . 'Contact:  ' . $entered_needed_sets_final_lfp[0]['contact_ph'] : '';
+                $html_lfp .= '<td><b>To:</b><br>'. $shipp_add[0]['company_name'] . $att . $phone . '<br>' . $shipp_add[0]['address_1'] . '<br>' . $add_2 . $add_3 . $shipp_add[0]['city'] . '&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'] . '<br>' . $shipp_add[0]['phone'] . '</td>';
+            } else {                    //echo $shipp_add[0]['address'];                        
+                $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                $html_lfp .= '<td>' . $shipp_add_p[0]['address'] . '</td>';
+            }
+
+            $html_lfp .= '<td><b>From:</b><br>' .$user_name.'<br>'. $service_billing_address[0]['comp_name'] . '<br>' . $service_address_1 . $service_address_2 . $service_address_3 . $service_billing_address[0]['comp_city'] . ',&nbsp;' . $service_billing_address[0]['comp_state'] . '&nbsp;' . $service_billing_address[0]['comp_zipcode'] . '<br>' . $service_billing_address[0]['comp_contact_phone'] . '</td>';
+            
+            $html_lfp .= '</tr><tr>';
+            $html_lfp .= '<td style="height:15px;">&nbsp;</td>';
+            $html_lfp .= '</tr>';
+            
+            $html_lfp .= '<tr>';
+            $html_lfp .= '<td style="font-weight: bold;">PACKING LIST:</td>';
+            $html_lfp .= '</tr>';
+            $html_lfp .= '</table>';
+
+            $html_lfp .= '<table border="0"  style="width: 100%;">';
+            $html_lfp .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
+            $html_lfp .= '<td style="font-weight: bold;">Option</td>';
+            $html_lfp .= '<td style="font-weight: bold;">Sets</td>';
+           
+            $html_lfp .= '<td style="font-weight: bold;">Size</td>';
+            $html_lfp .= '<td style="font-weight: bold;">Output</td>';
+            $html_lfp .= '<td style="font-weight: bold;">Media</td>';
+            $html_lfp .= '<td style="font-weight: bold;">Binding</td>';
+         
+            $html_lfp .= '</tr>';
+         
+                $html_lfp .= '<tr bgcolor="#fff">'; 
+                $html_lfp .= '<td>' . $needed_options . '</td>';
+                $html_lfp .= '<td>' . $needed_sets . '</td>';
+               
+                $html_lfp .= '<td>' . $size . '</td>';
+                $html_lfp .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+                $html_lfp .= '<td>' . $media . '</td>';
+                $html_lfp .= '<td>' . ucwords(strtolower($binding)) . '</td>';
+              
+                $html_lfp .= '</tr>';
+            
+
+            $html_lfp .= '</table>';
+            
+              /*****---Mounting and Lamination Start ************/
+    
+        /*****M&L End************/
+   // $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    foreach ($cust_original_order_pdf_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}
+                   if($title_lfp>0){ 
+    $html_lfp .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: MOUNTING & LAMINATING </div>';
+    $html_lfp .= '<table border="0" style="width: 100%;float: left;">';
+           $j=1;
+                    foreach ($cust_original_order_pdf_lfp as $original){ if($original['ml_active']==1){
+                       if($j==1){ 
+                      
+                               
+    
+    $html_lfp .= '<tr style="background-color: #002369;color: #FFF;">
+                        <td>Option</td> 
+                            <td>Originals</td> 
+                          
+                            <td>Order Type</td>                            
+                            <td>L</td>
+                            <td>W</td>';
+    
+    if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){ $html_lfp.='<td>Mounting</td>'; }
+    if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){ $html_lfp.='<td>Lamination</td>'; }
+     $html_lfp.='<td style="width: 15%;">Grommets</td>';
+               $html_lfp.='</tr>';
+                       }
+   
+        
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                                     $ml_type="Mounting";
+                            
+                                    }
+                                 elseif($original['ml_type']=="L"){
+                                    $ml_type="Lamination";
+                                    }
+                                 else{
+                                 $ml_type="Both";
+                                      }
+                                if($original['ml_grommets']=="0") {
+                                $grommets = "No"; }
+                                else {
+                                    $grommets ="Yes";
+                                }
+        
+        $html_lfp .= '<tr style="background-color: #FFF;color: #000;">';
+        $html_lfp .= '<td>' . $original['option_id'] . '</td>';
+        $html_lfp .= '<td>' . $original['ml_originals'] . '</td>';
+        $html_lfp .= '<td>' . $ml_type . '</td>';
+        $html_lfp .= '<td>' . $original['ml_width'] . '</td>';
+        $html_lfp .= '<td>' . $original['ml_length'] . '</td>';
+        if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){ $html_lfp .= '<td>' . $original['ml_mounting'] . '</td>'; };
+        if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){ $html_lfp .= '<td>' . $original['ml_laminating'] . '</td>'; };
+        $html_lfp .= '<td>'.$grommets.'</td>';
+        $html_lfp .= '</tr>';
+    
+     
+                    $j=2;
+       }  
+    $html_lfp .= '</table>';
+     
+   
+                   }}
+            
+            $html_lfp .= '<table border="0" style="width: 100%;">';
+          
+
+            $html_lfp .= '<tr>';
+            $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+            $html_lfp .= '<td><span style="font-weight: bold;">When Needed:  </span>' . $entered_sets['shipp_date'] . $date_asap;
+            $html_lfp .= '</tr>';
+            $html_lfp .= '</table>';
+            
+            $html_lfp .= '<table>';
+            if ($entered_sets['delivery_type'] != '0') {
+                
+                $html_lfp .= '<tr>';
+                $html_lfp .= '<td>&nbsp;</td>';
+                $html_lfp .= '</tr>';
+                
+                $html_lfp .= '<tr>';
+                $html_lfp .= '<td>&nbsp;</td>';
+                $html_lfp .= '</tr>';
+                
+                $html_lfp .= '<tr>';
+                $html_lfp .= '<td style="font-weight: bold;">Send Via: </td>';
+                $html_lfp .= '</tr>';
+                $html_lfp .= '<tr>';
+                if ($entered_sets['delivery_type'] == '1') {
+                    $delivery_type = 'Next Day Air';
+                } elseif ($entered_sets['delivery_type'] == '2') {
+                    $delivery_type = 'Two Day Air';
+                } elseif ($entered_sets['delivery_type'] == '3') {
+                    $delivery_type = 'Three Day Air';
+                } elseif ($entered_sets['delivery_type'] == '4') {
+                    $delivery_type = 'Ground';
+                }
+                $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+                $html_lfp .= '<td>';
+                $html_lfp .= $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                $html_lfp .= '</td>';
+                $html_lfp .= '</tr>';
+            } else {
+                $html_lfp .= '<tr>';
+                $html_lfp .= '<td>&nbsp;</td>';
+                $html_lfp .= '</tr>';
+                
+                $html_lfp .= '<tr>';
+                $html_lfp .= '<td>&nbsp;</td>';
+                $html_lfp .= '</tr>';
+                
+                $html_lfp .= '<tr colspan="8">';
+                $html_lfp .= '<td style="font-weight: bold;">Send Via: </td>';
+                $html_lfp .= '</tr>';
+                $html_lfp .= '<tr>';
+                $html_lfp .= '<td>';
+                $html_lfp .= 'SOHO TO ARRANGE DELIVERY</td>';
+                $html_lfp .= '</tr>';
+            }  
+                $html_lfp .= '</table>'; 
+            
+        // output the HTML content
+        $pdf->writeHTML($html_lfp, true, 0, true, 0);
+        $y++;
+        }
         
     }
     
-      
+      /************FAP***************/
+    if(count($entered_needed_sets_final_fap)>0){
+        $z  =   1;
+        foreach ($entered_needed_sets_final_fap as $entered_sets){
+        $pdf->AddPage();
+            if (($entered_sets['shipp_id'] == 'P1') && ($entered_sets['shipp_id'] == 'P2')) {
+                $shipp_add = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+            } else {
+                $shipp_add = SelectIdAddressService($entered_sets['shipp_id']);
+            }
+            
+            $needed_options = $entered_sets['option_id'];
+            $needed_sets = $entered_sets['print_of_need'];
+            $order_type = 'FAP';
+            $size = $entered_sets['size'];
+            $output  = $entered_sets['output'];
+            $media  = $entered_sets['media'];
+            
+            
+        // create some HTML content
+            $html_fap = '<table  border="0">';
+            $html_fap .= '<tr>';
+            $html_fap .= '<td>&nbsp;</td><td>&nbsp;</td>';
+            $html_fap .= '</tr>';
+            $html_fap .= '<tr>';
+            $html_fap .= '<td style="font-weight: bold;">RECIPIENT ' . $z . '</td><td>&nbsp;</td>';
+            $html_fap .= '</tr>';
+            
+            $html_fap .= '<tr>';
+            $html_fap .= '<td>&nbsp;</td>';
+            $html_fap .= '<td>&nbsp;</td>';
+            $html_fap .= '</tr>';
+
+            $html_fap .= '<tr>';
+            if (($entered_needed_sets_final_fap[0]['shipp_id'] != 'P1') && ($entered_needed_sets_final_fap[0]['shipp_id'] != 'P2')) {
+                $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                $att = ($entered_needed_sets_final_fap[0]['attention_to'] != "undefined") ? '<br>Attention:  ' . $entered_needed_sets_final_fap[0]['attention_to'] : '';
+                $phone = ($entered_needed_sets_final_fap[0]['contact_ph'] != "undefined") ? '<br>' . 'Contact:  ' . $entered_needed_sets_final_fap[0]['contact_ph'] : '';
+                $html_fap .= '<td><b>To:</b><br>'. $shipp_add[0]['company_name'] . $att . $phone . '<br>' . $shipp_add[0]['address_1'] . '<br>' . $add_2 . $add_3 . $shipp_add[0]['city'] . '&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'] . '<br>' . $shipp_add[0]['phone'] . '</td>';
+            } else {                    //echo $shipp_add[0]['address'];                        
+                $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                $html_fap .= '<td>' . $shipp_add_p[0]['address'] . '</td>';
+            }
+
+            $html_fap .= '<td><b>From:</b><br>' .$user_name.'<br>'. $service_billing_address[0]['comp_name'] . '<br>' . $service_address_1 . $service_address_2 . $service_address_3 . $service_billing_address[0]['comp_city'] . ',&nbsp;' . $service_billing_address[0]['comp_state'] . '&nbsp;' . $service_billing_address[0]['comp_zipcode'] . '<br>' . $service_billing_address[0]['comp_contact_phone'] . '</td>';
+            
+            $html_fap .= '</tr><tr>';
+            $html_fap .= '<td style="height:15px;">&nbsp;</td>';
+            $html_fap .= '</tr>';
+            
+            $html_fap .= '<tr>';
+            $html_fap .= '<td style="font-weight: bold;">PACKING LIST:</td>';
+            $html_fap .= '</tr>';
+            $html_fap .= '</table>';
+
+            $html_fap .= '<table border="0"  style="width: 100%;">';
+            $html_fap .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
+            $html_fap .= '<td style="font-weight: bold;">Option</td>';
+            $html_fap .= '<td style="font-weight: bold;">Sets</td>';
+            
+            $html_fap .= '<td style="font-weight: bold;">Size</td>';
+            $html_fap .= '<td style="font-weight: bold;">Output</td>';
+            $html_fap .= '<td style="font-weight: bold;">Media</td>';
+          
+         
+            $html_fap .= '</tr>';
+         
+                $html_fap .= '<tr bgcolor="#fff">'; 
+                $html_fap .= '<td>' . $needed_options . '</td>';
+                $html_fap .= '<td>' . $needed_sets . '</td>';
+               
+                $html_fap .= '<td>' . $size . '</td>';
+                $html_fap .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+                $html_fap .= '<td>' . $media . '</td>';
+             
+              
+                $html_fap .= '</tr>';
+            
+
+            $html_fap .= '</table>';
+            
+            $html_fap .= '<table border="0" style="width: 100%;">';
+          
+
+            $html_fap .= '<tr>';
+            $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+            $html_fap .= '<td><span style="font-weight: bold;">When Needed:  </span>' . $entered_sets['shipp_date'] . $date_asap;
+            $html_fap .= '</tr>';
+            $html_fap .= '</table>';
+            
+            $html_fap .= '<table>';
+            if ($entered_sets['delivery_type'] != '0') {
+                
+                $html_fap .= '<tr>';
+                $html_fap .= '<td>&nbsp;</td>';
+                $html_fap .= '</tr>';
+                
+                $html_fap .= '<tr>';
+                $html_fap .= '<td>&nbsp;</td>';
+                $html_fap .= '</tr>';
+                
+                $html_fap .= '<tr>';
+                $html_fap .= '<td style="font-weight: bold;">Send Via: </td>';
+                $html_fap .= '</tr>';
+                $html_fap .= '<tr>';
+                if ($entered_sets['delivery_type'] == '1') {
+                    $delivery_type = 'Next Day Air';
+                } elseif ($entered_sets['delivery_type'] == '2') {
+                    $delivery_type = 'Two Day Air';
+                } elseif ($entered_sets['delivery_type'] == '3') {
+                    $delivery_type = 'Three Day Air';
+                } elseif ($entered_sets['delivery_type'] == '4') {
+                    $delivery_type = 'Ground';
+                }
+                $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+                $html_fap .= '<td>';
+                $html_fap .= $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                $html_fap .= '</td>';
+                $html_fap .= '</tr>';
+            } else {
+                $html_fap .= '<tr>';
+                $html_fap .= '<td>&nbsp;</td>';
+                $html_fap .= '</tr>';
+                
+                $html_lfp .= '<tr>';
+                $html_fap .= '<td>&nbsp;</td>';
+                $html_fap .= '</tr>';
+                
+                $html_fap .= '<tr colspan="8">';
+                $html_fap .= '<td style="font-weight: bold;">Send Via: </td>';
+                $html_fap .= '</tr>';
+                $html_fap .= '<tr>';
+                $html_fap .= '<td>';
+                $html_fap .= 'SOHO TO ARRANGE DELIVERY</td>';
+                $html_fap .= '</tr>';
+            }  
+                $html_fap .= '</table>'; 
+            
+        // output the HTML content
+        $pdf->writeHTML($html_fap, true, 0, true, 0);
+        $z++;
+        }
+    }
     
+    } 
     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
     // reset pointer to the last page
     
@@ -6037,6 +7999,8 @@ if ($_POST['recipients'] == '1') {
     //New Format Start
 
     foreach ($cust_original_order_final as $original) {
+        
+        $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
         $message .= '<div style="float:left;width: 95%;margin-top: 10px;">';
         $message .= '<div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;font-weight:bold;"> OPTION&nbsp;' . $original['options'] . '&nbsp;- Details</div>';
         if ($original['size'] == 'CUSTOM') {
@@ -6045,9 +8009,7 @@ if ($_POST['recipients'] == '1') {
         if ($original['output'] == 'BOTH') {
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Color Page Numbers:&nbsp;' . $original['output_both'] . '</div>';
         }
-        if ($original['spl_instruction'] != '') {
-            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original['spl_instruction'] . '</div>';
-        }
+        
         if ($original['ftp_link'] != "0") {
             $link = ($original['ftp_link'] != '0') ? $original['ftp_link'] : '';
             $user_name_ftp = ($original['user_name'] != '0') ? $original['user_name'] : '';
@@ -6080,7 +8042,9 @@ if ($_POST['recipients'] == '1') {
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Drop-Off Option:&nbsp;Use same file as Option&nbsp;' . $original['use_same_alt'] . '</div>';
             }
         }
-
+        if ($original['spl_instruction'] != '') {
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original['spl_instruction'] . '</div>';
+        }
         if ($original['pick_up'] != "0") {
             if (($original['pick_up'] == "ASAP") && ($original['pick_up_time'] == "ASAP")) {
                 $pickup_details = $original['pick_up'];
@@ -6120,6 +8084,7 @@ if ($_POST['recipients'] == '1') {
     
     
     /****************LFP*****************/
+     $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
     $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
     $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: LARGE FORMAT COLOR & BW </div>';
     $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
@@ -6132,7 +8097,7 @@ if ($_POST['recipients'] == '1') {
 //    $cust_order_type = ($cust_original_order[0]['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
 //    $option = ($cust_original_order[0]['arch_needed'] != '0') ? 'Pickup Options:' : 'File Options:';
     
-    $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $cust_original_order_pdf_lfp = EnteredLFPMultiOriginal($user_session_comp, $user_session, $job_reference_final[0]['id']);
     
     $message .= '<table border="0" style="width: 100%;text-align: center;border-spacing: 1px;">';
     $message .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
@@ -6172,19 +8137,17 @@ if ($_POST['recipients'] == '1') {
    // $enteredPlot = EnteredPlotRecipientsMultiOriginal($user_session_comp, $user_session, $job_reference_final[0]['id']);
 
     //New Format Start
-
-    foreach ($cust_original_order_pdf_lfp as $original_lfp) {
+$i=0;
+    foreach ($cust_original_order_pdf_lfp as $original_lfp) {$i++;
         $message .= '<div style="float:left;width: 95%;margin-top: 10px;">';
-        $message .= '<div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;font-weight:bold;"> OPTION&nbsp;' . $original_lfp['options'] . '&nbsp;- Details</div>';
+        $message .= '<div style="float:left;width: 95%;font-weight: bold;color: #000;margin-top: 7px;font-weight:bold;"> OPTION&nbsp;' . $i . '&nbsp;- Details</div>';
         if ($original_lfp['size'] == 'CUSTOM') {
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Custom Size:&nbsp;' . $original_lfp['size_custom'] . '</div>';
         }
         if ($original_lfp['output'] == 'BOTH') {
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Color Page Numbers:&nbsp;' . $original_lfp['output_both_page'] . '</div>';
         }
-        if ($original_lfp['special_inc'] != '') {
-            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original_lfp['special_inc'] . '</div>';
-        }
+      
         if ($original_lfp['ftp_link'] != "0") {
             $link = ($original_lfp['ftp_link'] != '0') ? $original_lfp['ftp_link'] : '';
             $user_name_ftp = ($original_lfp['user_name'] != '0') ? $original_lfp['user_name'] : '';
@@ -6217,7 +8180,9 @@ if ($_POST['recipients'] == '1') {
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Drop-Off Option:&nbsp;Use same file as Option&nbsp;' . $original_lfp['use_same_alt'] . '</div>';
             }
         }
-
+          if ($original_lfp['special_inc'] != '') {
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original_lfp['special_inc'] . '</div>';
+        }
         if ($original_lfp['schedule_pickup'] != "0") {
             if (($original_lfp['schedule_pickup'] == "ASAP") && ($original_lfp['pick_up_time'] == "ASAP")) {
                 $pickup_details = $original_lfp['schedule_pickup'];
@@ -6259,9 +8224,10 @@ if ($_POST['recipients'] == '1') {
     
      /****************Mounting*****************/  
     
-      $cust_original_order_pdf_lfp = EnteredLFPPrimaryPdf($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+      $cust_original_order_pdf_lfp =EnteredLFPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
     foreach ($cust_original_order_pdf_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
                     <?php if($title_lfp>0){
+                         $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
     $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
     $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: MOUNTING & LAMINATING </div>';
     $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
@@ -6354,10 +8320,13 @@ if ($_POST['recipients'] == '1') {
                     }
     //Original Order End
   /****************FAP*****************/
+                    $cust_original_order_pdf_lfp   = EnteredFAPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+                    if($cust_original_order_pdf_lfp){
+                     $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
     $message .= '<div style="width: 95%;float: left;margin-top: 10px;margin-bottom: 10px;">';
     $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;font-weight: bold;">PACKING LIST: FINE ART PRINTING </div>';
     $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
-    $cust_original_order_pdf_lfp   = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid']);
+    $cust_original_order_pdf_lfp   = EnteredFAPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
     
     
     
@@ -6396,6 +8365,7 @@ if ($_POST['recipients'] == '1') {
     $message .= '</table>';
     $message .= '</div>';
     $message .= '</div>';
+}
    // $enteredPlot = EnteredPlotRecipientsMultiOriginal($user_session_comp, $user_session, $job_reference_final[0]['id']);
 
     //New Format Start
@@ -6409,9 +8379,7 @@ $i=0;
         if ($original_lfp['output'] == 'Both') {
             $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Color Page Numbers:&nbsp;' . $original_lfp['output_both'] . '</div>';
         }
-        if ($original_lfp['special_instruction'] != '') {
-            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original_lfp['special_inc'] . '</div>';
-        }
+      
         if ($original_lfp['ftp_link_val'] != "0") {
             $link = ($original_lfp['ftp_link_val'] != '0') ? $original_lfp['ftp_link_val'] : '';
             $user_name_ftp = ($original_lfp['user_name_val'] != '0') ? $original_lfp['user_name_val'] : '';
@@ -6444,7 +8412,9 @@ $i=0;
                 $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Drop-Off Option:&nbsp;Use same file as Option&nbsp;' . $original_lfp['use_same_alt'] . '</div>';
             }
         }
-
+          if ($original_lfp['special_instruction'] != '') {
+            $message .= '<div style="float:left;width: 95%;color: #000;margin-top: 7px;">Special Instructions:&nbsp;' . $original_lfp['special_inc'] . '</div>';
+        }
         if ($original_lfp['pick_up'] != "0") {
             if (($original_lfp['pick_up'] == "ASAP") && ($original_lfp['pick_up_time'] == "ASAP")) {
                 $pickup_details = $original_lfp['pick_up'];
@@ -6654,6 +8624,7 @@ $i=0;
 //            $message .='<div style="width: 100%;float: left;margin-top: 7px;">MOHAMED JASSIM'.$entered_sets['shipp_id'].'</div>';
 //        }
 //        
+        if(count($entered_needed_sets_final)>0){
         $r = 1;
         foreach ($entered_needed_sets_final as $entered_sets) {
             if (($entered_sets['shipp_id'] == 'P1') && ($entered_sets['shipp_id'] == 'P2')) {
@@ -6675,6 +8646,7 @@ $i=0;
             $folding = ($entered_sets['folding'] == 'undefined') ? $entered_sets['arch_folding'] : $entered_sets['folding'];
             //border: 2px #F99B3E solid;
             //$message .= '<div style="width: 95%;float: left;height:2px;background-color: #F99B3E;margin-top: 10px;margin-bottom: 10px"></div>';
+            $message .= '<h2 style="margin-top: 10px;margin-bottom: 10px; font-size: 15px;">PLOTTING & ARCHITECTURAL COPIES</h2>';
             $message .= '<div style="font-weight: bold;padding-top: 3px;width: 100%;float: left;">RECIPIENT ' . $r . '</div>';
             //$message .= '<div>';
             //$message .= '<div style="width: 100%;float: left;">&nbsp;</div>';
@@ -6738,19 +8710,7 @@ $i=0;
             $message .= '</table>';
             $message .= '</div>';
 
-            if ($entered_sets['size'] == 'Custom') {
-                $message .= '<div style="float: left;width: 65%;margin-top: 5px;">';
-                $message .= '<div style="font-weight: bold;width: 100%;float: left;">Custom Size Details:</div>';
-                $message .= '<div style="padding-top: 3px;">' . $entered_sets['custome_details'] . '</div>';
-                $message .= '</div>';
-            }
-
-            if ($entered_sets['output'] == 'Both') {
-                $message .= '<div style="float: left;width: 65%;margin-top: 5px;">';
-                $message .= '<div style="font-weight: bold;width: 100%;float: left;">Page Number:</div>';
-                $message .= '<div style="padding-top: 3px;">' . $entered_sets['output_page_number'] . '</div>';
-                $message .= '</div>';
-            }
+        
 
             $message .= '<div style="float: left;width: 100%;margin-top: 7px;">';
             $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
@@ -6782,13 +8742,291 @@ $i=0;
                 $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
                 $message .= 'SOHO TO ARRANGE DELIVERY</div>';
             }
+          
+            $r++;
+        }
+        
+        }
+        
+        /*****LFP***/
+        
+        if(count($entered_needed_sets_final_lfp)>0){
+          $s = 1;
+        
+        foreach ($entered_needed_sets_final_lfp  as $entered_sets) {
+            if (($entered_sets['shipp_id'] == 'P1') && ($entered_sets['shipp_id'] == 'P2')) {
+                $shipp_add = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+            } else {
+                $shipp_add = SelectIdAddressService($entered_sets['shipp_id']);
+            }
+            $needed_options = $entered_sets['option_id'];
+            $needed_sets = $entered_sets['print_of_need'];
+            $order_type = 'LFP';
+            $size = $entered_sets['size'];
+            $output  = $entered_sets['output'];
+            $binding  = $entered_sets['binding'];
+            $media  = $entered_sets['media'];
+            
+            //border: 2px #F99B3E solid;
+            //$message .= '<div style="width: 95%;float: left;height:2px;background-color: #F99B3E;margin-top: 10px;margin-bottom: 10px"></div>';
+            $message .= '<div style="float:left; width:100%; margin-top:10px;"><h2 style="margin-bottom: 10px; font-size: 15px;">LARGE FORMAT COLOR &amp; BW</h2></div>';
+            $message .= '<div style="font-weight: bold;padding-top: 3px;width: 100%;float: left;">RECIPIENT ' . $s . '</div>';
+            //$message .= '<div>';
+            //$message .= '<div style="width: 100%;float: left;">&nbsp;</div>';
+            $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">';
+            
+            
+            $message .= '<div style="float: left;width: 100%">';
+            $message .= '<div style="float: left;width: 48%;">';
+            if (($entered_sets['shipp_id'] != 'P1') && ($entered_sets['shipp_id'] != 'P2')) {
+                $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . ',<br>';
+                $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . ',<br>';
+                $tel = ($entered_sets['contact_ph'] != '') ? 'Tel:  ' . $entered_sets['contact_ph'] . ',<br>' : '';
+                $message .= '<b>To:</b><br>'.$shipp_add[0]['company_name'] . '<br>' . 'Attention: ' . $entered_sets['attention_to'] . '<br>' . $tel . $shipp_add[0]['address_1'] . ',<br>' . $add_2 . $add_3 . $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'];
+            } else {                    //echo $shipp_add[0]['address'];                        
+                $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                $message .= $shipp_add_p[0]['address'];
+            }
+            $message .= '</div>';
+            $message .= '<div style="float:left;width:48%;"><b>From:</b><br>'.$user_name.'<br>'.$service_billing_address[0]['comp_name'] . '<br>' . $service_address_1 . $service_address_2 . $service_address_3 . $service_billing_address[0]['comp_city'] . ',&nbsp;' . $service_billing_address[0]['comp_state'] . '&nbsp;' . $service_billing_address[0]['comp_zipcode']. '<br>' . $service_billing_address[0]['comp_contact_phone'] . '</div>';
+            $message .= '</div>';
+            
+            $message .= '<div style="float: left;width: 100%;margin-top: 7px;font-weight: bold;">PACKING LIST:</div>';
+            $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
+
+            $message .= '<table border="0" style="width: 100%;text-align: center;border-spacing: 1px;">';
+            $message .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
+            $message .= '<td style="font-weight: bold;">Option</td>';
+            $message .= '<td style="font-weight: bold;">Sets</td>';
+            $message .= '<td style="font-weight: bold;">Size</td>';
+            $message .= '<td style="font-weight: bold;">Output</td>';
+            $message .= '<td style="font-weight: bold;">Media</td>';
+            $message .= '<td style="font-weight: bold;">Binding</td>';
+            $message .= '</tr>';
+           
+                $message .= '<tr style="background-color: #FFF;">';
+                $message .= '<td>' . $needed_options . '</td>';
+                $message .= '<td>' . $needed_sets . '</td>';
+                $message .= '<td>' . $size . '</td>';
+                $message .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+                $message .= '<td>' . $media . '</td>';
+                $message .= '<td>' . ucwords(strtolower($binding)) . '</td>';
+                $message .= '</tr>';
+          
+
+            $message .= '</table>';
+            $message .= '</div>';
+            
+        
+            
+            /**********M&L**********/
+               $cust_original_order_pdf_lfp =EnteredLFPMultiOriginal($_SESSION['sohorepro_companyid'],$_SESSION['sohorepro_userid'],$job_reference_final[0]['id']);
+    foreach ($cust_original_order_pdf_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){
+             $message .= '<div style="float: left;width: 100%;margin-top: 7px;font-weight: bold;">PACKING LIST: MOUNTING & LAMINATING</div>';
+            $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
+
+            $message .= '<table border="0" style="width: 100%;text-align: center;border-spacing: 1px;">';
+             $i = 1; $j=1;
+              foreach ($cust_original_order_pdf_lfp as $original){ if($original['ml_active']==1){
+                       if($j==1){ 
+           $message .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
+    $message .= '<td style="font-weight: bold;">Option</td> 
+                  <td style="font-weight: bold;">Originals</td> 
+                  <td style="font-weight: bold;">Order Type</td>                            
+                  <td style="font-weight: bold;">L</td>
+                  <td style="font-weight: bold;">W</td>';
+  if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){ $message .= '<td style="font-weight: bold;">Mounting</td>';} 
+  if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){  $message .= '<td style="font-weight: bold;">Lamination</td>'; }
+                         $message .= '<td style="font-weight: bold;">Grommets</td>';
+    $message .= '</tr>';
+                       }
+   
+  
+      $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        } 
+        if($original['ml_grommets']=="0") { $grom="No"; } else{$grom="Yes";}
+        
+        $message .= '<tr style="background-color: #FFF;">';
+        $message .= '<td>' . $original_pdf_lfp['option_id'] . '</td>';
+        $message .= '<td>' . $original_pdf_lfp['ml_originals'] . '</td>';
+        $message .= '<td>' . $ml_type . '</td>';
+        $message .= '<td>' . $original['ml_width'] . '</td>';
+        $message .= '<td>' . $original['ml_length'] . '</td>';
+       if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){ $message .= '<td>' . $original['ml_mounting']. '</td>'; }
+        if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){ $message .= '<td>' . $original['ml_laminating']. '</td>'; }
+        $message .= ' <td>'.$grom.'</td>';
+       
+        $message .= '</tr>';
+     $i++;
+                    $j=2;
+                    } }
+    $message .= '</table>';
+            $message .= '</div>';
+                    }
+            /*************M&L End******************/
+        
+            $message .= '<div style="float: left;width: 100%;margin-top: 7px;">';
+            $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+            $message .= '<span style="font-weight: bold;">When Needed:  </span>' . $entered_sets['shipp_date'] . $date_asap;
+            $message .= '</div>';
+            if ($entered_sets['delivery_type'] != '0') {
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                $message .= '<span style="font-weight: bold;">Send Via: </span>';
+                $message .= '</div>';
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                if ($entered_sets['delivery_type'] == '1') {
+                    $delivery_type = 'Next Day Air';
+                } elseif ($entered_sets['delivery_type'] == '2') {
+                    $delivery_type = 'Two Day Air';
+                } elseif ($entered_sets['delivery_type'] == '3') {
+                    $delivery_type = 'Three Day Air';
+                } elseif ($entered_sets['delivery_type'] == '4') {
+                    $delivery_type = 'Ground';
+                }
+                $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+                $message .= $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                $message .= '</div>';
+            } else {
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                $message .= '<span style="font-weight: bold;">Send Via: </span>';
+                $message .= '</div>';
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                $message .= 'SOHO TO ARRANGE DELIVERY</div>';
+            }
+          
+            $s++;
+            
+        }
+            
+        }     
+        if(count($entered_needed_sets_final_fap)>0){
+        $z = 1;
+        foreach ($entered_needed_sets_final_fap as $entered_sets) {
+            if (($entered_sets['shipp_id'] == 'P1') && ($entered_sets['shipp_id'] == 'P2')) {
+                $shipp_add = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+            } else {
+                $shipp_add = SelectIdAddressService($entered_sets['shipp_id']);
+            }
+                  $needed_options = $entered_sets['option_id'];
+            $needed_sets = $entered_sets['print_of_need'];
+            $order_type = 'FAP';
+            $size = $entered_sets['size'];
+            $output  = $entered_sets['output'];
+            $media  = $entered_sets['media'];
+            
+            //border: 2px #F99B3E solid;
+            //$message .= '<div style="width: 95%;float: left;height:2px;background-color: #F99B3E;margin-top: 10px;margin-bottom: 10px"></div>';
+            $message .= '<div style="float:left;width:100%;margin-top: 10px;"><h2 style="margin-bottom: 10px; font-weight:bold; font-size: 15px;">FINE ART PRINTING</h2></div>';
+            $message .= '<div style="font-weight: bold;padding-top: 3px;width: 100%;float: left;">RECIPIENT ' . $z . '</div>';
+            //$message .= '<div>';
+            //$message .= '<div style="width: 100%;float: left;">&nbsp;</div>';
+            $message .= '<div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">';
+            
+            
+            $message .= '<div style="float: left;width: 100%">';
+            $message .= '<div style="float: left;width: 48%;">';
+            if (($entered_sets['shipp_id'] != 'P1') && ($entered_sets['shipp_id'] != 'P2')) {
+                $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . ',<br>';
+                $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . ',<br>';
+                $tel = ($entered_sets['contact_ph'] != '') ? 'Tel:  ' . $entered_sets['contact_ph'] . ',<br>' : '';
+                $message .= '<b>To:</b><br>'.$shipp_add[0]['company_name'] . '<br>' . 'Attention: ' . $entered_sets['attention_to'] . '<br>' . $tel . $shipp_add[0]['address_1'] . ',<br>' . $add_2 . $add_3 . $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'];
+            } else {                    //echo $shipp_add[0]['address'];                        
+                $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                $message .= $shipp_add_p[0]['address'];
+            }
+            $message .= '</div>';
+            $message .= '<div style="float:left;width:48%;"><b>From:</b><br>'.$user_name.'<br>'.$service_billing_address[0]['comp_name'] . '<br>' . $service_address_1 . $service_address_2 . $service_address_3 . $service_billing_address[0]['comp_city'] . ',&nbsp;' . $service_billing_address[0]['comp_state'] . '&nbsp;' . $service_billing_address[0]['comp_zipcode']. '<br>' . $service_billing_address[0]['comp_contact_phone'] . '</div>';
+            $message .= '</div>';
+            
+            $message .= '<div style="float: left;width: 100%;margin-top: 7px;font-weight: bold;">PACKING LIST:</div>';
+            $message .= '<div style="float: left;width: 100%;margin-top: 5px;">';
+
+            $message .= '<table border="0" style="width: 100%;text-align: center;border-spacing: 1px;">';
+            $message .= '<tr style="width: 100%;background-color: #002369;color: #FFF;">';
+            $message .= '<td style="font-weight: bold;">Option</td>';
+            $message .= '<td style="font-weight: bold;">Sets</td>';
+          
+            $message .= '<td style="font-weight: bold;">Size</td>';
+            $message .= '<td style="font-weight: bold;">Output</td>';
+            $message .= '<td style="font-weight: bold;">Media</td>';
+         
+            $message .= '</tr>';
+           
+                $message .= '<tr style="background-color: #FFF;">';
+                $message .= '<td>' . $needed_options . '</td>';
+                $message .= '<td>' . $needed_sets . '</td>';
+              
+                $message .= '<td>' . $size . '</td>';
+                $message .= '<td style="text-transform: uppercase;">' . $output . '</td>';
+                $message .= '<td>' . $media . '</td>';
+               
+                $message .= '</tr>';
+           
+         
+
+            $message .= '</table>';
+            $message .= '</div>';
+
+        
+
+            $message .= '<div style="float: left;width: 100%;margin-top: 7px;">';
+            $date_asap = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+            $message .= '<span style="font-weight: bold;">When Needed:  </span>' . $entered_sets['shipp_date'] . $date_asap;
+            $message .= '</div>';
+            if ($entered_sets['delivery_type'] != '0') {
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                $message .= '<span style="font-weight: bold;">Send Via: </span>';
+                $message .= '</div>';
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                if ($entered_sets['delivery_type'] == '1') {
+                    $delivery_type = 'Next Day Air';
+                } elseif ($entered_sets['delivery_type'] == '2') {
+                    $delivery_type = 'Two Day Air';
+                } elseif ($entered_sets['delivery_type'] == '3') {
+                    $delivery_type = 'Three Day Air';
+                } elseif ($entered_sets['delivery_type'] == '4') {
+                    $delivery_type = 'Ground';
+                }
+                $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+                $message .= $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                $message .= '</div>';
+            } else {
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                $message .= '<span style="font-weight: bold;">Send Via: </span>';
+                $message .= '</div>';
+                $message .= '<div style="width: 100%;float: left;margin-top: 7px;">';
+                $message .= 'SOHO TO ARRANGE DELIVERY</div>';
+            }
+          
+            $z++;
+        }
+        
+        }
+        
             $message .= '</div>';            
             $message .= '<div style="width: 100%;float: left;">';
             $message .= '<hr style="border-top: 1px solid #002369;">';
             $message .= '</div>';
-            $r++;
-        }
-        
         
     }
 
@@ -7433,8 +9671,9 @@ $i=0;
     }
 } elseif ($_POST['recipients'] == '4_4') {
 
-    $cust_original_order = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
-
+     $cust_original_order = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
+     $number_of_lfp          = EnteredLFPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+     $number_of_fap          = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
 //    echo '<pre>';
 //    print_r($cust_original_order);
 //    echo '</pre>';
@@ -7506,6 +9745,49 @@ $i=0;
                                 shipp_comp_3    = '" . $shipp_comp_3_f . "',
                                 delivery_type_option  = '" . $delivery_type_option . "' ";
         $sql_result = mysql_query($query);
+    }
+    
+    
+     foreach ($number_of_lfp as $original_order) {
+        $plot_neede = ($original_order['plot_arch'] == '1') ? $original_order['print_ea'] : '0';
+        $arch_neede = ($original_order['plot_arch'] == '1') ? '0' : $original_order['print_ea'];
+        $query = "UPDATE sohorepro_service_lfp
+			SET    
+                                shipp_id        = '" . $shipping_id_rec . "',
+                                attention_to    = '" . $attention_to . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $date_needed . "',
+                                shipp_time      = '" . $time_needed . "', 
+                                spl_inc_delivery   = '" . $spl_recipient . "',
+                                delivery_type   = '" . $delivery_type . "',
+                                billing_number  = '" . $bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "',
+                                delivery_type_option  = '" . $delivery_type_option . "'
+                        WHERE   company_id ='".$_SESSION['sohorepro_companyid']."' AND user_id ='".$_SESSION['sohorepro_userid']."' AND order_id ='".$original_order['order_id']."'";
+        $sql_result = mysql_query($query);
+    }
+    
+     foreach ($number_of_fap as $original_order) {
+
+        $query = "UPDATE sohorepro_fine_arts_sets
+			SET    
+                                shipp_id        = '" . $shipping_id_rec . "',
+                                attention_to    = '" . $attention_to . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $date_needed . "',
+                                shipp_time      = '" . $time_needed . "', 
+                                spl_inc_delivery   = '" . $spl_recipient . "',
+                                delivery_type   = '" . $delivery_type . "',
+                                billing_number  = '" . $bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "',
+                                delivery_type_option  = '" . $delivery_type_option . "'
+                        WHERE   company_id ='".$_SESSION['sohorepro_companyid']."' AND user_id ='".$_SESSION['sohorepro_userid']."' AND order_id ='".$original_order['order_id']."'";
+        $sql_result = mysql_query($query);
+      //  echo $query;
     }
 
     echo '1';
@@ -8900,7 +11182,8 @@ $i=0;
 
 
     $cust_original_order = EnteredPlotRecipientsMulti($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid'], $_SESSION['ref_val']);
-
+    $number_of_lfp          = EnteredLFPPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
+    $number_of_fap          = EnteredPlotttingFineArts($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
 
 
     $shipping_id_rec_pre = explode("_", $_POST['shipping_id_rec']);
@@ -8948,6 +11231,48 @@ $i=0;
                                 shipp_comp_3    = '',
                                 delivery_type_option  = '" . $delivery_type_option . "' ";
         $sql_result = mysql_query($query);
+    }
+    
+      foreach ($number_of_lfp as $original_order) {
+        $plot_neede = ($original_order['plot_arch'] == '1') ? $original_order['print_ea'] : '0';
+        $arch_neede = ($original_order['plot_arch'] == '1') ? '0' : $original_order['print_ea'];
+        $query = "UPDATE sohorepro_service_lfp
+			SET    
+                                shipp_id        = '" . $shipping_id_rec . "',
+                                attention_to    = '" . $attention_to . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $date_needed . "',
+                                shipp_time      = '" . $time_needed . "', 
+                                spl_inc_delivery   = '" . $spl_recipient . "',
+                                delivery_type   = '" . $delivery_type . "',
+                                billing_number  = '" . $bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "',
+                                delivery_type_option  = '" . $delivery_type_option . "'
+                        WHERE   company_id ='".$_SESSION['sohorepro_companyid']."' AND user_id ='".$_SESSION['sohorepro_userid']."' AND order_id ='".$original_order['order_id']."'";
+        $sql_result = mysql_query($query);
+    }
+    
+     foreach ($number_of_fap as $original_order) {
+
+        $query = "UPDATE sohorepro_fine_arts_sets
+			SET    
+                                shipp_id        = '" . $shipping_id_rec . "',
+                                attention_to    = '" . $attention_to . "',
+                                contact_ph      = '" . $contact_ph . "',    
+                                shipp_date      = '" . $date_needed . "',
+                                shipp_time      = '" . $time_needed . "', 
+                                spl_inc_delivery   = '" . $spl_recipient . "',
+                                delivery_type   = '" . $delivery_type . "',
+                                billing_number  = '" . $bill_number . "',
+                                shipp_comp_1    = '" . $shipp_comp_1_f . "',
+                                shipp_comp_2    = '" . $shipp_comp_2_f . "',
+                                shipp_comp_3    = '" . $shipp_comp_3_f . "',
+                                delivery_type_option  = '" . $delivery_type_option . "'
+                        WHERE   company_id ='".$_SESSION['sohorepro_companyid']."' AND user_id ='".$_SESSION['sohorepro_userid']."' AND order_id ='".$original_order['order_id']."'";
+        $sql_result = mysql_query($query);
+      //  echo $query;
     }
 
     echo '1';
@@ -9181,8 +11506,6 @@ $i=0;
                                 ml_length                = '" . $original_order['ml_length'] . "',
                                 ml_grommets              = '" . $original_order['ml_grommets'] . "',    
                                 mal_splns                = '" . $original_order['mal_splns'] . "',
-                                    
-                
                                 shipp_id                 = '" . $shipping_id_rec . "',
                                 attention_to             = '" . $attention_to . "',
                                 contact_ph               = '" . $contact_ph . "',    

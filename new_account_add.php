@@ -768,6 +768,9 @@ exit;
                                                                                                 /*text-transform: uppercase;*/
                                                                                             }
                                                                                             .resale_table td{ padding:10px 20px;border-right: 1px solid #ddd;}
+                                                                                            #myModal{
+                                                                                                top:25%;
+                                                                                            }
                                                                                         </style>
 
                                                                                         <?php if (isset($_GET['new_company']) == 'succ') { ?>
@@ -1024,11 +1027,44 @@ exit;
 
                                                                                         </form>
 
-
+<!--                                                                                           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
                                                                                         <script type="text/javascript">
-                                                                                            $(document).ready(function()
-                                                                                            {
-                                                                                                $(".ui-autocomplete-input").keyup(function()
+                                                                                            $(document).ready(function(){
+                                                                                                
+//                                                                                                $('#reg_contactmail').blur(function(){
+//                                                                                                    
+//                                                                                                   var cont_email =  $('#reg_contactmail').val();
+//                                                                                                    $.ajax
+//        ({
+//            type: "POST",
+//            url: "ajax_test.php",
+//            data: "add_customer=1&cust_email="+cont_email,
+//           success: function(option)
+//            {  //alert(option);
+//                if(option>'0'){
+//                   $('#myModal').modal('show');
+//
+//                    $('#re-enter').click(function(){
+//                    $(this).data('clicked', true);
+//                    $('#myModal').modal('hide');
+//                     $('#reg_contactmail').val('');
+//                    $('#reg_contactmail').focus();
+//                    //alert("re enter")
+//                    });
+//                    $('#accept').click(function(){
+//                    $(this).data('clicked', true);
+//                    $('#myModal').modal('hide');
+//                    $('#reg_password').focus();
+//                    });  
+//                }
+//            }
+//        });
+                                                                                                         
+
+                                                                                             //   });
+                                                                                  $(".ui-autocomplete-input").keyup(function()
                                                                                                 {
                                                                                                     var check = $(this).val;
                                                                                                     if (check != '')
@@ -1058,7 +1094,21 @@ exit;
 
 
                                                                                             });
-
+//$("#reg_contactmail").click(function(){
+//       $("#reg_contactmail").easyconfirm({locale: {
+//	title: 'Are you Sure?',
+//	text: 'The Account Email already exist.',
+//	button: ['Accept',' Re-Enter'],
+//        closeText: 'Close'
+//                                                                                                 }
+//});
+//$("#reg_contactmail").on('click',function() {
+//	alert("Je vous remercie de votre soumission!");
+//     
+//       $('#reg_contactmail').focus();
+//       return false;
+//});
+//});
                                                                                             function validate()
                                                                                             {
 //                                                                                                if (document.getElementById('jobref').value == '')
@@ -1068,6 +1118,9 @@ exit;
 //                                                                                                    return false;
 //                                                                                                }
 //                                                                                                return true;
+
+                                                                                          
+    
                                                                                                  var captcha_v      = $("#reg_captcha_v").val();
                                                                                                  var reg_captcha    = $("#reg_captcha").val();
                                                                                                  
@@ -1302,3 +1355,25 @@ $("#password").val('');
 
 
                                                                 </script>
+                                                                
+                                                                 <!-- Modal -->
+<!--  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+       Modal content
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Contact Email</h4>
+        </div>
+        <div class="modal-body">
+          <p>Contact Email Already Exist.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="re-enter">Re-Enter</button>
+          <button type="button" class="btn btn-default" id="accept">Accept</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>-->

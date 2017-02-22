@@ -300,7 +300,7 @@ if ($_POST['service_plotting_add'] == '1') {
                             }else{
                         ?>
                         <div style="float: left;width: 100%;">
-                            <div style="float: left;width: 100%;margin-bottom: 10px;">Schedule a pick up Date/Time: <?php echo $plot['pick_up'].'&nbsp;'.$plot['pick_up_time']; ?></div>
+                            <div style="float: left;width: 100%;margin-bottom: 10px;">Schedule a pick up on <?php echo $plot['pick_up'].' at '.$plot['pick_up_time']; ?></div>
 <!--                            <div style="float: left;width: 100%;">Pickup Date : <?php //echo $plot['pick_up']; ?></div>
                             <div style="float: left;width: 100%;">Pickup Time  : <?php //echo $plot['pick_up_time']; ?></div>-->
                         </div>
@@ -321,8 +321,8 @@ if ($_POST['service_plotting_add'] == '1') {
                     ?>
                     
                 </div>
-                
-                <?php if($plot['my_office_alt'] != '0'){ 
+                <?php //print_r($plot); ?>
+                <?php if($plot['my_office_alt'] != '0' && $plot['ftp_link'] == ''){ 
                     
                     $address_dtls    = SelectLastEnteredAddress($plot['address_book_id']);
                     $address_2       = ($address_dtls[0]['address_2'] != '') ? $address_dtls[0]['address_2'].'<br>' : '';
@@ -610,7 +610,7 @@ if ($_POST['service_plotting_add'] == '1') {
                                 
                                 <div style="width: 60%;float: left;border: 1px #F99B3E solid;margin-left: 20px;height: auto;">
                                     <div style="float: left;width: 45%;margin-left: 30px;border: 0px #F99B3E solid;margin-top: 30px;">
-                                        <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" />My Office
+                                        <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="my_office();" id="my_office" value="my_office" checked />My Office
                                     </div>
                                     <div style="float: left;width: 45%;border: 0px #F99B3E solid;margin-top: 30px;">
                                         <input style="width: 10% !important;" type="radio" name="my_office_alternate" onclick="alternate();" id="alternate" value="alternate" />Alternative

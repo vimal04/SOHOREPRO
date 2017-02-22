@@ -318,35 +318,50 @@ function getProductsU($c_id,$s_id,$su_id) {
     return $value;
 }
 
-function getOrdersAll($sorting,$start,$limit) {
+function getOrdersAll($sorting="",$start,$limit,$search = '') {
     //return $sorting;
+    
+    $subQry = '';
+    if($search != '')
+    {
+        $subQry = " where order_number = '$search'";
+    }
+    
     if($sorting == 'a'){
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY created_date ASC LIMIT $start, $limit";  
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY created_date ASC LIMIT $start, $limit";  
     }  
     elseif($sorting == 'd') 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY created_date DESC LIMIT $start, $limit";     
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY created_date DESC LIMIT $start, $limit";     
     }
     elseif($sorting == 'jnd') 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY order_id DESC LIMIT $start, $limit";     
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY order_id DESC LIMIT $start, $limit";     
     }
     elseif($sorting == 'jna') 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY order_id ASC LIMIT $start, $limit";     
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY order_id ASC LIMIT $start, $limit";     
     }
     
     elseif($sorting == 'pd') 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY customer_company_name DESC LIMIT $start, $limit";     
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY customer_company_name DESC LIMIT $start, $limit";     
+    }
+    elseif($sorting == 'sa') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY closed_status ASC LIMIT $start, $limit";     
+    }   
+       elseif($sorting == 'sd') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY closed_status DESC LIMIT $start, $limit";     
     }
     elseif($sorting == 'pa') 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY customer_company_name ASC LIMIT $start, $limit";     
-    }    
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY customer_company_name ASC LIMIT $start, $limit";     
+    }  
     else 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master ORDER BY id DESC LIMIT $start, $limit";
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry ORDER BY id DESC LIMIT $start, $limit";
     }
     $orders = mysql_query($select_orders);
     while ($object = mysql_fetch_assoc($orders)):
@@ -395,15 +410,28 @@ function getOrdersAllServices($sorting,$start,$limit) {
 }
 
 
-function OrdersCount() {    
-    $select_orders = "SELECT * FROM sohorepro_order_master"; 
+function OrdersCount($search = '') {    
+    $subQry = '';
+    if($search != '')
+    {
+        $subQry = " where order_number = '$search'";
+    }
+    
+    $select_orders = "SELECT * FROM sohorepro_order_master $subQry"; 
     $orders = mysql_query($select_orders);
     while ($object = mysql_fetch_assoc($orders)):
         $value[] = $object;
     endwhile;
     return $value;
 }
-
+function ClosedOrdersCount() {    
+    $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1'"; 
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function SeriviceOrdersCount() {    
     $select_orders = "SELECT * FROM sohorepro_order_master_service"; 
     $orders = mysql_query($select_orders);
@@ -431,9 +459,17 @@ function getClosedOrdersAll($sorting) {
     {
     $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY order_id ASC";     
     }
+      
     else 
     {
-    $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY id ASC";        
+   // $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY id DESC";   
+    
+     $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' 
+ORDER BY sohorepro_order_master.id DESC";
     }
     $orders = mysql_query($select_orders);
     while ($object = mysql_fetch_assoc($orders)):
@@ -441,8 +477,349 @@ function getClosedOrdersAll($sorting) {
     endwhile;
    return $value;
 }
+function closedOrderBillable($filter){
+    
+    if($filter){
+            if($filter=="weekly"){
+            $f_sort ="7";
+        }elseif($filter=="monthly"){
+             $f_sort ="30";
+        }elseif($filter=="bimonthly"){
+            $f_sort ="14";
+        }
+    
+      
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.*
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' AND `closed_status`='1'
+GROUP BY sohorepro_company.comp_id
+ORDER BY sohorepro_order_master.created_date ASC";
+
+  
+//    if($filter=="weekly"){
+//         $select_orders = "SELECT DISTINCT `customer_company` FROM `sohorepro_order_master` WHERE `closed_status`='1' AND "; 
+//    }
+    }
+    else{
+     $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.*
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE `closed_status`='1'
+GROUP BY sohorepro_company.comp_id
+ORDER BY sohorepro_order_master.created_date ASC";
+    }
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+   return $value;
+}
+function getGrandTotalClosed($filter,$comp_id){
+    
+    if($filter){
+                 if($filter=="weekly"){
+            $f_sort ="7";
+        }elseif($filter=="monthly"){
+             $f_sort ="30";
+        }elseif($filter=="bimonthly"){
+            $f_sort ="14";
+        }
+        $select_orders = "SELECT SUM(sohorepro_product_master.product_price*sohorepro_tax_rate.tax_rate/100) as tax, SUM(sohorepro_product_master.product_price) as subtotal,
+SUM((sohorepro_product_master.product_price*sohorepro_tax_rate.tax_rate/100)+(sohorepro_product_master.product_price)) as grandtotal
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+INNER JOIN sohorepro_product_master
+ON sohorepro_order_master.id=sohorepro_product_master.order_id
+INNER JOIN sohorepro_tax_rate
+ON sohorepro_tax_rate.state_id=sohorepro_product_master.tax_status
+WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1'
+ORDER BY sohorepro_order_master.created_date ASC";
+    }elseif($comp_id){
+        $select_orders = "SELECT SUM(sohorepro_product_master.product_price*sohorepro_tax_rate.tax_rate/100) as tax, SUM(sohorepro_product_master.product_price) as subtotal,
+SUM((sohorepro_product_master.product_price*sohorepro_tax_rate.tax_rate/100)+(sohorepro_product_master.product_price)) as grandtotal
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+INNER JOIN sohorepro_product_master
+ON sohorepro_order_master.id=sohorepro_product_master.order_id
+INNER JOIN sohorepro_tax_rate
+ON sohorepro_tax_rate.state_id=sohorepro_product_master.tax_status
+WHERE sohorepro_company.comp_id = '$comp_id' AND sohorepro_order_master.closed_status = '1'
+ORDER BY sohorepro_order_master.created_date ASC";
+    }else
+     {
+   // $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY id DESC";   
+    
+     $select_orders = "SELECT SUM(sohorepro_product_master.product_price*sohorepro_tax_rate.tax_rate/100) as tax, SUM(sohorepro_product_master.product_price) as subtotal,
+SUM((sohorepro_product_master.product_price*sohorepro_tax_rate.tax_rate/100)+(sohorepro_product_master.product_price)) as grandtotal
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+INNER JOIN sohorepro_product_master
+ON sohorepro_order_master.id=sohorepro_product_master.order_id
+INNER JOIN sohorepro_tax_rate
+ON sohorepro_tax_rate.state_id=sohorepro_product_master.tax_status
+ORDER BY sohorepro_order_master.created_date ASC";
+    }
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+   return $value;
+
+}
 
 
+function getDistinctClosed($filter){
+    
+    if($filter){
+                 if($filter=="weekly"){
+            $f_sort ="7";
+        }elseif($filter=="monthly"){
+             $f_sort ="30";
+        }elseif($filter=="bimonthly"){
+            $f_sort ="14";
+        }
+        $select_orders = "";
+    }else
+     {
+   // $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY id DESC";   
+    
+     $select_orders = "";
+    }
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+   return $value;
+
+}
+function getClosedOrdersAllFreq($sorting,$sort_feq,$comp_id) {
+    //return $sorting;
+    if($sort_feq){
+        if($sort_feq=="weekly"){
+            $f_sort ="7";
+        }elseif($sort_feq=="monthly"){
+             $f_sort ="30";
+        }elseif($sort_feq=="bimonthly"){
+            $f_sort ="14";
+        }
+    }
+    if($comp_id['company_id']!=""){
+        $compan = $comp_id['company_id'];
+        $sub_query = "AND sohorepro_order_master.customer_company='$compan'";
+    }
+    
+        if($f_sort!="" && $sorting == 'a'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' 
+ORDER BY sohorepro_order_master.created_date ASC";
+    }
+     elseif($f_sort!="" && $sorting == 'd'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' 
+ORDER BY sohorepro_order_master.created_date DESC";
+    }
+     elseif($f_sort!="" && $sorting == 'd'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' 
+ORDER BY sohorepro_order_master.created_date DESC";
+    }
+     elseif($f_sort!="" && $sorting == 'jnd'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' 
+ORDER BY sohorepro_order_master.order_id DESC";
+    }
+        elseif($f_sort!="" && $sorting == 'jna'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' 
+ORDER BY sohorepro_order_master.order_id ASC";
+    }
+        elseif($f_sort!="" && $sorting == 'feq_a'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' 
+ORDER BY sohorepro_company.invoice_type ASC";
+    }
+      elseif($f_sort!="" && $sorting == 'feq_d'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1' 
+ORDER BY sohorepro_company.invoice_type ASC";
+    }
+    elseif($sorting == 'a'){
+     $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
+ORDER BY created_date ASC";  
+    }  
+    elseif($sorting == 'd') 
+    {
+    $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
+ORDER BY created_date DESC";     
+    }
+    elseif($sorting == 'jnd') 
+    {
+    $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
+ORDER BY order_id DESC";     
+    }
+    elseif($sorting == 'jna') 
+    {
+    $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
+ORDER BY order_id ASC";     
+    }
+      elseif($sorting == 'feq_a'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' ".$sub_query." 
+ORDER BY sohorepro_company.invoice_type ASC";
+    }
+      elseif($sorting == 'feq_d'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
+ORDER BY sohorepro_company.invoice_type DESC";
+    }
+    elseif($sort_feq == 'weekly'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '7' AND sohorepro_order_master.closed_status = '1' 
+ORDER BY sohorepro_order_master.id DESC";
+    }
+    elseif($sort_feq == 'monthly'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '30' AND sohorepro_order_master.closed_status = '1' 
+ORDER BY sohorepro_order_master.id DESC";
+    }
+    elseif($sort_feq == 'bimonthly'){
+        $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_company.invoice_type = '14' AND sohorepro_order_master.closed_status = '1' 
+ORDER BY sohorepro_order_master.id DESC";
+    }
+ 
+    elseif($comp_id['company_id']!=""){
+         //echo "joi";
+         //exit;
+   // $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY id DESC";   
+    $company_id =$comp_id["company_id"];
+     $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' AND sohorepro_company.comp_id='$company_id'
+ORDER BY sohorepro_order_master.id DESC";
+    
+    } 
+    else
+    {
+   // $select_orders = "SELECT * FROM sohorepro_order_master WHERE closed_status = '1' ORDER BY id DESC";   
+    
+     $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+WHERE sohorepro_order_master.closed_status = '1' 
+ORDER BY sohorepro_order_master.id DESC";
+    }
+  //  echo $select_orders;
+   // exit;
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+   return $value;
+}
+
+function getInvoiceFreq($comp_id){
+    $select_orders = "SELECT * FROM sohorepro_company WHERE comp_id = '".$comp_id."'" ;
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+function getClosedOrderCompany($comp_id,$startDate,$endDate){
+    if($startDate){
+        
+        $select_price = "select * from sohorepro_order_master where created_date between '$startDate' and '$endDate' and customer_company='$comp_id' group by order_id";
+    }else{
+    $select_price = "SELECT * FROM sohorepro_order_master WHERE customer_company='$comp_id' group by order_id" ;
+    }
+   // echo $select_price; exit;
+    $price = mysql_query($select_price);
+    while ($object = mysql_fetch_assoc($price)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+    
+}
+function getInvoiceClosedProduct($order_id){
+    
+            $select_price = "SELECT sohorepro_company.*,sohorepro_tax_rate.*,sohorepro_product_master.*,sohorepro_order_master.order_number,sohorepro_order_master.created_date
+FROM sohorepro_order_master
+INNER JOIN sohorepro_company
+ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+INNER JOIN sohorepro_product_master
+ON sohorepro_order_master.id=sohorepro_product_master.order_id
+INNER JOIN sohorepro_tax_rate
+ON sohorepro_tax_rate.state_id=sohorepro_product_master.tax_status
+WHERE sohorepro_order_master.order_id = '$order_id' AND sohorepro_order_master.closed_status='1' 
+ORDER BY sohorepro_order_master.created_date ASC" ;
+    $price = mysql_query($select_price);
+    while ($object = mysql_fetch_assoc($price)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function getPrice($id) {
     $select_price = "SELECT sum(product_price * product_quantity) as sub_total FROM sohorepro_product_master WHERE order_id = '".$id."'" ;
     $price = mysql_query($select_price);
@@ -478,7 +855,7 @@ function getPriceAll($id) {
 
 function viewOrders($id) {
     //return $id;
-    $select_orders = "SELECT * FROM sohorepro_product_master WHERE order_id = '".$id."'" ;
+    $select_orders = "SELECT * FROM sohorepro_product_master WHERE order_id = '".$id."' LIMIT 0, 25"; 
     $price = mysql_query($select_orders);
     while ($object = mysql_fetch_assoc($price)):
         $value[] = $object;
@@ -1492,7 +1869,9 @@ function custPerComp($id) {
 
 
 //Pagination Function
-function Paginations($per_page = 10, $page = 1, $url = '', $total){    
+function Paginations($per_page = 10, $page = 1, $url = '', $total){  
+
+
  
         $adjacents = "2";
  
@@ -2316,7 +2695,14 @@ function UserLogin($reg_email_id,$reg_password) {
     endwhile;
     return $value;
 }
-
+function UserDtls($user_id) {
+    $select_category = "SELECT * FROM sohorepro_customers WHERE cus_id = '".$user_id."'";
+    $category = mysql_query($select_category);
+    while ($object = mysql_fetch_assoc($category)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function UserLoginDtls($chk_cus_status) {
     $select_category = "SELECT * FROM sohorepro_customers WHERE cus_id = '".$chk_cus_status."' ";
     $category = mysql_query($select_category);
@@ -2426,6 +2812,16 @@ function AutoCustomer($customer_name)
     return $value;    
 }
 
+function AutoSupplyOrders($customer_name)
+{
+    $select_checkout = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3  WHERE  t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id  and (t1.customer_company_name LIKE '%$customer_name%' OR t1.order_id LIKE '%$customer_name%' OR t1.order_number LIKE '%$customer_name%') ";
+    
+    $product = mysql_query($select_checkout);
+    while ($object = mysql_fetch_assoc($product)):
+        $value[] = $object;
+    endwhile;
+    return $value;    
+}
 function OrdDetails($id) {
     $select_orders = "SELECT * FROM sohorepro_order_master WHERE id = '".$id."'" ;
     $price = mysql_query($select_orders);
@@ -3545,14 +3941,6 @@ function EnteredLFPPrimary($comp_id, $user_id) {
     return $value;
 }
 
-function EnteredLFPPrimary_pdf($comp_id, $user_id) {
-    $select_fav = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."'";
-    $details       = mysql_query($select_fav);
-    while ($object = mysql_fetch_assoc($details)):
-        $value[] = $object;
-    endwhile;
-    return $value;
-}
 
 function LastFileOptionEnteredLFP($company_id, $user_id){
     $plotting_set = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0' ORDER BY option_id DESC LIMIT 1" ;
@@ -3702,4 +4090,209 @@ function CompanyExistSpltyNot($comp_id, $product_id) {
     return $value;
 }
 
+
+//Frontend Get My Orders
+function getMyOrders($userId, $userCompanyid, $sorting = 'all', $sort = 'asc', $sorttype = 'order_id') {
+    
+    error_reporting(0);
+    $userinfo = UserDtls($userId);
+    //echo "<pre>"; print_r($userinfo); 
+    $ap_user = $userinfo[0]['ap_user'];
+    $userQry = "";
+    if($ap_user == 0)
+    {
+        $userQry = " and customer_name = '$userId'";
+    }
+    //echo $userQry; exit;
+    //return $sorting;
+    if($sorting != 'invoice')
+    {
+        $sorttype = 'order_id';
+    }
+    
+    if($sorting == 'all' || $sorting == ''){
+    $select_orders = "SELECT * FROM sohorepro_order_master WHERE customer_company = '$userCompanyid' $userQry ORDER BY $sorttype $sort";  
+    }  
+    elseif($sorting == 'open') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master WHERE customer_company = '$userCompanyid' $userQry and closed_status = '0' ORDER BY $sorttype $sort";     
+    }
+    elseif($sorting == 'closed') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master WHERE customer_company = '$userCompanyid' $userQry and closed_status = '1' ORDER BY $sorttype $sort";     
+    }      
+    else 
+    {       
+       $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+       FROM sohorepro_order_master
+       INNER JOIN sohorepro_company
+       ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+       WHERE sohorepro_order_master.closed_status = '1' and sohorepro_order_master.customer_company = '$userCompanyid' $userQry
+       ORDER BY $sorttype $sort";
+    }
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+   return $value;
+}
+
+function myOrdersCount($userId, $userCompanyid, $sorting = 'all', $sort = 'asc', $sorttype = 'order_id') {    
+    $userinfo = UserDtls($userId);
+    $ap_user = $userinfo[0]['ap_user'];
+    $userQry = "";
+    if($ap_user == 0)
+    {
+        $userQry = " and customer_name = '$userId'";
+    }
+    if($sorting == 'all'){
+        $select_orders = "SELECT id FROM sohorepro_order_master WHERE customer_company = '$userCompanyid' $userQry "; 
+    }
+    elseif($sorting == 'open') 
+    {
+        $select_orders = "SELECT id FROM sohorepro_order_master WHERE customer_company = '$userCompanyid' $userQry and closed_status = '0' "; 
+    }
+    elseif($sorting == 'closed') 
+    {
+        $select_orders = "SELECT id FROM sohorepro_order_master WHERE customer_company = '$userCompanyid'$userQry and closed_status = '1' "; 
+    }      
+    else 
+    {       
+       $select_orders = "SELECT sohorepro_order_master.id
+       FROM sohorepro_order_master
+       INNER JOIN sohorepro_company
+       ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+       WHERE sohorepro_order_master.closed_status = '1' and customer_company = '$userCompanyid' $userQry
+       ORDER BY sohorepro_order_master.id DESC";
+    }
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function viewOrdersGroup($id) {
+    //return $id;
+    $select_orders = "SELECT *,t1.order_id as ord_id FROM sohorepro_product_master as t1,sohorepro_order_master as t2 WHERE t2.order_id = '".$id."' and t1.order_id = t2.id " ;
+    $price = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($price)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getPriceGroup($id) {
+    $select_price = "SELECT sum(product_price * product_quantity) as sub_total FROM sohorepro_product_master as t1,sohorepro_order_master as t2 WHERE t2.order_id = '".$id."' and t1.order_id = t2.id" ;
+    $price = mysql_query($select_price);
+    while ($object = mysql_fetch_assoc($price)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getsohoreproInvoiceFrequency() {
+    $select_price = "SELECT * FROM sohorepro_invoice_frequency" ;
+    $price = mysql_query($select_price);
+    while ($object = mysql_fetch_assoc($price)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getOrdersAllFilter($sorting,$start,$limit,$search = '',$filter_by_customer = '',$admin_added = '') {
+    //return $sorting;
+    //$select_checkout = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3  WHERE  t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id  and (t1.customer_company_name LIKE '%$customer_name%' OR t1.order_id LIKE '%$customer_name%' OR t1.order_number LIKE '%$customer_name%') ";
+    $subQry = '';
+    if($search != '')
+    {
+        $subQry .= "and (t1.customer_company_name LIKE '%$search%' OR t1.order_id LIKE '%$search%' OR t1.order_number LIKE '%$search%')";
+        //$subQry .= " and t1.order_number = '$search'";
+    }
+    
+    if($admin_added != '')
+    {
+        $subQry .= " and t3.cus_type = '$admin_added'";
+    }
+    
+    if($sorting == 'a'){
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY created_date ASC LIMIT $start, $limit";  
+    }  
+    elseif($sorting == 'd') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY created_date DESC LIMIT $start, $limit";     
+    }
+    elseif($sorting == 'jnd') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY order_id DESC LIMIT $start, $limit";     
+    }
+    elseif($sorting == 'jna') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY order_id ASC LIMIT $start, $limit";     
+    }
+    
+    elseif($sorting == 'pd') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY customer_company_name DESC LIMIT $start, $limit";     
+    }
+    elseif($sorting == 'sa') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY closed_status ASC LIMIT $start, $limit";     
+    }   
+       elseif($sorting == 'sd') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY closed_status DESC LIMIT $start, $limit";     
+    }
+    elseif($sorting == 'pa') 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY customer_company_name ASC LIMIT $start, $limit";     
+    }  
+    else 
+    {
+    $select_orders = "SELECT * FROM sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry ORDER BY id DESC LIMIT $start, $limit";
+    }
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+   return $value;
+}
+
+function OrdersCountFilter($search = '',$filter_by_customer = '',$admin_added = '') {       
+    $subQry = '';
+    if($search != '')
+    {   $subQry .= "and (t1.customer_company_name LIKE '%$search%' OR t1.order_id LIKE '%$search%' OR t1.order_number LIKE '%$search%')";
+        //$subQry .= " and t1.order_number = '$search'";
+    }
+    
+    if($admin_added != '')
+    {
+        $subQry .= " and t3.cus_type = '$admin_added'";
+    }
+    
+    $select_orders = "SELECT * FROM  sohorepro_order_master as t1,sohorepro_customers as t2,sohorepro_company as t3 where t1.customer_name = t2.cus_id and t1.customer_company = t3.comp_id $subQry"; 
+    $orders = mysql_query($select_orders);
+    while ($object = mysql_fetch_assoc($orders)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getMyUserList($userId,$companyId) {
+    $select_users = "SELECT * FROM  sohorepro_customers where cus_compname = '$companyId' and cus_id != '$userId' "; 
+    $users = mysql_query($select_users);
+    while ($object = mysql_fetch_assoc($users)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getCustomerCSV() {
+    $select_users = "SELECT `cus_fname`,`cus_contact_email` FROM `sohorepro_customers`"; 
+    $customers = mysql_query($select_users);
+    while ($object = mysql_fetch_row($customers)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 ?>

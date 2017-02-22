@@ -415,7 +415,15 @@ if (count($user_checked_product) > 0) {
                                                             <td  align="left" valign="middle" style="padding-left:20px;" width="180"></td>
                                                             <td height="60" width="170" align="right" valign="middle" width="100"></td>
                                                             <td height="60" align="right" valign="middle" width="100"></td>
-                                                            <td height="60" align="right" valign="middle" class="product" width="380"><span class="btn_filter_red" onclick="return cancel_addprod();" style="float:right; margin-left: 5px;">Cancel</span><input type="image" name="add_prod" src="images/btn_save_red.png" width="123" height="34" id="add_prod" style="float:right"/></td>
+                                                            
+                                                             <?php  if ($_GET['search'] == '') {  ?>
+                                                            <td height="60" align="right" valign="middle" class="product" width="380">
+                                                          
+                                                                <span class="btn_filter_red" onclick="return cancel_addprod();" style="float:right; margin-left: 5px;">Cancel</span>
+                                                                <input type="image" name="add_prod" src="images/btn_save_red.png" width="123" height="34" id="add_prod" style="float:right"/>
+                                                            </td>
+                                                          <?php  } ?>
+<!--                                                            <td height="60" align="right" valign="middle" class="product" width="380"><span class="btn_filter_red" onclick="return cancel_addprod();" style="float:right; margin-left: 5px;">Cancel</span><input type="image" name="add_prod" src="images/btn_save_red.png" width="123" height="34" id="add_prod" style="float:right"/></td>-->
                                                         </tr>                                               
                                                     </table>
                                                 </div>
@@ -491,7 +499,7 @@ if ($_GET['filter'] == '1') {
                                                                 <td width="101" align="center" valign="middle" bgcolor="<?php echo $rowColor; ?>"  class="pad_btm"><span class="selling_span_<?php echo $id; ?>" id="selling_span_<?php echo $id; ?>"><?php echo "$" . $sell_price; ?></span><input type="text" class="none selling_key inline-text selling_txt_<?php echo $id; ?>" id="selling_txt_<?php echo $id; ?>" value="<?php echo $sell_price; ?>"/></td>                                                                
                                                                 <td width="81"  align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>" class="pad_btm">
                                                                     <input type="hidden" name="od_id" id="od_id" value="<?php echo $order_id; ?>" />
-                                                                    <input name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $id; ?>" <?php if ($quantity_selected != '') { ?> checked="checked" <?php } ?>>
+                                                                    <input class="checkboxp_<?php echo $id; ?> none" name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $id; ?>" <?php if ($quantity_selected != '') { ?> checked="checked" <?php } ?>>
             <!--                                                                    <select name="qty[]" id="qty_<?php echo $id; ?>" onchange="return select_qty('<?php echo $id; ?>',<?php echo $order_id; ?>);" > 
                                                                         <option value="0">0</option>
                                                                         <option value="1" <?php if ($quantity_selected == '1') { ?>selected="selected"<?php } ?>>1</option>
@@ -549,8 +557,16 @@ if ($_GET['filter'] == '1') {
     ?>
                                         <!-- Search Start -->
                                         <table width="759" border="0" cellspacing="0" cellpadding="0" >
-                                            <tr>
+<!--                                            <tr>
                                                 <td height="38" colspan="7" align="left" valign="middle" class="add_title">SEARCH RESULTS : <?php echo $search_values; ?></td>
+                                            </tr>-->
+                                             <tr>
+                                                <td style="padding:10px;" height="38" colspan="7" align="left" valign="middle" class="add_title"><span style="line-height:30px;" >SEARCH RESULTS : <?php echo $search_values; ?></span>
+                                                    <div style="float:right;" class="product">
+                                                                <span class="btn_filter_red" onclick="return cancel_addprod();" style="float:right; margin-left: 5px;">Cancel</span>
+                                                                <input type="image" name="add_prod" src="images/btn_save_red.png" width="123" height="34" id="add_prod" style="float:right"/>
+                                                 </div>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td width="20" height="28" align="center" valign="middle" class="td_brdr" bgcolor="#f99b3e">S.no</td>
@@ -623,7 +639,7 @@ if ($_GET['filter'] == '1') {
                                                     <td width="101" align="center" valign="middle" bgcolor="<?php echo $rowColor; ?>"  class="pad_btm"><span class="selling_span_<?php echo $id; ?>" id="selling_span_<?php echo $id; ?>"><?php echo "$" . $sell_price; ?></span><input type="text" class="none selling_key inline-text selling_txt_<?php echo $id; ?>" id="selling_txt_<?php echo $id; ?>" value="<?php echo $sell_price; ?>"/></td>                                                                
                                                     <td width="81"  align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>" class="pad_btm">
                                                         <input type="hidden" name="od_id" id="od_id" value="<?php echo $order_id; ?>" />
-                                                        <input name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $id; ?>" <?php if ($quantity_selected != '') { ?> checked="checked" <?php } ?>>
+                                                        <input class="checkboxp_<?php echo $id;?> none"  name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $id; ?>" <?php if ($quantity_selected != '') { ?> checked="checked" <?php } ?>>
             <!--                                                                    <select name="qty[]" id="qty_<?php echo $id; ?>" onchange="return select_qty('<?php echo $id; ?>',<?php echo $order_id; ?>);" > 
                                                             <option value="0">0</option>
                                                             <option value="1" <?php if ($quantity_selected == '1') { ?>selected="selected"<?php } ?>>1</option>
@@ -727,7 +743,7 @@ if ($_GET['filter'] == '1') {
                                                     <td width="101" align="center" valign="middle" bgcolor="<?php echo $rowColor; ?>"  class="pad_btm"><span class="selling_span_<?php echo $id; ?>" id="selling_span_<?php echo $id; ?>"><?php echo "$" . $sell_price; ?></span><input type="text" class="none selling_key inline-text selling_txt_<?php echo $id; ?>" id="selling_txt_<?php echo $id; ?>" value="<?php echo $sell_price; ?>"/></td>                                                                
                                                     <td width="81"  align="center" valign="middle" bgcolor="<?php echo $rowColor1; ?>" class="pad_btm">
                                                         <input type="hidden" name="od_id" id="od_id" value="<?php echo $order_id; ?>" />
-                                                        <input name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $id; ?>" <?php if ($quantity_selected != '') { ?> checked="checked" <?php } ?>>
+                                                        <input class="checkboxp_<?php echo $id;?> none"  name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $id; ?>" <?php if ($quantity_selected != '') { ?> checked="checked" <?php } ?>>
             <!--                                                                    <select name="qty[]" id="qty_<?php echo $id; ?>" onchange="return select_qty('<?php echo $id; ?>',<?php echo $order_id; ?>);" > 
                                                             <option value="0">0</option>
                                                             <option value="1" <?php if ($quantity_selected == '1') { ?>selected="selected"<?php } ?>>1</option>
@@ -864,6 +880,7 @@ if ($_GET['filter'] == '1') {
         var qty = document.getElementById("qty_" + id).value;
         if (qty != '')
         {
+             $(".checkboxp_"+ id).attr("checked", "true");
             $.ajax
                     ({
                         type: "POST",

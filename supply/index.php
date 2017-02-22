@@ -127,6 +127,20 @@ if (isset($_REQUEST['forgot_submit'])) {
     }
 }
 
+if (isset($_REQUEST['redirect_supply'])){
+    $user_details = UserDtls($_REQUEST['redirect_supply']);
+      unset($_SESSION['sohorepro_userid']);
+    unset($_SESSION['sohorepro_companyid']);
+    unset($_SESSION['sohorepro_username']);
+  if ((count($user_details) > 0)) {
+        $_SESSION['sohorepro_userid'] = $user_details[0]['cus_id'];
+        $_SESSION['sohorepro_companyid'] = $user_details[0]['cus_compname'];
+        $_SESSION['sohorepro_username'] = $user_details[0]['cus_contact_name'];
+        header("Location:index.php");
+    } else {
+        header("Location:index.php?err=incorrect");
+    }
+}
 
 if (isset($_REQUEST['login_submit'])) {
     unset($_SESSION['sohorepro_userid']);

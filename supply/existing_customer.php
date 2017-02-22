@@ -164,8 +164,7 @@ exit;
 
 
 
-clearstatcache();
-$Super = getSuperCategory();
+
 
 
 

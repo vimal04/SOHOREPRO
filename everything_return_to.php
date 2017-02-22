@@ -5,6 +5,7 @@ error_reporting(0);
 
 if ($_POST['everything_return_to'] == '1') {
     $address_book_se = $_POST['address_book_se'];
+    $address_book_label = $_POST['address_book_lable'];
     $current_option = CurrentOption($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $number_of_sets = EnteredPlotttingPrimary($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
     $rem_avl_options = AvlOptionsRemaining($_SESSION['sohorepro_companyid'], $_SESSION['sohorepro_userid']);
@@ -16,7 +17,7 @@ if ($_POST['everything_return_to'] == '1') {
     <input type="hidden" name="delivery_type_option" id="delivery_type_option" value="2" />
     <div style="border: 1px #F99B3E solid;margin-bottom: 20px;padding-bottom: 20px;width: 100%;float: left;">
         <div style="width: 100%;float: left;margin-top: 10px;">
-            <div style="float: left;width: 48%;margin-left: 22px;font-weight: bold;">SEND EVERYTHING TO</div>
+            <div style="float: left;width: 48%;margin-left: 22px;font-weight: bold;">SEND EVERYTHING TO <?php echo $address_book_label; ?></div>
             
 
             <?php
@@ -111,9 +112,9 @@ if ($_POST['everything_return_to'] == '1') {
                     <div style="float:left;width: 100%;font-weight: bold;color: #000;margin-top: 7px;"> OPTION <?php echo $entered['options']; ?></div>
                     <div style="width: 98%;float: left;border: 1px solid #F99B3E;padding: 5px;">   
                         <?php
-                        if ($entered['size'] == 'Custom') {
+                        if ($entered['size'] == 'CUSTOM') {
                             ?>
-                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;margin-top: 5px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
                                     Custom Size Details
                                 </div>
@@ -124,9 +125,9 @@ if ($_POST['everything_return_to'] == '1') {
                             </div>
                             <?php
                         }
-                        if ($entered['output'] == 'Both') {
+                        if ($entered['output'] == 'BOTH') {
                             ?>
-                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;margin-top: 5px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
                                     Color Page Numbers
                                 </div>
@@ -139,7 +140,7 @@ if ($_POST['everything_return_to'] == '1') {
                         }
                         if ($entered['spl_instruction'] != '') {
                             ?> 
-                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;">
+                            <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right: 10px;margin-top: 5px;">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
                                     Special Instructions
                                 </div>
@@ -150,11 +151,13 @@ if ($_POST['everything_return_to'] == '1') {
                             </div>
                             <?php
                         }
+                        
+                        
                         //if ($entered['plot_arch'] == '0') {
                             if ($entered['pick_up_time'] != '0') {
                                 $pickup_option = ($entered['pick_up'] == "ASAP") ? $entered['pick_up'] : $entered['pick_up'] . ' ' . $entered['pick_up_time'];
                                 ?>
-                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;">
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right:10px;margin-top: 5px;">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
                                         Schedule a Pickup
                                     </div>
@@ -163,8 +166,52 @@ if ($_POST['everything_return_to'] == '1') {
                                         <?php echo $pickup_option; ?>
                                     </div>
                                 </div>
-                            <?php }if ($entered['drop_off'] != '0') { ?>
-                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;">
+                            <?php } 
+                            if($entered['my_office_alt'] != ''){ 
+                                
+                                $address_dtls    = SelectLastEnteredAddress($entered['address_book_id']);
+                                $address_3       = ($address_dtls[0]['address_3'] != '') ? $address_dtls[0]['address_3'].'<br>' : '';
+                                $address_string  = $address_dtls[0]['company_name'].'<br>'.$address_dtls[0]['address_1'].'<br>'.$address_dtls[0]['address_2'].'<br>'.$address_3.$address_dtls[0]['city'].',&nbsp;'.StateName($address_dtls[0]['state']).'&nbsp;'.$address_dtls[0]['zip'];
+
+                                $option_sechdule = ($entered['my_office_alt'] == 'my_office') ? '<span>My Office</span>' : '<span>Alternate:</span><br>'.$address_string;
+                                if($entered['use_same_alt'] == '1'){
+                                ?>   
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-right:10px;margin-top: 5px;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Schedule a Pick-up Option
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="pick_up_time" id="pick_up_time" value="<?php //echo $option_sechdule; ?>" />
+                                        Use same file as Option <?php echo $entered['use_same_alt']; ?>
+                                    </div>
+                                </div>                                
+                            <?php }
+                            if($entered['my_office_alt'] == 'my_office'){
+                            ?>
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E; margin-right:10px;margin-top: 5px;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Schedule a Pick-up Option
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="pick_up_time" id="pick_up_time" value="<?php //echo $option_sechdule; ?>" />
+                                        <?php echo $option_sechdule; ?>
+                                    </div>
+                                </div>
+                            <?php }else{ ?>
+                         <div style="width: 22%;float: left;border: 1px solid #F99B3E; margin-right:10px;margin-top: 5px;">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
+                                        Schedule a Pick-up Option
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="pick_up_time" id="pick_up_time" value="<?php //echo $option_sechdule; ?>" />
+                                        <?php echo $option_sechdule; ?>
+                                    </div>
+                                </div>
+                        <?php 
+                            } } 
+                            
+                            if ($entered['drop_off'] != '0') { ?>
+                                <div style="width: 22%;float: left;border: 1px solid #F99B3E;margin-top: 5px;">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #F99B3E;color: #5C5C5C;text-align: center;">
                                         Drop-off Option
                                     </div>

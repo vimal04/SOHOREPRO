@@ -48,8 +48,14 @@ $page_name_new= $page_names[$pagename_pos];
             <tr>
                 <td width="198" height="40" align="left" valign="middle" bgcolor="#7a7878" class="lft_menu <?php if($page_name_new=='email_settings.php') { echo "active"; } ?><?php if($page_name_new=='settings_update.php') { echo "active"; } ?>"><a href="email_settings.php">Settings</a></td>
             </tr>
+<!--            <tr>
+                <td width="198" height="40" align="left" valign="middle" bgcolor="#7a7878" class="lft_menu <?php //if($page_name_new=='invoice.php') { echo "active"; } ?>"><a href="invoice.php">Invoice</a></td>
+            </tr>-->
             <tr>
-                <td width="198" height="40" align="left" valign="middle" bgcolor="#7a7878" class="lft_menu <?php if($page_name_new=='invoice.php') { echo "active"; } ?>"><a href="invoice.php">Invoice</a></td>
+                <td width="198" height="40" align="left" valign="middle" bgcolor="#7a7878" class="lft_menu <?php if($page_name_new=='supply_billing.php') { echo "active"; } ?>"><a href="supply_billing.php">Billing</a></td>
+            </tr>
+            <tr>
+                <td width="198" height="40" align="left" valign="middle" bgcolor="#7a7878" class="lft_menu <?php if($page_name_new=='supply_closed_order.php') { echo "active"; } ?>"><a href="supply_closed_order.php">CLOSED ORDERS</a></td>
             </tr>
     <?php } ?>
 </table>

@@ -38,7 +38,7 @@ if (isset($_POST['cust_id']) && $_POST['cust_id'] != '') {
                 <tr>
                     <td class="inf">Email</td>
                     <td align="left">
-                        <span class="edit_email cus_email_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" id="cus_email_<?php echo $company_id; ?>_<?php echo $customer_id; ?>"><?php echo wordwrap($object['cus_email'],15,"<br>\n",TRUE);?></span>
+                        <span class="edit_email cus_email_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" id="cus_email_<?php echo $company_id; ?>_<?php echo $customer_id; ?>"><?php echo $object['cus_email']; //echo wordwrap($object['cus_email'],15,"<br>\n",TRUE);?></span>
                         <input type="text" class="inline-text-cus none cus_email_txt_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" id="cus_email_txt_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" value="<?php echo $object['cus_email']; ?>" />
                         <div style="float: left; margin-left: 5px;"><img src="images/like_icon.png"  alt="Update" title="Update" width="22" height="22" class="emupdate em_update_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" style="display: none;"/></div>
                         <div style="float: left; margin-left: 5px;"><img src="images/cancel_icon.png"  alt="Cancel" title="Cancel" width="22" height="22" class="emcancel em_cancel_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" style="display: none;"/></div></td>
@@ -48,7 +48,7 @@ if (isset($_POST['cust_id']) && $_POST['cust_id'] != '') {
                     <td class="inf">Password</td>
                     <td align="left">
                         <span class="edit_password cus_password_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" id="cus_password_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" style="cursor: pointer;"><?php echo $object['cus_pass']; ?></span><span onclick="return resend_cred('<?php echo $company_id; ?>','<?php echo $customer_id; ?>');"  id="cus_resend_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" style="cursor: pointer;display: inline;background: #03803E;float: right;padding: 2px 5px;color: #FFF;font-weight: bold;font-size: 11px;border-radius: 5px;">RESEND</span>
-                        <input type="text" class="inline-text-cus none cus_password_txt_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" id="cus_password_txt_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" value="<?php echo $object['cus_pass']; ?>" />
+                        <input type="text" class="inline-text-cus none cus_password_txt_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" id="<?php echo $comcus_password_txt_pany_id; ?>_<?php echo $customer_id; ?>" value="<?php echo $object['cus_pass']; ?>" />
                         <div style="float: left; margin-left: 5px;"><img src="images/like_icon.png"  alt="Update" title="Update" width="22" height="22" class="passwordupdate password_update_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" style="display: none;"/></div>
                         <div style="float: left; margin-left: 5px;"><img src="images/cancel_icon.png"  alt="Cancel" title="Cancel" width="22" height="22" class="passwordcancel password_cancel_<?php echo $company_id; ?>_<?php echo $customer_id; ?>" style="display: none;"/></div></td>
                     </td>

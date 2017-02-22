@@ -1,0 +1,7 @@
+1. after a customer submits an order, the admin can edit the order and an update is sent to the customer
+the email for the customer should be the email belonging to the user who placed the original order online
+
+
+
+
+currently, after a customer places a supply order, the Admin is capable of modifying the order. We need a method of "closing" and order so that it cannot be modified further, and can therefore be billed for.

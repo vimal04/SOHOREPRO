@@ -6,11 +6,12 @@ if ($_POST['number_of_booklet'] != '') {
     for ($x = 1; $x <= $booklet_value; $x++) {
         ?>
         <div style="width:100%;float:left;margin-top: 10px;margin-bottom: 10px;background-color: #F6F2F2;padding: 5px;">
+            <input type="hidden" id="mount_count" name="mount_count" value="<?php echo $booklet_value;?>">
             <div style="width:100%;float:left;font-weight: bold;font-size: 15px;margin-bottom: 10px;">Original <?php echo $x; ?></div>
-            <div style="clear:both;"><label>Mounting</label>
+            <div style="clear:both;"><label>Mounting<span class="mounting_req" style="color: red;display: none;">*</span></label>
             <div class="drop" style="margin-right:0px;margin-left:0px;height:2px;">
                 <div style="float:left;margin-right:0px;">
-                    <select class="order_0_set1_0_mounting kdSelect " style="width:150px;" id="order_0_set1_0_mounting" name="">
+                    <select class="mounting_select kdSelect " style="width:150px;" id="mounting_select_<?php echo $x;?>" name="mounting_select_<?php echo $x;?>" onchange="return restrict_number();">
                         <option value="none" selected="selected">None</option>
                         <option value="3308">FoamBoard 3/16 White</option>
                         <option value="3309">FoamBoard 3/16 Black</option>
@@ -33,10 +34,10 @@ if ($_POST['number_of_booklet'] != '') {
 
             </div>
             <div>
-            <label>Lamination</label>
+            <label>Lamination<span class="laminating_req" style="color: red;display: none;">*</span></label>
             <div class="drop" style="margin-right:0px;margin-left:0px;height:2px;">
                 <div style="float:left;margin-right:0px;">
-                    <select class="order_0_set1_0_lamination kdSelect " style="width:150px;" id="order_0_set1_0_lamination" name="order[0][set1][0][lamination]">
+                    <select class="lamination_select kdSelect " style="width:150px;" id="lamination_select<?php echo $x;?>" name="mounting_select_<?php echo $x;?>" onchange="return lamination_value_change();">
                         <option value="none" selected="selected">None</option>
                         <option value="3317">Lamination Pouch,7mil 9x12 Gloss</option>
                         <option value="3317">Lamination Pouch,7mil 12x18 Gloss</option>

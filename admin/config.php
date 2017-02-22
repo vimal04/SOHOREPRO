@@ -2719,7 +2719,40 @@ function EnteredPlotRecipientsMultiOriginal($comp_id, $user_id, $order_id) {
     endwhile;
     return $value;
 }
+function EnteredLFPMultiOriginal($comp_id, $user_id, $order_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '".$order_id."'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 
+function EnteredFAPMultiOriginal($comp_id, $user_id, $order_id) {
+    $select_fav = "SELECT * FROM sohorepro_fine_arts_sets WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '".$order_id."'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function EnteredFAPMultiOriginalFinal($comp_id, $user_id, $order_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_fap_sets_needed WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '".$order_id."'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+function EnteredLFPMultiOriginalFinal($comp_id, $user_id, $order_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp_sets_needed WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '".$order_id."'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function EnteredSetsAll($option_id,$comp_id, $user_id) {
     $select_price = "SELECT SUM(plot_needed) as needed_plot FROM sohorepro_sets_needed WHERE option_id = '". $option_id ."' AND comp_id = '".$comp_id."' AND usr_id = '".$user_id."' AND order_id = '0' " ;
     $price = mysql_query($select_price);
@@ -2747,7 +2780,7 @@ function EnteredPlotttingPrimary($comp_id, $user_id) {
 
 
 function EnteredPlotttingFineArts($comp_id, $user_id) {
-    $select_fav = "SELECT * FROM sohorepro_fine_arts_sets WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' " ;
+    $select_fav = "SELECT * FROM sohorepro_fine_arts_sets WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '0'" ;
     $details       = mysql_query($select_fav);
     while ($object = mysql_fetch_assoc($details)):
         $value[] = $object;
@@ -2864,7 +2897,21 @@ function ArchSetsNeededNew($comp_id, $user_id, $option_id) {
     $catg = $object['needed_arch'];
     return $catg;
 }
+function LFPNeededNew($comp_id, $user_id, $option_id) {
+    $select_price = "SELECT SUM(print_of_need) as needed_lfp FROM sohorepro_service_lfp_sets_needed WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND option_id = '".$option_id."'  AND order_id = '0' " ;
+    $price = mysql_query($select_price);
+    $object = mysql_fetch_assoc($price);
+    $catg = $object['needed_lfp'];
+    return $catg;
+}
 
+function FAPNeededNew($comp_id, $user_id, $option_id) {
+    $select_price = "SELECT SUM(print_of_need) as needed_fap FROM sohorepro_service_fap_sets_needed WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND option_id = '".$option_id."'  AND order_id = '0' " ;
+    $price = mysql_query($select_price);
+    $object = mysql_fetch_assoc($price);
+    $catg = $object['needed_fap'];
+    return $catg;
+}
 function CheckSerials($comp_id, $user_id,$serial) {
     $select_fav = "SELECT * FROM sohorepro_plotting_set WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND set_serial = '".$serial."' " ;
     $details       = mysql_query($select_fav);
@@ -2877,6 +2924,23 @@ function CheckSerials($comp_id, $user_id,$serial) {
 
 function NeededSets($comp_id, $user_id) {
     $select_fav = "SELECT * FROM sohorepro_sets_needed WHERE comp_id = '".$comp_id."' AND usr_id = '".$user_id."' AND order_id = '0' " ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function NeededSetsLFP($comp_id, $user_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp_sets_needed WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '0' " ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+function NeededSetsFAP($comp_id, $user_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_fap_sets_needed WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '0' " ;
     $details       = mysql_query($select_fav);
     while ($object = mysql_fetch_assoc($details)):
         $value[] = $object;
@@ -2965,7 +3029,23 @@ function SetsOrderedFinalize($ordere_id) {
     endwhile;
     return $value;
 }
+function SetsOrderedFinalizeLFP($ordere_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp_sets_needed WHERE order_id = '".$ordere_id."'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 
+function SetsOrderedFinalizeFAP($ordere_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_fap_sets_needed WHERE order_id = '".$ordere_id."'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function SetsOrderedFinalizeOriginal($ordere_id) {
     $select_fav = "SELECT * FROM sohorepro_plotting_set WHERE order_id = '".$ordere_id."'" ;
     $details       = mysql_query($select_fav);
@@ -3147,7 +3227,22 @@ function PlottingNeededSetWithoutOrderId($company_id, $user_id){
     return $value;  
 }
 
-
+function LFPNeededSetWithoutOrderId($company_id, $user_id){
+    $plotting_set = "SELECT * FROM sohorepro_service_lfp_sets_needed WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0'" ;
+    $set = mysql_query($plotting_set);
+    while ($object = mysql_fetch_assoc($set)):
+        $value[] = $object;
+    endwhile;
+    return $value;  
+}
+function FAPNeededSetWithoutOrderId($company_id, $user_id){
+    $plotting_set = "SELECT * FROM sohorepro_service_fap_sets_needed WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0'" ;
+    $set = mysql_query($plotting_set);
+    while ($object = mysql_fetch_assoc($set)):
+        $value[] = $object;
+    endwhile;
+    return $value;  
+}
 //check Print of each Null
 function CheckPeNull($company_id, $user_id){
     $plotting_set = "SELECT * FROM sohorepro_plotting_set WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND print_ea = ''" ;
@@ -3217,8 +3312,26 @@ function AvlOptionsRemaining($company_id, $user_id){
     return $value;  
 }
 
+function AvlOptionsRemainingLFP($company_id, $user_id){
+    $plotting_set = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0' AND recipients_set = '1'" ;
+    $set = mysql_query($plotting_set);
+    while ($object = mysql_fetch_assoc($set)):
+        $value[] = $object;
+    endwhile;
+    return $value;  
+}
+
+function AvlOptionsRemainingFAP($company_id, $user_id){
+    $plotting_set = "SELECT * FROM sohorepro_fine_arts_sets WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0' AND recipients_set = '1'" ;
+    $set = mysql_query($plotting_set);
+    while ($object = mysql_fetch_assoc($set)):
+        $value[] = $object;
+    endwhile;
+    return $value;  
+}
+
 function RemainingSets($company_id, $user_id){
-    $plotting_set = "SELECT * FROM sohorepro_plotting_set WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0'" ;
+    $plotting_set = "SELECT * FROM sohorepro_plotting_set WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0'";
     $set = mysql_query($plotting_set);
     while ($object = mysql_fetch_assoc($set)):
         $value[] = $object;
@@ -3235,6 +3348,14 @@ function RemainingSetsAfter($company_id, $user_id){
     return $value;  
 }
 
+function RemainingSetsAfterFAP($company_id, $user_id){
+    $plotting_set = "SELECT * FROM sohorepro_fine_arts_sets WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0' AND recipients_set = '0'" ;
+    $set = mysql_query($plotting_set);
+    while ($object = mysql_fetch_assoc($set)):
+        $value[] = $object;
+    endwhile;
+    return $value;  
+}
 function EnteredPlotRecipientsCurrentOption($id) {
     $select_fav = "SELECT * FROM sohorepro_plotting_set WHERE id = '".$id."' GROUP BY plot_arch ORDER BY plot_arch DESC" ;
     $details       = mysql_query($select_fav);
@@ -3244,6 +3365,23 @@ function EnteredPlotRecipientsCurrentOption($id) {
     return $value;
 }
 
+function EnteredLFPRecipientsCurrentOption($id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp WHERE id = '".$id."' " ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function EnteredFAPRecipientsCurrentOption($id) {
+    $select_fav = "SELECT * FROM sohorepro_fine_arts_sets WHERE id = '".$id."' " ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 
 function EnteredPlotRecipientsCurrentOptionDynamic($company_id, $user_id) {
     $select_fav = "SELECT * FROM sohorepro_plotting_set WHERE company_id = '".$company_id."' AND user_id = '".$user_id."' AND order_id = '0' AND recipients_set = '0' ORDER BY id ASC LIMIT 1" ;
@@ -3544,6 +3682,22 @@ function EnteredLFPPrimary($comp_id, $user_id) {
     return $value;
 }
 
+function EnteredFAPPrimary($comp_id, $user_id) {
+    $select_fav = "SELECT * FROM sohorepro_fine_arts_sets WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '0'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+function EnteredLFPPrimaryRec($comp_id, $user_id) {
+    $select_fav = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."' AND order_id = '0' AND recipients_set ='0'" ;
+    $details       = mysql_query($select_fav);
+    while ($object = mysql_fetch_assoc($details)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
 function EnteredLFPPrimaryPdf($comp_id, $user_id) {
     $select_fav = "SELECT * FROM sohorepro_service_lfp WHERE company_id = '".$comp_id."' AND user_id = '".$user_id."'";
     $details       = mysql_query($select_fav);

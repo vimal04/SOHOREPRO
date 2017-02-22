@@ -327,7 +327,8 @@ if ($_POST['add_fine_arts_services'] == '99') {
     
      $user_id_add_set = $_SESSION['sohorepro_userid'];
     $company_id_view_plot = $_SESSION['sohorepro_companyid'];
-
+    $job_reference = $_POST['job_reference'];
+     $option = $_POST['option'];
     $original = $_POST['original'];
     $print_ea = $_POST['print_ea'];
     $size = $_POST['size'];
@@ -353,9 +354,11 @@ if ($_POST['add_fine_arts_services'] == '99') {
                                 poe             = '" . $print_ea . "',
                                 size            = '" . $size . "',  
                                 output          = '" . $output . "',
+                                option_id       = '" . $option . "',   
                                 media           = '" . $order_0_set1_0_media . "',
                                 size_custom     = '" . $size_custom . "',    
                                 output_both     = '" . $output_both . "',
+                                reference     = '" . $job_reference . "',   
                                 dropoff_val     = '" . $dropoff_val . "',
                                 ftp_link_val    = '" . $ftp_link_val . "',
                                 user_name_val   = '" . $user_name_val . "',

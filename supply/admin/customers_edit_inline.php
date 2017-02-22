@@ -419,6 +419,74 @@ if(isset($_POST['bus_del_phone']) && $_POST['bus_del_phone'] != '')
 }
 
 
+if(isset($_POST['bus_acc_name']))
+{
+  $id                   = $_POST['id'];   
+  $name                = $_POST['bus_acc_name'];  
+
+
+  $query = "UPDATE sohorepro_company
+			SET     comp_contact_name = '" . $name . "' WHERE comp_id = '".$id."'";
+  mysql_query($query);   
+  
+  echo $name;   
+  
+}
+
+if(isset($_POST['bus_acc_email']))
+{
+  $id                   = $_POST['id'];   
+  $email                = $_POST['bus_acc_email'];  
+if($email!=""){
+   $check_email_exist    = "SELECT * FROM sohorepro_company WHERE comp_contact_email = '".$email."' AND comp_id != '".$id."' ";
+  $val_mail = mysql_query($check_email_exist);
+  $num_rows = mysql_num_rows($val_mail);
+  if($num_rows > 0){
+      $row = mysql_fetch_assoc($val_mail);
+      echo "0~".$row['comp_name'];
+  
+  }else{
+  $query = "UPDATE sohorepro_company
+			SET     comp_contact_email = '" . $email . "' WHERE comp_id = '".$id."'";
+  mysql_query($query);   
+  
+  echo $email;    
+}
+}
+else{
+   $query = "UPDATE sohorepro_company
+			SET     comp_contact_email = '" . $email . "' WHERE comp_id = '".$id."'";
+  mysql_query($query);   
+  
+  echo $email;    
+}
+}
+if(isset($_POST['accept_email'])){
+    
+    $id                   = $_POST['id'];   
+  $email                = $_POST['accept_email'];  
+  
+      $query = "UPDATE sohorepro_company
+			SET     comp_contact_email = '" . $email . "' WHERE comp_id = '".$id."'";
+  mysql_query($query);   
+  
+  echo $email; 
+    
+}
+
+if(isset($_POST['bus_acc_phone']))
+{
+  $id                   = $_POST['id'];   
+  $phone                = $_POST['bus_acc_phone'];  
+
+ 
+  $query = "UPDATE sohorepro_company
+			SET     comp_contact_phone = '" . $phone . "' WHERE comp_id = '".$id."'";
+  mysql_query($query);   
+  
+  echo $phone;    
+}
+
 if(isset($_POST['bus_fax']) && $_POST['bus_fax'] != '')
 {
   $id                   = $_POST['id'];   

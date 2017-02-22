@@ -754,7 +754,7 @@ if (isset($_POST['order_closed_now_id']) && $_POST['order_closed_now_id'] != '')
     $current_status = OrderComment($order_closed_now_id);
     $close_status = ($current_status[0]['closed_status'] == '1') ? '0' : '1';
 
-    $order_close = "UPDATE sohorepro_order_master SET closed_status = '" . $close_status . "' WHERE id = '" . $order_closed_now_id . "' ";
+    $order_close = "UPDATE sohorepro_order_master SET closed_status = '" . $close_status . "',closed_date = now() WHERE id = '" . $order_closed_now_id . "' ";
     mysql_query($order_close);
 
     $orders_details = viewOrders($order_closed_now_id);
@@ -765,6 +765,7 @@ if (isset($_POST['order_closed_now_id']) && $_POST['order_closed_now_id'] != '')
         $order_close = "UPDATE sohorepro_invoice SET inv_status     = '" . $close_status . "',
                                                      created_date   = now()   WHERE order_id = '" . $order_closed_now_id . "' ";
         mysql_query($order_close);
+        
     } else {
         foreach ($orders_details as $details) {
             $sql = "INSERT INTO sohorepro_invoice
@@ -1120,6 +1121,50 @@ if (isset($_POST['std_spl']) && $_POST['std_spl'] != '') {
         echo '9~STD~std_spl';
     }
     
+}
+
+if(isset($_POST['cst_invtype']) && $_POST['cst_invtype'] != '')
+{
+
+    $invoicing = $_POST['invoice_opt'];
+    $invoice_comp_id = $_POST['invoice_comp_id'];
+    $sql_order_id = mysql_query("SELECT comp_id,e_billing FROM sohorepro_company WHERE comp_id = $invoice_comp_id");
+    $object = mysql_fetch_assoc($sql_order_id);
+   echo $object['e_billing'];
+    if (count($object['comp_id']) > 0) {
+        if($_POST['tchkd'] == "add")
+        {
+            if($object['e_billing'] ==  "1" || $object['e_billing'] == "2")
+            {
+                echo "-a-";
+                $ebilvaule = $object['e_billing'].",".$invoicing;
+            }
+            else {
+                $ebilvaule = $invoicing;
+            }
+            echo $invoice_change = "UPDATE sohorepro_company SET e_billing = '" . $ebilvaule . "' WHERE comp_id = '" . $invoice_comp_id . "' ";
+            mysql_query($invoice_change);
+        }
+        elseif($_POST['tchkd'] == "del")
+        {
+            if(strpos($object['e_billing'], ","))
+            {
+                $expebilval = explode(",", $object['e_billing']);
+                if(($key = array_search($invoicing, $expebilval)) !== false) {
+                    unset($expebilval[$key]);
+                }
+                $ebilvaule = implode("",$expebilval);
+            }
+            else {
+                $ebilvaule = "";
+            }
+            echo $invoice_change = "UPDATE sohorepro_company SET e_billing = '" . $ebilvaule . "' WHERE comp_id = '" . $invoice_comp_id . "' ";
+            mysql_query($invoice_change);
+        }
+    } else {
+        echo "Invalid Company";
+    }
+
 }
 
 ?>

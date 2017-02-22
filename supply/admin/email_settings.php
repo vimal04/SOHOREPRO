@@ -3,6 +3,73 @@ include './config.php';
 include './auth.php';
 $Email = getEmail();
 
+//ob_end_clean();
+ $select_users = "SELECT `cus_fname`,`cus_contact_email` FROM `sohorepro_customers`"; 
+    $result = mysql_query($select_users);
+    
+
+if(isset($_POST['export_csv'])){
+    
+//header('Content-Type: text/csv; charset=utf-8');
+//header('Content-Disposition: attachment; filename=data.csv');
+//$data = array(
+//        'aaa,bbb,ccc,dddd',
+//        '123,456,789',
+//        '"aaa","bbb"'
+//);
+//ob_start();
+//$fp = fopen('php://output', 'w');
+//foreach ( $data as $line ) {
+//    $val = explode(",", $line);
+//    fputcsv($fp, $val);
+//}
+//fclose($fp);
+//ob_get_clean();
+
+
+function array2csv(array &$array)
+{
+   if (count($array) == 0) {
+     return null;
+   }
+   ob_start();
+   $df = fopen("php://output", 'w');
+  // fputcsv($df, array_keys(reset($array)));
+  fputcsv($df, array('Contact Name', 'Account Email'));
+   $select_users = "SELECT `comp_contact_name`,`comp_contact_email` FROM `sohorepro_company`"; 
+    $result = mysql_query($select_users);
+ while($row = mysql_fetch_row($result)) {
+    if(($row[0]!="") AND ($row[1]!="")){
+	fputcsv($df, $row);
+     }
+}
+   fclose($df);
+   return ob_get_clean();
+}
+function download_send_headers($filename) {
+    // disable caching
+    $now = gmdate("D, d M Y H:i:s");
+    header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
+    header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
+    header("Last-Modified: {$now} GMT");
+
+    // force download  
+    header("Content-Type: application/force-download");
+    header("Content-Type: application/octet-stream");
+    header("Content-Type: application/download");
+
+    // disposition / encoding on response body
+    header("Content-Disposition: attachment;filename={$filename}");
+    header("Content-Transfer-Encoding: binary");
+}
+
+$cus = getCustomerCSV();
+download_send_headers("data_export_" . date("Y-m-d") . ".csv");
+echo array2csv($cus);
+die();
+
+}
+
 if ($_REQUEST['new_mail'] == '1') {
     extract($_POST);
     $sql = "INSERT INTO sohorepro_email
@@ -58,6 +125,7 @@ $sql_tax_rate = mysql_query("SELECT tax_rate FROM sohorepro_tax_rate");
 $object_tax_rate = mysql_fetch_assoc($sql_tax_rate);
 $tax_rate = $object_tax_rate['tax_rate'];
 ?>
+
 
 <!doctype html>
 <html>
@@ -480,7 +548,7 @@ $tax_rate = $object_tax_rate['tax_rate'];
                                                                     
                                                                     <div id="supply_setting">
                                                                         <div id="supply_curve">
-                                                                            <label>ORDERS</label>
+                                                                            <label>SUPPLY ORDERS</label>
                                                                             <div id="service_check" onclick="return change_services_status('<?php echo $id; ?>','orders')">
                                                                                 <div class="service_check_inside_<?php echo $id; ?>_orders <?php if($Mail['orders'] == '1'){ ?>active_settings<?php } ?>" id="service_check_inside"></div>
                                                                             </div>
@@ -631,7 +699,24 @@ $tax_rate = $object_tax_rate['tax_rate'];
                                                 <tr>
                                                     <td>&nbsp;</td>
                                                 </tr>
-                                                
+                                                 <tr>
+                                                    <td height="38" align="left" valign="middle" class="add_title">Export Contacts to CSV</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><div id="days_off_succ" style="color:#007F2A;"></div></td>
+                                                </tr>
+                                                <tr>
+                                                    <td bgcolor="#f6f6f6" class="form_bg">
+                                                        <?php 
+                                                          //  $specials       = Specials('3');
+                                                           // $close_lable    = ($specials == '1') ? 'SPECIALS ON' : 'SPECIALS OFF';
+                                                           // $close_lable_bg = ($specials == '1') ? 'background: #009D59;' : 'background: #D3412C;';                                                                                
+                                                        ?>
+                                                        <form action="" method="POST" name="export_csv_form">
+                                                        <button id="export_csv" name="export_csv" style="background: #009D59; border:none;cursor: pointer;color: #FFF;float: left;padding: 5px 14px;margin-top: 10px;border-radius: 5px;text-decoration: none;margin-right: 15px;margin-left:5px;margin-bottom: 15px;font-weight: bold;">Export to CSV</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
                                                 <tr>
                                                     <td height="38" align="left" valign="middle" class="add_title">Specials Button settings</td>
                                                 </tr>
@@ -660,7 +745,7 @@ $tax_rate = $object_tax_rate['tax_rate'];
             </tr>
         </table>
     </body>
-</html>
+
 
 <script type="text/javascript">
     $(document).ready(function()
@@ -1024,3 +1109,5 @@ function change_services_status(ID, SER_ID)
         }
     }
 </script>
+
+</html>

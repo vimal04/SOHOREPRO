@@ -13,8 +13,12 @@ error_reporting(0);
 // 4 - Decrease the Available Sets
 // Made the Repository 
 
-if ($_POST['all_mounting_sets'] == '1') {    
-echo '1';
+if ($_POST['all_mounting_sets'] == '1') {   
+   //echo $_POST['mounting_select'];
+  // echo $_POST['lamination_select'];
+  print_r($_POST['mount_data']);
+//echo '1';
+
 }
 
 

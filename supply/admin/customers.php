@@ -98,7 +98,21 @@ if ($_GET['status_id']) {
     <link href="style/style.css" rel="stylesheet" type="text/css" media="all" />
     <link href="style/customer-css.css" rel="stylesheet" type="text/css" media="all" />
     <link href="style/pagination.css" rel="stylesheet" type="text/css" media="all" />
-    <style type="text/css">            
+    <style type="text/css">     
+	.custtype {
+    border: 2px solid #F99B3E;
+    padding: 5px 10px 0px 10px;
+    position: relative;
+    top: -26px;
+    float: left;
+    width: 216px;
+}
+  
+	.custtype .action_sus { margin-top: 4px;float: left;}   
+	   .phone_tp {
+    margin-top: 6px;
+    float: left;
+} 
         option.select_customer1 { font-weight: bold !important;}
         .subcat {  
             color: #000000;            
@@ -141,6 +155,10 @@ if ($_GET['status_id']) {
             -ms-animation: pulse 1s linear infinite;
             animation: pulse 1s linear infinite;
         }
+		.cust_edit_tab td span {
+    padding-left: 10px;
+    float: left;
+}
 
         @keyframes "pulse" {
             0% {
@@ -580,17 +598,22 @@ if ($_GET['status_id']) {
                                                                                     <span id="fail_alert_<?php echo $cumpony_id; ?>" style="color:#F00;"></span> 
                                                                                 </td>
                                                                             </tr>
+                                                                            <tr style="text-align: left;" align="left">
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="34%">User Info</td>
+                                                                          </tr>
 
                                                                             <tr valign="top">
                                                                                 <td width="33%" style="height: 30px;text-align: left;padding-left: 2px;">
-                                                                                    <span style="font-weight: bold;float:left;">Cust. ID :&nbsp;&nbsp;</span>
+                                                                                    <span style="font-weight: bold;float:left;">Cust. ID:&nbsp;&nbsp;</span>
                                                                                     <span style="cursor: pointer;" class="cust_inline cust_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $cust_id; ?></span>
                                                                                     <span style="float:left;" class="none cust_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none cust_inline_txt_<?php echo $cumpony_id; ?>" id="cust_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $cust_id; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cust_update cust_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="cust_cancel cust_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>   
                                                                                 </td>
                                                                                 <td width="33%" style="text-align: left;">
-                                                                                    <span style="font-weight: bold;float:left;">Company :&nbsp;&nbsp;</span>
+                                                                                    <span style="font-weight: bold;float:left;">Company:&nbsp;&nbsp;</span>
                                                                                     <span style="cursor: pointer;" class="bus_inline bus_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_name; ?></span>
                                                                                     <span style="float:left;" class="none bus_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none bus_inline_txt_<?php echo $cumpony_id; ?>" id="bus_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_name; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cn_update cn_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -605,27 +628,44 @@ if ($_GET['status_id']) {
                                                                                 $cus_type = 'Customers';   
                                                                                 }
                                                                                 ?>
-                                                                                <td width="34%"><span style="font-weight: bold;">Cust. Type :</span>
-                                                                                    <select id="account_type_<?php echo $cumpony_id; ?>" onchange="return change_account_type('<?php echo $cumpony_id; ?>');" style="border-radius: 5px;border: 1px solid #aeaeae;">
-                                                                                        <option value="1" <?php if($Prod['cus_type'] == '1'){ ?> selected="selected" <?php } ?>>ACCOUNT</option>
-                                                                                        <option value="2" <?php if($Prod['cus_type'] == '2'){ ?> selected="selected" <?php } ?>>CASH</option>
-                                                                                        <option value="3" <?php if($Prod['cus_type'] == '3'){ ?> selected="selected" <?php } ?>>CASH-EXEMPT</option>
-                                                                                    </select>
+                                                                                <?php $customer_per_company = custPerComp($cumpony_id); ?>
+                                                                              <td style="text-align: left;" align="left">
+                                                                        <table width="265" border="0">
+                                                                            <tbody> <tr>
+                                                                                <td class="inf">Select User</td>
+                                                                                <td align="left" style="padding-right: 60px;">
+                                                                                    <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
+                                                                                    <div id="user_select_box_<?php echo $cumpony_id; ?>_<?php echo $customer_per_company[0]['cus_id']; ?>">
+                                                                                        <select  name="customer_name" id="<?php echo $cumpony_id; ?>" class="customer_name_<?php echo $cumpony_id; ?> select_customer">
+                                                                                            <option value="0">--Customers--</option>                                                                                                
+                                                                                            <?php
+                                                                                            foreach ($customer_per_company as $customers) {
+                                                                                                $bold = ($customers['cus_manager'] == '1') ? 'select_customer1' : '';
+                                                                                                ?>
+                                                                                                <option value="<?php echo $customers['cus_id']; ?>" class="<?php echo $bold; ?>"><?php echo $customers['cus_contact_name']; ?></option>                                                                                                 <?php } ?>                                                                                               
+                                                                                        </select>                                                                                            
+                                                                                    </div>
                                                                                 </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                                                                                                           
+                                                                            </tr>
+                                                                        </tbody></table>
+                                                                    </td>
                                                                             </tr>
 
                                                                             <tr align="left" style="text-align: left;">
                                                                                 <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Business Info</td>
                                                                                 <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Delivery Info</td>
-                                                                                <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;">User Info</td>
+                                                                                <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;"></td>
                                                                             </tr>
                                                                             <tr valign="top">                                                                         
                                                                                 <!--Business Table Start-->
                                                                                 <td align="left" width="250" style="text-align: left;">
                                                                                     <table border="0" width="325">
                                                                                         <tr>                                                                                       
-                                                                                            <td>
-                                                                                                <strong style="float:left;">A1 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
+                                                                                            <td> <?php $user_address1 =($user_address1 == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $user_address1;?>
+                                                                                                <strong style="float:left;">A1:&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
                                                                                                 <span style="float:left;" class="none bus_add1_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 150px;" type="text" class="none bus_add1_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address1; ?>" />
                                                                                                 <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_update ad1_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                                 <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_cancel ad1_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -636,7 +676,7 @@ if ($_GET['status_id']) {
                                                                                         ?>
                                                                                         <tr>
                                                                                             <td align="left">
-                                                                                                <strong style="float:left;">A2 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
+                                                                                                <strong style="float:left;">A2:&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
                                                                                                 <span style="float:left;" class="none bus_add2_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add2_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address2_ori; ?>" />
                                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_update ad2_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_cancel ad2_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -647,7 +687,7 @@ if ($_GET['status_id']) {
                                                                                         ?>
                                                                                         <tr>
                                                                                             <td align="left">
-                                                                                                <strong style="float:left;">A3 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
+                                                                                                <strong style="float:left;">A3:&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
                                                                                                 <span style="float:left;" class="none bus_add3_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add3_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_suit; ?>" />
                                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_update ad3_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_cancel ad3_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -663,10 +703,10 @@ if ($_GET['status_id']) {
                                                                                         </tr>-->
                                                                                         <tr>                                                                                        
                                                                                             <td align="left" width="500">
-                                                                                                <table>
+                                                                                                <table border="0" cellspacing="0" cellpadding="0">
                                                                                                     <tr>
                                                                                                         <td>
-                                                                                                            <table>
+                                                                                                            <table border="0" cellspacing="0" cellpadding="0">
                                                                                                                 <tr>
                                                                                                                     <td>
                                                                                                                         <span style="cursor: pointer;" class="bus_city_inline bus_city_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_city; ?>,&nbsp;</span>
@@ -724,7 +764,7 @@ if ($_GET['status_id']) {
                                                                                         </tr>                                                                                     
                                                                                         <tr>                                                                                        
                                                                                             <td>
-                                                                                                <span style="float:left;"><strong>P : </strong></span>
+                                                                                                <span style="float:left;"><strong>P: </strong></span>
                                                                                                 <span style="cursor: pointer;" class="bus_phone_inline bus_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_phone; ?></span>
                                                                                                 <input style="width: 80px;" type="text" class="none comp_phone bus_phone_inline_txt_<?php echo $cumpony_id; ?>" id="bus_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_phone; ?>" />
                                                                                                 <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="phone_update phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -733,7 +773,7 @@ if ($_GET['status_id']) {
                                                                                         </tr> 
                                                                                         <tr>                                                                                        
                                                                                             <td>                                                                                           
-                                                                                                <span style="float:left;"><strong>F : </strong></span>                                                                                            
+                                                                                                <span style="float:left;"><strong>F: </strong></span>                                                                                            
                                                                                                 <span style="cursor: pointer;" class="bus_fax_inline bus_fax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_fax; ?></span>
                                                                                                 <input style="width: 80px;" type="text" class="none comp_fax bus_fax_inline_txt_<?php echo $cumpony_id; ?>" id="bus_fax_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_fax; ?>" />
                                                                                                 <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="fax_update fax_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -741,7 +781,7 @@ if ($_GET['status_id']) {
                                                                                             </td>
                                                                                         </tr> 
                                                                                         <tr>
-                                                                                            <td class="inf">Tax Exemption&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                            
+                                                                                            <td class="inf"><strong style="position:relative; left:-2px;">Tax Exemption:</strong>&nbsp;&nbsp;                                                                                            
                                                                                                 <span style="cursor: pointer;" class="bus_tax_inline bus_tax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $tax; ?></span>
                                                                                                 <select name="tax" id="<?php echo $cumpony_id; ?>" class="none bus_tax bus_tax_inline_txt_<?php echo $cumpony_id; ?>" >                                                                                                                   
                                                                                                     <option value="1" <?php if ($tax == 'Yes') { ?> selected="selected" <?php } ?>>Yes</option>                                                                                                    
@@ -752,16 +792,17 @@ if ($_GET['status_id']) {
                                                                                         </tr>
                                                                                         <?php if ($Prod['tax_exe'] == '1') { ?>                                                                                        
                                                                                             <tr class="tax_exempt_number_row_view_<?php echo $cumpony_id; ?>">
-                                                                                                <td>Tax ID : &nbsp;
-                                                                                                    <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>                                                                                                
+                                                                                                <td class="tax_id_label_<?php echo $cumpony_id; ?>" style="position: relative;left: -2px;"><strong>Tax ID: </strong>&nbsp;
+                                                                                                    <span style="cursor: pointer;" class="bus_tax_exep_inline tax_exempt_number_span_<?php echo $cumpony_id ?>" id="<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>
+                                                                                                    
                                                                                                 </td>                                                                                             
                                                                                             </tr> 
                                                                                         <?php } ?>
                                                                                         <tr class="none tax_exempt_number_row_<?php echo $cumpony_id; ?>">
-                                                                                            <td>
-                                                                                                <span style="float: left;">Tax ID : &nbsp;</span>
-                                                                                                <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
-                                                                                                <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus="autofocus" value="<?php echo $tax_form_excempt; ?>" />
+                                                                                            <td style="position: relative;left: -2px;">
+                                                                                                <span style="float: left;"><strong>Tax ID:</strong> &nbsp;</span>
+                                                                                                <span style="cursor:pointer;" id="<?php echo $cumpony_id; ?>" class="tt tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
+                                                                                                <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus value="<?php echo ($tax_form_excempt!="" ? $tax_form_excempt :$tax_excempt_number); ?>" />
                                                                                                 <div style="float:left; margin:0 4px">
                                                                                                     <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
                                                                                                 </div>
@@ -778,7 +819,7 @@ if ($_GET['status_id']) {
                                                                                                 <?php
                                                                                                 $del_add_1 = ($deleivery_address[0]['address_1'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_1'];
                                                                                                 ?>
-                                                                                                <span style="float:left;"><strong>A1 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
+                                                                                                <span style="float:left;"><strong>A1:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
                                                                                                 <input style="float:left;width:140px;" type="text" class="none del_add1_inline_txt_<?php echo $cumpony_id; ?>" id="del_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_1; ?>" />
                                                                                                 <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_del_update ad1_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                                 <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_del_cancel ad1_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -790,7 +831,7 @@ if ($_GET['status_id']) {
                                                                                                 <?php
                                                                                                 $del_add_2 = ($deleivery_address[0]['address_2'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_2'];
                                                                                                 ?>
-                                                                                                <span style="float:left;"><strong>A2 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
+                                                                                                <span style="float:left;"><strong>A2:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
                                                                                                 <input style="float:left; width: 140px;" type="text" class="none del_add2_inline_txt_<?php echo $cumpony_id; ?>" id="del_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_2; ?>" />
                                                                                                 <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_del_update ad2_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                                 <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_del_cancel ad2_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -801,7 +842,7 @@ if ($_GET['status_id']) {
                                                                                         ?>
                                                                                         <tr>                                                                                       
                                                                                             <td>
-                                                                                                <span style="float:left;"><strong>A3 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
+                                                                                                <span style="float:left;"><strong>A3:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
                                                                                                 <input style="float:left;width: 140px;" type="text" class="none del_add3_inline_txt_<?php echo $cumpony_id; ?>" id="del_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $suite_del; ?>" />
                                                                                                 <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_del_update ad3_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                                 <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_del_cancel ad3_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -820,10 +861,10 @@ if ($_GET['status_id']) {
                                                                                         </tr>-->
                                                                                         <tr>                                                                                        
                                                                                             <td align="left" width="500">
-                                                                                                <table align="left">
+                                                                                                <table align="left" border="0" cellspacing="0" cellpadding="0">
                                                                                                     <tr align="left">
                                                                                                         <td align="left">
-                                                                                                            <table border="0">
+                                                                                                            <table border="0" cellspacing="0" cellpadding="0">
                                                                                                                 <tr>
                                                                                                                     <td>
                                                                                                                         <span style="cursor: pointer;" class="del_city_inline del_city_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_city =  ($deleivery_address[0]['city'] != '') ? $deleivery_address[0]['city'] : 'CITY'; ?></span>,
@@ -905,7 +946,7 @@ if ($_GET['status_id']) {
                                                                                 <!--Personal Table Start-->
                                                                                 <td align="left" style="text-align: left;">
                                                                                     <table border="0" width="265">
-                                                                                        <tr>
+<!--                                                                                        <tr>
                                                                                             <td class="inf">Select User</td>
                                                                                             <td align="left" style="padding-right: 60px;">
                                                                                                 <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
@@ -920,7 +961,7 @@ if ($_GET['status_id']) {
                                                                                                     </select>                                                                                            
                                                                                                 </div>
                                                                                             </td>
-                                                                                        </tr>
+                                                                                        </tr>-->
                                                                                         <tr>
                                                                                             <td colspan="2" height="70">
                                                                                                 <!--                                                                                            <div id="jassim"></div>-->
@@ -931,6 +972,20 @@ if ($_GET['status_id']) {
                                                                                                 <div id="jass">
 
                                                                                                 </div>
+                                                                                                  <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
+                                                                                        <option value="0">Address Book</option>
+                                                                                        <?php
+                                                                                        $address_book = AddressBookCompany($cumpony_id);
+                                                                                        foreach ($address_book as $address) {
+                                                                                            ?>                                                                                        
+                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
+                                                                                            <?php
+                                                                                        }
+                                                                                        ?>
+                                                                                    </select>
+
+                                                                                <div id="addressbook_info_<?php echo $cumpony_id; ?>">
+                                                                                </div>
                                                                                             </td>                                                                                           
                                                                                         </tr>
                                                                                     </table>
@@ -941,11 +996,26 @@ if ($_GET['status_id']) {
                                                                                 <?php
                                                                                 $e_billing_checked = ($Prod['e_billing'] == '1') ? 'checked="checked"' : '' ;
                                                                                 ?>
-                                                                    <td>
-                                                                        <label style="font-weight: bold;">E-Billing:</label>        
-                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">
+                                                                    <td style="opacity:0;">
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+                                                                        <span style="font-weight: bold;">Cust. Type:</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
                                                                     </td>
-                                                                    <td>&nbsp;</td>
+                                                                    <td>
+                                                                        
+                                                                       
+                                                                        <span class="acc_email_head_inline_span_<?php echo $cumpony_id; ?>"><strong> A/P:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_email_inline acc_email_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_email'];?></span>
+                                                                                               <input style="width: 120px;" type="text" class="none acc_email_inline_txt_<?php echo $cumpony_id; ?>" id="acc_email_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_email'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_email_update acc_email_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_email_cancel acc_email_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                    
+                                                                    </td>
                                                                     <td>&nbsp;</td>
                                                                 </tr>
                                                                             <tr>
@@ -960,13 +1030,31 @@ if ($_GET['status_id']) {
                                                                     $invoice_type_set = "Select Type";
                                                                     }
                                                                     ?>
-                                                                    <td align="left" width="30%" class="inf">
-                                                                        <div style="width: 100%;float: left;margin-bottom: 3px;"> 
+                                                                    <td align="left" width="30%" class="inf custtype">
+                                                                    <div>
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+                                                                        <span style="font-weight: bold;">Cust. Type:</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
+                                                                    </div>
+                                                                        <div style="padding-bottom:10px;padding-top: 10px;"><b>Invoicing:</b> 
+                                                                            <?php 
+                                                                                $expebill = explode(",", $Prod['e_billing']);
+                                                                            ?>
+                                                                            E-Mail <input type="checkbox" <?php if(in_array("1", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',1);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+                                                                            Print <input type="checkbox" <?php if(in_array("2", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',2);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+<!--                                                                            Both <input type="checkbox">-->
+                                                                        </div>
+                                                                        <div style="width: 100%;float: left;margin-bottom: 10px;"> 
                                                                             <ul>
                                                                                 <li>
-                                                                                    <label style="font-weight: bold;">Invoice Frequency :</label>
+                                                                                    <label style="font-weight: bold;">Invoice Frequency:</label>
                                                                                     <span style="cursor: pointer;" id="inv_type_<?php echo $cumpony_id; ?>" onclick="return select_inv_type('<?php echo $cumpony_id; ?>');"><?php echo $invoice_type_set; ?></span>
-                                                                                    <select name="invoice_freq" class="invoice_freq_type none" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');">                                                                                        
+                                                                                    <select name="invoice_freq" class="invoice_freq_type" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');" style="display:none !important;">                                                                                        
                                                                                         <!--<option value="0"  <?php if($Prod['invoice_type'] == '0'){ ?>selected="selected"<?php } ?>>Select Type</option>-->
                                                                                         <option value="7"  <?php if($Prod['invoice_type'] == '7'){ ?>selected="selected"<?php } ?>>Weekly</option>
                                                                                         <option value="14" <?php if($Prod['invoice_type'] == '14'){ ?>selected="selected"<?php } ?>>Bi-Monthly</option>
@@ -974,34 +1062,33 @@ if ($_GET['status_id']) {
                                                                                     </select>
                                                                                 </li>
                                                                             </ul>
-                                                                        </div>                                                                        
+                                                                        </div> 
+                                                               <div style="margin-bottom:10px; float:left;">  <?php
+                                                                            $status_class = ($Prod['status'] == '1') ? 'action_sus' : 'action_rein';
+                                                                            $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
+                                                                            ?><span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span></div>                                                                          
                                                                     </td>
 
-                                                                                <td width="40%" class="inf">
-                                                                                    <table>
-                                                                                        <tr>
-                                                                                            <td>
-                                                                                                <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
-                                                                                                    <option value="0">Address Book</option>
-                                                                                                    <?php
-                                                                                                    $address_book = AddressBookCompany($cumpony_id);
-                                                                                                    foreach ($address_book as $address) {
-                                                                                                        ?>                                                                                        
-                                                                                                        <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
-                                                                                                        <?php
-                                                                                                    }
-                                                                                                    ?>
-                                                                                                </select>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                        <tr>
-                                                                                            <td style="padding-top: 5px;">
-                                                                                                <div id="addressbook_info_<?php echo $cumpony_id; ?>">
-
-                                                                                                </div>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </table>                                                                                
+                                                                                <td width="40%" class="inf" style="vertical-align:top;">
+                                                                                       <table border="0" > <?php //print_r($Prod);?>
+                                                                                           <tr><td>
+                                                                                                   <span class="acc_name_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Name:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; <?php if($Prod['comp_contact_name']==""){ ?> min-height:15px; <?php } ?> display: inline-block;" class="acc_name_inline acc_name_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_name'];?></span>
+                                                                                               <input style="width: 80px;" type="text" class="none acc_name_inline_txt_<?php echo $cumpony_id; ?>" id="acc_name_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_name'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_name_update acc_name_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_name_cancel acc_name_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                               </td> </tr>
+<!--                                                                            <tr><td><b>Last Name</b></td></tr>-->
+                                                                            <tr><td class="phone_tp">
+                                                                                   
+                                                                                     <span class="acc_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Phone:</strong></span> 
+                                                                                    <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_phone_inline acc_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_phone'];?></span>
+                                                                                    <input style="width: 80px;" type="text" class="none comp_phone acc_phone_inline_txt_<?php echo $cumpony_id; ?>" id="acc_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_phone'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_phone_update acc_phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_phone_cancel acc_phone_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                
+                                                                                </td></tr>
+                                                                        </table>                                                                              
                                                                                 </td>
                                                                                 <td width="30%" class="inf" style="font-weight: bold;padding-left: 2px;">&nbsp;</td>
                                                                             </tr>
@@ -1013,10 +1100,12 @@ if ($_GET['status_id']) {
                                                                             $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
                                                                             ?>
                                                                             <tr>
-                                                                                <td colspan="3">
+                                                                                <td colspan="3" style="opacity:0;">
                                                                                     <span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span>
                                                                                 </td>
                                                                             </tr>
+                                                                            
+                                                                            
                                                                             <tr>
                                                                                 <td colspan="3">
                                                                                     <div style="float:left;width:50%;font-weight: bold;">Customer Notes: </div>
@@ -1243,17 +1332,21 @@ if ($_GET['status_id']) {
                                                                         <span id="fail_alert_<?php echo $cumpony_id; ?>" style="color:#F00;"></span> 
                                                                     </td>
                                                                 </tr>
-
+                                                                <tr style="text-align: left;" align="left">
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="34%">User Info</td>
+                                                                </tr>
                                                                 <tr valign="top">
                                                                     <td width="33%" style="height: 30px;text-align: left;padding-left: 2px;">
-                                                                        <span style="font-weight: bold;float:left;">Cust. ID :&nbsp;&nbsp;</span>
+                                                                        <span style="font-weight: bold;float:left;">Cust. ID:&nbsp;&nbsp;</span>
                                                                         <span style="cursor: pointer;" class="cust_inline cust_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $cust_id; ?></span>
                                                                         <span style="float:left;" class="none cust_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none cust_inline_txt_<?php echo $cumpony_id; ?>" id="cust_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $cust_id; ?>" />
                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cust_update cust_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="cust_cancel cust_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>   
                                                                     </td>
                                                                     <td width="33%" style="text-align: left;padding-left: 2px;">
-                                                                        <span style="font-weight: bold;float:left;">Company :&nbsp;&nbsp;</span>
+                                                                        <span style="font-weight: bold;float:left;">Company:&nbsp;&nbsp;</span>
                                                                         <span style="cursor: pointer;" class="bus_inline bus_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_name; ?></span>
                                                                         <span style="float:left;" class="none bus_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none bus_inline_txt_<?php echo $cumpony_id; ?>" id="bus_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_name; ?>" />
                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cn_update cn_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1268,27 +1361,45 @@ if ($_GET['status_id']) {
                                                                     $cus_type = 'Customers';   
                                                                     }
                                                                     ?>
-                                                                    <td width="34%"><span style="font-weight: bold;">Cust. Type :</span>
-                                                                    <select id="account_type_<?php echo $cumpony_id; ?>" onchange="return change_account_type('<?php echo $cumpony_id; ?>');" style="border-radius: 5px;border: 1px solid #aeaeae;">
-                                                                        <option value="1" <?php if($Prod['cus_type'] == '1'){ ?> selected="selected" <?php } ?>>ACCOUNT</option>
-                                                                        <option value="2" <?php if($Prod['cus_type'] == '2'){ ?> selected="selected" <?php } ?>>CASH</option>
-                                                                        <option value="3" <?php if($Prod['cus_type'] == '3'){ ?> selected="selected" <?php } ?>>CASH-EXEMPT</option>
-                                                                    </select>
-                                                                        </td>
+                                                                    <?php $customer_per_company = custPerComp($cumpony_id); ?>
+                                                                    <td style="text-align: left;" align="left">
+                                                                        <table width="265" border="0">
+                                                                            <tbody>
+                                                                                 <tr>
+                                                                                <td class="inf">Select User</td>
+                                                                                <td align="left" style="padding-right: 60px;">
+                                                                                    <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
+                                                                                    <div id="user_select_box_<?php echo $cumpony_id; ?>_<?php echo $customer_per_company[0]['cus_id']; ?>">
+                                                                                        <select  name="customer_name" id="<?php echo $cumpony_id; ?>" class="customer_name_<?php echo $cumpony_id; ?> select_customer">
+                                                                                            <option value="0">--Customers--</option>                                                                                                
+                                                                                            <?php
+                                                                                            foreach ($customer_per_company as $customers) {
+                                                                                                $bold = ($customers['cus_manager'] == '1') ? 'select_customer1' : '';
+                                                                                                ?>
+                                                                                                <option value="<?php echo $customers['cus_id']; ?>" class="<?php echo $bold; ?>"><?php echo $customers['cus_contact_name']; ?></option>                                                                                                 <?php } ?>                                                                                               
+                                                                                        </select>                                                                                            
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                                                                                                           
+                                                                            </tr>
+                                                                        </tbody></table>
+                                                                    </td>
                                                                 </tr>
 
                                                                 <tr align="left" style="text-align: left;">
                                                                     <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Business Info</td>
                                                                     <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Delivery Info</td>
-                                                                    <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;">User Info</td>
+                                                                    <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;"></td>
                                                                 </tr>
                                                                 <tr valign="top">                                                                        
                                                                     <!--Business Table Start-->
                                                                     <td align="left" width="250" style="text-align: left;">
                                                                         <table border="0" width="325"> 
                                                                             <tr>                                                                                       
-                                                                                <td>
-                                                                                    <strong style="float:left;">A1 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
+                                                                                <td>  <?php $user_address1 =($user_address1 == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $user_address1;?>
+                                                                                    <strong style="float:left;">A1:&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
                                                                                     <span style="float:left;" class="none bus_add1_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 150px;" type="text" class="none bus_add1_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address1; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_update ad1_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_cancel ad1_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1299,7 +1410,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>
                                                                                 <td align="left">
-                                                                                    <strong style="float:left;">A2 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
+                                                                                    <strong style="float:left;">A2:&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
                                                                                     <span style="float:left;" class="none bus_add2_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add2_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address2_ori; ?>" />
                                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_update ad2_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_cancel ad2_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -1310,7 +1421,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>
                                                                                 <td align="left">
-                                                                                    <strong style="float:left;">A3 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
+                                                                                    <strong style="float:left;">A3:&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
                                                                                     <span style="float:left;" class="none bus_add3_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add3_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_suit; ?>" />
                                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_update ad3_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_cancel ad3_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -1364,7 +1475,7 @@ if ($_GET['status_id']) {
                                                                             </tr>                                                                                     
                                                                             <tr>                                                                                        
                                                                                 <td>
-                                                                                    <span style="float:left;"><strong>P : </strong></span>
+                                                                                    <span style="float:left;"><strong>P: </strong></span>
                                                                                     <span style="cursor: pointer;" class="bus_phone_inline bus_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_phone; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_phone bus_phone_inline_txt_<?php echo $cumpony_id; ?>" id="bus_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_phone; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="phone_update phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1373,7 +1484,7 @@ if ($_GET['status_id']) {
                                                                             </tr> 
                                                                             <tr>                                                                                        
                                                                                 <td>                                                                                           
-                                                                                    <span style="float:left;"><strong>F : </strong></span>                                                                                            
+                                                                                    <span style="float:left;"><strong>F: </strong></span>                                                                                            
                                                                                     <span style="cursor: pointer;" class="bus_fax_inline bus_fax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_fax; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_fax bus_fax_inline_txt_<?php echo $cumpony_id; ?>" id="bus_fax_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_fax; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="fax_update fax_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1392,20 +1503,21 @@ if ($_GET['status_id']) {
                                                                             </tr>
                                                                             <?php if ($Prod['tax_exe'] == '1') { ?>                                                                                        
                                                                                 <tr class="tax_exempt_number_row_view_<?php echo $cumpony_id; ?>">
-                                                                                    <td>Tax ID : &nbsp;
-                                                                                        <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>                                                                                                
-                                                                                    </td>                                                                                             
+                                                                                       <td class="tax_id_label_<?php echo $cumpony_id; ?>" style="position: relative;left: -2px;"><strong>Tax ID: </strong>&nbsp;
+                                                                                                    <span style="cursor: pointer;" class="bus_tax_exep_inline tax_exempt_number_span_<?php echo $cumpony_id ?>" id="<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>
+                                                                                                    
+                                                                                                </td>                                                                                              
                                                                                 </tr> 
                                                                             <?php } ?>
                                                                             <tr class="none tax_exempt_number_row_<?php echo $cumpony_id; ?>">
-                                                                                <td>
-                                                                                    <span style="float: left;">Tax ID : &nbsp;</span>
-                                                                                    <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
-                                                                                    <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus="autofocus" value="<?php echo $tax_form_excempt; ?>" />
-                                                                                    <div style="float:left; margin:0 4px">
-                                                                                        <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
-                                                                                    </div>
-                                                                                </td>                                                                                             
+                                                                               <td style="position: relative;left: -2px;">
+                                                                                                <span style="float: left;"><strong>Tax ID:</strong> &nbsp;</span>
+                                                                                                <span style="cursor:pointer;" id="<?php echo $cumpony_id; ?>" class="tt tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
+                                                                                                <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus value="<?php echo ($tax_form_excempt!="" ? $tax_form_excempt :$tax_excempt_number); ?>" />
+                                                                                                <div style="float:left; margin:0 4px">
+                                                                                                    <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
+                                                                                                </div>
+                                                                                            </td>                                                                                                 
                                                                             </tr>                                                                                    
                                                                         </table>
                                                                     </td>
@@ -1420,7 +1532,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $del_add_1 = ($deleivery_address[0]['address_1'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_1'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A1 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
+                                                                                    <span style="float:left;"><strong>A1:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
                                                                                     <input style="float:left;width:140px;" type="text" class="none del_add1_inline_txt_<?php echo $cumpony_id; ?>" id="del_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_1; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_del_update ad1_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_del_cancel ad1_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1432,7 +1544,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $del_add_2 = ($deleivery_address[0]['address_2'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_2'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A2 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
+                                                                                    <span style="float:left;"><strong>A2:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
                                                                                     <input style="float:left; width: 140px;" type="text" class="none del_add2_inline_txt_<?php echo $cumpony_id; ?>" id="del_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_2; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_del_update ad2_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_del_cancel ad2_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -1443,7 +1555,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $suite_del = ($deleivery_address[0]['suite'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['suite'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A3 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
+                                                                                    <span style="float:left;"><strong>A3:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
                                                                                     <input style="float:left;width: 140px;" type="text" class="none del_add3_inline_txt_<?php echo $cumpony_id; ?>" id="del_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $suite_del; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_del_update ad3_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_del_cancel ad3_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1531,7 +1643,7 @@ if ($_GET['status_id']) {
                                                                     <!--Personal Table Start-->
                                                                     <td align="left" style="text-align: left;">
                                                                         <table border="0" width="265">
-                                                                            <tr>
+<!--                                                                            <tr>
                                                                                 <td class="inf">Select User</td>
                                                                                 <td align="left" style="padding-right: 60px;">
                                                                                     <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
@@ -1546,7 +1658,7 @@ if ($_GET['status_id']) {
                                                                                         </select>                                                                                            
                                                                                     </div>
                                                                                 </td>
-                                                                            </tr>
+                                                                            </tr>-->
                                                                             <tr>
                                                                                 <td colspan="2" height="70">
                                                                                     <!--                                                                                            <div id="jassim"></div>-->
@@ -1557,21 +1669,52 @@ if ($_GET['status_id']) {
                                                                                     <div id="jass">
 
                                                                                     </div>
+                                                                                      <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
+                                                                                        <option value="0">Address Book</option>
+                                                                                        <?php
+                                                                                        $address_book = AddressBookCompany($cumpony_id);
+                                                                                        foreach ($address_book as $address) {
+                                                                                            ?>                                                                                        
+                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
+                                                                                            <?php
+                                                                                        }
+                                                                                        ?>
+                                                                                    </select>
+
+                                                                                <div id="addressbook_info_<?php echo $cumpony_id; ?>">
+                                                                                </div>
+                                                                                    
                                                                                 </td>                                                                                           
                                                                             </tr>
                                                                         </table>
                                                                     </td>
                                                                     <!--Personal Table Start End-->
                                                                 </tr>
+                                                                
+                                                                <!--------------custtype-------------->
+                                                                
+                                                                
                                                                 <tr>
                                                                                 <?php
                                                                                 $e_billing_checked = ($Prod['e_billing'] == '1') ? 'checked="checked"' : '' ;
                                                                                 ?>
-                                                                    <td>
-                                                                        <label style="font-weight: bold;">E-Billing:</label>        
-                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">
+                                                                   <td style="opacity:0;">
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+<span style="font-weight: bold;">Cust. Type :</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
                                                                     </td>
-                                                                    <td>&nbsp;</td>
+                                                                   <td>
+                                                                   <span class="acc_email_head_inline_span_<?php echo $cumpony_id; ?>"><strong> A/P</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_email_inline acc_email_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_email'];?></span>
+                                                                                               <input style="width: 120px;" type="text" class="none acc_email_inline_txt_<?php echo $cumpony_id; ?>" id="acc_email_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_email'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_email_update acc_email_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_email_cancel acc_email_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                   </td>
                                                                     <td>&nbsp;</td>
                                                                 </tr>
                                                                 <tr>
@@ -1585,14 +1728,34 @@ if ($_GET['status_id']) {
                                                                     }elseif ($Prod['invoice_type'] == '0') {
                                                                     $invoice_type_set = "Select Type";
                                                                     }
-                                                                    ?>
-                                                                    <td align="left" width="30%" class="inf">
-                                                                        <div style="width: 100%;float: left;margin-bottom: 3px;"> 
+                                                                
+                                                                        $invoicing = ($Prod['e_billing'] == '0') ? 'checked="checked"' : '' ;
+                                                                            ?>
+                                                                    <td align="left" width="30%" class="inf custtype">
+                                                                    <div>
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+<span style="font-weight: bold;">Cust. Type :</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
+                                                                    </div>
+                                                                        <div style="padding-bottom:10px;padding-top: 10px;"><b>Invoicing:</b> 
+                                                                            <?php 
+                                                                                $expebill = explode(",", $Prod['e_billing']);
+                                                                            ?>
+                                                                            E-Mail <input type="checkbox" <?php if(in_array("1", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',1);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+                                                                            Print <input type="checkbox" <?php if(in_array("2", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',2);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+<!--                                                                            Both <input type="checkbox">-->
+                                                                        </div>
+                                                                        <div style="width: 100%;float: left;margin-bottom: 10px;"> 
                                                                             <ul>
                                                                                 <li>
-                                                                                    <label style="font-weight: bold;">Invoice Frequency :</label>
+                                                                                    <label style="font-weight: bold;">Invoice Frequency:</label>
                                                                                     <span style="cursor: pointer;" id="inv_type_<?php echo $cumpony_id; ?>" onclick="return select_inv_type('<?php echo $cumpony_id; ?>');"><?php echo $invoice_type_set; ?></span>
-                                                                                    <select name="invoice_freq" class="invoice_freq_type none" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');">                                                                                        
+                                                                                    <select name="invoice_freq" class="invoice_freq_type" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');" style="display:none !important;">                                                                                        
                                                                                         <!--<option value="0"  <?php if($Prod['invoice_type'] == '0'){ ?>selected="selected"<?php } ?>>Select Type</option>-->
                                                                                         <option value="7"  <?php if($Prod['invoice_type'] == '7'){ ?>selected="selected"<?php } ?>>Weekly</option>
                                                                                         <option value="14" <?php if($Prod['invoice_type'] == '14'){ ?>selected="selected"<?php } ?>>Bi-Monthly</option>
@@ -1600,33 +1763,31 @@ if ($_GET['status_id']) {
                                                                                     </select>
                                                                                 </li>
                                                                             </ul>
-                                                                        </div>                                                                        
+                                                                        </div>         <div style="margin-bottom:10px; float:left;">  <?php
+                                                                            $status_class = ($Prod['status'] == '1') ? 'action_sus' : 'action_rein';
+                                                                            $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
+                                                                            ?><span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span></div>                                                                        
                                                                     </td>
-                                                                    <td width="40%" class="inf">
-                                                                        <table>
-                                                                            <tr>
-                                                                                <td style="padding-top: 5px;">
-                                                                                    <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
-                                                                                        <option value="0">Address Book</option>
-                                                                                        <?php
-                                                                                        $address_book = AddressBookCompany($cumpony_id);
-                                                                                        foreach ($address_book as $address) {
-                                                                                            ?>                                                                                        
-                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
-                                                                                            <?php
-                                                                                        }
-                                                                                        ?>
-                                                                                    </select>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td style="padding-top: 5px;">
-                                                                                    <div id="addressbook_info_<?php echo $cumpony_id; ?>">
-
-                                                                                    </div>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </table>                                                                                
+                                                                    <td width="40%" class="inf" style="vertical-align:top;">
+                                                                           <table border="0" > <?php //print_r($Prod);?>
+                                                                                           <tr><td>
+                                                                                                   <span class="acc_name_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Name:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; <?php if($Prod['comp_contact_name']==""){ ?> min-height:15px; <?php } ?>  display: inline-block;" class="acc_name_inline acc_name_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_name'];?></span>
+                                                                                               <input style="width: 80px;" type="text" class="none acc_name_inline_txt_<?php echo $cumpony_id; ?>" id="acc_name_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_name'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_name_update acc_name_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_name_cancel acc_name_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                               </td> </tr>
+<!--                                                                            <tr><td><b>Last Name</b></td></tr>-->
+                                                                            <tr><td class="phone_tp">
+                                                                                   
+                                                                                     <span class="acc_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Phone:</strong></span> 
+                                                                                    <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_phone_inline acc_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_phone'];?></span>
+                                                                                    <input style="width: 80px;" type="text" class="none comp_phone acc_phone_inline_txt_<?php echo $cumpony_id; ?>" id="acc_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_phone'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_phone_update acc_phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_phone_cancel acc_phone_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                
+                                                                                </td></tr>
+                                                                        </table>                                                                               
                                                                     </td>
                                                                     <td width="30%" class="inf" style="font-weight: bold;padding-left: 2px;">&nbsp;</td>
                                                                 </tr>
@@ -1636,10 +1797,14 @@ if ($_GET['status_id']) {
                                                                 $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
                                                                 ?>
                                                                 <tr>
-                                                                    <td colspan="3">
+                                                                    <td colspan="3" style="opacity:0;">
                                                                         <span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span>
                                                                     </td>
                                                                 </tr>
+                                                                
+                                                               
+                                                                
+                                                                 <!--------------custtype-------------->
                                                                 <tr>
                                                                                 <td colspan="3">
                                                                                     <div style="float:left;width:50%;font-weight: bold;">Customer Notes: </div>
@@ -1872,16 +2037,21 @@ if ($_GET['status_id']) {
                                                                         <span id="fail_alert_<?php echo $cumpony_id; ?>" style="color:#F00;"></span> 
                                                                     </td>
                                                                 </tr>
+                                                                <tr style="text-align: left;" align="left">
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="34%">User Info</td>
+                                                                </tr>
                                                                 <tr valign="top">
                                                                     <td width="33%" style="height: 30px;text-align: left;padding-left: 2px;">
-                                                                        <span style="font-weight: bold;float:left;">Cust. ID :&nbsp;&nbsp;</span>
+                                                                        <span style="font-weight: bold;float:left;">Cust. ID:&nbsp;&nbsp;</span>
                                                                         <span style="cursor: pointer;" class="cust_inline cust_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $cust_id; ?></span>
                                                                         <span style="float:left;" class="none cust_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none cust_inline_txt_<?php echo $cumpony_id; ?>" id="cust_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $cust_id; ?>" />
                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cust_update cust_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="cust_cancel cust_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>   
                                                                     </td>
                                                                     <td width="33%" style="text-align: left;padding-left: 2px;">
-                                                                        <span style="font-weight: bold;float:left;">Company :&nbsp;&nbsp;</span>
+                                                                        <span style="font-weight: bold;float:left;">Company:&nbsp;&nbsp;</span>
                                                                         <span style="cursor: pointer;" class="bus_inline bus_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_name; ?></span>
                                                                         <span style="float:left;" class="none bus_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none bus_inline_txt_<?php echo $cumpony_id; ?>" id="bus_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_name; ?>" />
                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cn_update cn_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1896,26 +2066,43 @@ if ($_GET['status_id']) {
                                                                     $cus_type = 'Customers';   
                                                                     }
                                                                     ?>
-                                                                    <td width="34%"><span style="font-weight: bold;">Cust. Type :</span>
-                                                                    <select id="account_type_<?php echo $cumpony_id; ?>" onchange="return change_account_type('<?php echo $cumpony_id; ?>');" style="border-radius: 5px;border: 1px solid #aeaeae;">
-                                                                        <option value="1" <?php if($Prod['cus_type'] == '1'){ ?> selected="selected" <?php } ?>>ACCOUNT</option>
-                                                                        <option value="2" <?php if($Prod['cus_type'] == '2'){ ?> selected="selected" <?php } ?>>CASH</option>
-                                                                        <option value="3" <?php if($Prod['cus_type'] == '3'){ ?> selected="selected" <?php } ?>>CASH-EXEMPT</option>
-                                                                    </select>
-                                                                        </td>
+                                                                    <?php $customer_per_company = custPerComp($cumpony_id); ?>
+                                                                    <td style="text-align: left;" align="left">
+                                                                        <table width="265" border="0">
+                                                                            <tbody> <tr>
+                                                                                <td class="inf">Select User</td>
+                                                                                <td align="left" style="padding-right: 60px;">
+                                                                                    <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
+                                                                                    <div id="user_select_box_<?php echo $cumpony_id; ?>_<?php echo $customer_per_company[0]['cus_id']; ?>">
+                                                                                        <select  name="customer_name" id="<?php echo $cumpony_id; ?>" class="customer_name_<?php echo $cumpony_id; ?> select_customer">
+                                                                                            <option value="0">--Customers--</option>                                                                                                
+                                                                                            <?php
+                                                                                            foreach ($customer_per_company as $customers) {
+                                                                                                $bold = ($customers['cus_manager'] == '1') ? 'select_customer1' : '';
+                                                                                                ?>
+                                                                                                <option value="<?php echo $customers['cus_id']; ?>" class="<?php echo $bold; ?>"><?php echo $customers['cus_contact_name']; ?></option>                                                                                                 <?php } ?>                                                                                               
+                                                                                        </select>                                                                                            
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                                                                                                           
+                                                                            </tr>
+                                                                        </tbody></table>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr align="left" style="text-align: left;">
                                                                     <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Business Info</td>
                                                                     <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Delivery Info</td>
-                                                                    <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;">User Info</td>
+                                                                    <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;"></td>
                                                                 </tr>
                                                                 <tr valign="top">                                                                        
                                                                     <!--Business Table Start-->
                                                                     <td align="left" width="250" style="text-align: left;">
                                                                         <table border="0" width="325"> 
                                                                             <tr>                                                                                       
-                                                                                <td>
-                                                                                    <strong style="float:left;">A1 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
+                                                                                <td> <?php $user_address1 =($user_address1 == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $user_address1;?>
+                                                                                    <strong style="float:left;">A1:&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
                                                                                     <span style="float:left;" class="none bus_add1_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 150px;" type="text" class="none bus_add1_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address1; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_update ad1_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_cancel ad1_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -1926,7 +2113,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>
                                                                                 <td align="left">
-                                                                                    <strong style="float:left;">A2 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
+                                                                                    <strong style="float:left;">A2:&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
                                                                                     <span style="float:left;" class="none bus_add2_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add2_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address2_ori; ?>" />
                                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_update ad2_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_cancel ad2_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -1937,7 +2124,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>
                                                                                 <td align="left">
-                                                                                    <strong style="float:left;">A3 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
+                                                                                    <strong style="float:left;">A3:&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
                                                                                     <span style="float:left;" class="none bus_add3_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add3_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_suit; ?>" />
                                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_update ad3_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_cancel ad3_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -1953,10 +2140,10 @@ if ($_GET['status_id']) {
                                                                             </tr>-->
                                                                             <tr>                                                                                        
                                                                                 <td align="left" width="500">
-                                                                                    <table>
+                                                                                    <table border="0" cellspacing="0" cellpadding="0">
                                                                                         <tr>
                                                                                             <td>
-                                                                                                <table>
+                                                                                                <table border="0" cellspacing="0" cellpadding="0">
                                                                                                     <tr>
                                                                                                         <td>
                                                                                                             <span style="cursor: pointer;" class="bus_city_inline bus_city_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_city; ?>,&nbsp;</span>
@@ -2014,7 +2201,7 @@ if ($_GET['status_id']) {
                                                                             </tr>                                                                                     
                                                                             <tr>                                                                                        
                                                                                 <td>
-                                                                                    <span style="float:left;"><strong>P : </strong></span>
+                                                                                    <span style="float:left;"><strong>P: </strong></span>
                                                                                     <span style="cursor: pointer;" class="bus_phone_inline bus_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_phone; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_phone bus_phone_inline_txt_<?php echo $cumpony_id; ?>" id="bus_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_phone; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="phone_update phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2023,7 +2210,7 @@ if ($_GET['status_id']) {
                                                                             </tr> 
                                                                             <tr>                                                                                        
                                                                                 <td>                                                                                           
-                                                                                    <span style="float:left;"><strong>F : </strong></span>                                                                                            
+                                                                                    <span style="float:left;"><strong>F: </strong></span>                                                                                            
                                                                                     <span style="cursor: pointer;" class="bus_fax_inline bus_fax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_fax; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_fax bus_fax_inline_txt_<?php echo $cumpony_id; ?>" id="bus_fax_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_fax; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="fax_update fax_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2031,7 +2218,7 @@ if ($_GET['status_id']) {
                                                                                 </td>
                                                                             </tr> 
                                                                             <tr>
-                                                                                <td class="inf">Tax Exemption&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                            
+                                                                                <td class="inf"><strong style="position:relative; left:-2px;">Tax Exemption:</strong>&nbsp;&nbsp;                                                                                           
                                                                                     <span style="cursor: pointer;" class="bus_tax_inline bus_tax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $tax; ?></span>
                                                                                     <select name="tax" id="<?php echo $cumpony_id; ?>" class="none bus_tax bus_tax_inline_txt_<?php echo $cumpony_id; ?>" >                                                                                                                   
                                                                                         <option value="1" <?php if ($tax == 'Yes') { ?> selected="selected" <?php } ?>>Yes</option>                                                                                                    
@@ -2042,20 +2229,21 @@ if ($_GET['status_id']) {
                                                                             </tr>
             <?php if ($Prod['tax_exe'] == '1') { ?>                                                                                        
                                                                                 <tr class="tax_exempt_number_row_view_<?php echo $cumpony_id; ?>">
-                                                                                    <td>Tax ID : &nbsp;
-                                                                                        <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>                                                                                                
-                                                                                    </td>                                                                                             
+                                                                                     <td class="tax_id_label_<?php echo $cumpony_id; ?>" style="position: relative;left: -2px;"><strong>Tax ID: </strong>&nbsp;
+                                                                                                    <span style="cursor: pointer;" class="bus_tax_exep_inline tax_exempt_number_span_<?php echo $cumpony_id ?>" id="<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>
+                                                                                                    
+                                                                                     </td>                                                                                              
                                                                                 </tr> 
             <?php } ?>
                                                                             <tr class="none tax_exempt_number_row_<?php echo $cumpony_id; ?>">
-                                                                                <td>
-                                                                                    <span style="float: left;">Tax ID : &nbsp;</span>
-                                                                                    <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
-                                                                                    <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus="autofocus" value="<?php echo $tax_form_excempt; ?>" />
-                                                                                    <div style="float:left; margin:0 4px">
-                                                                                        <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
-                                                                                    </div>
-                                                                                </td>                                                                                             
+                                                                               <td style="position: relative;left: -2px;">
+                                                                                                <span style="float: left;"><strong>Tax ID:</strong> &nbsp;</span>
+                                                                                                <span style="cursor:pointer;" id="<?php echo $cumpony_id; ?>" class="tt tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
+                                                                                                <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus value="<?php echo ($tax_form_excempt!="" ? $tax_form_excempt :$tax_excempt_number); ?>" />
+                                                                                                <div style="float:left; margin:0 4px">
+                                                                                                    <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
+                                                                                                </div>
+                                                                                            </td>                                                                                                    
                                                                             </tr>                                                                                    
                                                                         </table>
                                                                     </td>
@@ -2068,7 +2256,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $del_add_1 = ($deleivery_address[0]['address_1'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_1'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A1 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
+                                                                                    <span style="float:left;"><strong>A1:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
                                                                                     <input style="float:left;width:140px;" type="text" class="none del_add1_inline_txt_<?php echo $cumpony_id; ?>" id="del_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_1; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_del_update ad1_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_del_cancel ad1_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2080,7 +2268,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $del_add_2 = ($deleivery_address[0]['address_2'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_2'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A2 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
+                                                                                    <span style="float:left;"><strong>A2:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
                                                                                     <input style="float:left; width: 140px;" type="text" class="none del_add2_inline_txt_<?php echo $cumpony_id; ?>" id="del_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_2; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_del_update ad2_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_del_cancel ad2_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -2091,7 +2279,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>                                                                                       
                                                                                 <td>
-                                                                                    <span style="float:left;"><strong>A3 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
+                                                                                    <span style="float:left;"><strong>A3:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
                                                                                     <input style="float:left;width: 140px;" type="text" class="none del_add3_inline_txt_<?php echo $cumpony_id; ?>" id="del_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $suite_del; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_del_update ad3_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_del_cancel ad3_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2110,10 +2298,10 @@ if ($_GET['status_id']) {
                                                                             </tr>-->
                                                                             <tr>                                                                                        
                                                                                 <td align="left" width="500">
-                                                                                    <table align="left">
+                                                                                    <table align="left" border="0" cellspacing="0" cellpadding="0">
                                                                                         <tr align="left">
                                                                                             <td align="left">
-                                                                                                <table border="0">
+                                                                                                <table border="0" cellspacing="0" cellpadding="0">
                                                                                                     <tr>
                                                                                                         <td>
                                                                                                             <span style="cursor: pointer;" class="del_city_inline del_city_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $deleivery_address[0]['city']; ?></span>,
@@ -2171,7 +2359,7 @@ if ($_GET['status_id']) {
                                                                             <tr>                                                                                        
                                                                                 <td>
             <?php $del_phone = ($deleivery_address[0]['phone'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['phone']; ?>
-                                                                                    <span class="del_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>P : </strong></span>
+                                                                                    <span class="del_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>P: </strong></span>
                                                                                     <span style="cursor: pointer;" class="del_phone_inline del_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_phone; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_phone del_phone_inline_txt_<?php echo $cumpony_id; ?>" id="del_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $deleivery_address[0]['phone']; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="phone_del_update phone_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2196,7 +2384,7 @@ if ($_GET['status_id']) {
                                                                     <!--Personal Table Start-->
                                                                     <td align="left" style="text-align: left;">
                                                                         <table border="0" width="265">
-                                                                            <tr>
+<!--                                                                            <tr>
                                                                                 <td class="inf">Select User</td>
                                                                                 <td align="left" style="padding-right: 60px;">
                                                                                     <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
@@ -2211,7 +2399,7 @@ if ($_GET['status_id']) {
                                                                                         </select>                                                                                            
                                                                                     </div>
                                                                                 </td>
-                                                                            </tr>
+                                                                            </tr>-->
                                                                             <tr>
                                                                                 <td colspan="2" height="70">
                                                                                     <!--                                                                                            <div id="jassim"></div>-->
@@ -2223,21 +2411,50 @@ if ($_GET['status_id']) {
                                                                                     <div id="jass">
 
                                                                                     </div>
+                                                                                    
+                                                                                     <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
+                                                                                        <option value="0">Address Book</option>
+                                                                                        <?php
+                                                                                        $address_book = AddressBookCompany($cumpony_id);
+                                                                                        foreach ($address_book as $address) {
+                                                                                            ?>                                                                                        
+                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
+                                                                                            <?php
+                                                                                        }
+                                                                                        ?>
+                                                                                    </select>
+
+                                                                                <div id="addressbook_info_<?php echo $cumpony_id; ?>">
+                                                                                </div>
                                                                                 </td>                                                                                           
                                                                             </tr>
                                                                         </table>
                                                                     </td>
                                                                     <!--Personal Table Start End-->
                                                                 </tr>
+                                                                
+                                                                 <!--------------custtype-------------->
+                                                                 
                                                                 <tr>
                                                                                 <?php
                                                                                 $e_billing_checked = ($Prod['e_billing'] == '1') ? 'checked="checked"' : '' ;
                                                                                 ?>
-                                                                    <td>
-                                                                        <label style="font-weight: bold;">E-Billing:</label>        
-                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">
+                                                                   <td style="opacity:0;">
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+<span style="font-weight: bold;">Cust. Type :</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
                                                                     </td>
-                                                                    <td>&nbsp;</td>
+                                                                    <td><span class="acc_email_head_inline_span_<?php echo $cumpony_id; ?>"><strong> A/P:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_email_inline acc_email_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_email'];?></span>
+                                                                                               <input style="width: 120px;" type="text" class="none acc_email_inline_txt_<?php echo $cumpony_id; ?>" id="acc_email_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_email'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_email_update acc_email_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_email_cancel acc_email_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                    </td>
                                                                     <td>&nbsp;</td>
                                                                 </tr>
                                                                 <tr>
@@ -2252,13 +2469,31 @@ if ($_GET['status_id']) {
                                                                     $invoice_type_set = "Select Type";
                                                                     }
                                                                     ?>
-                                                                    <td align="left" width="30%" class="inf">
-                                                                        <div style="width: 100%;float: left;margin-bottom: 3px;"> 
+                                                                    <td align="left" width="30%" class="inf custtype">
+                                                                    <div>
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+<span style="font-weight: bold;">Cust. Type :</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
+                                                                    </div>
+                                                                        <div style="padding-bottom:10px;padding-top: 10px;"><b>Invoicing:</b>
+                                                                            <?php 
+                                                                                $expebill = explode(",", $Prod['e_billing']);
+                                                                            ?>
+                                                                            E-Mail <input type="checkbox" <?php if(in_array("1", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',1);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+                                                                            Print <input type="checkbox" <?php if(in_array("2", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',2);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+<!--                                                                            Both <input type="checkbox">-->
+                                                                        </div>
+                                                                        <div style="width: 100%;float: left;margin-bottom: 10px;"> 
                                                                             <ul>
                                                                                 <li>
-                                                                                    <label style="font-weight: bold;">Invoice Frequency :</label>
+                                                                                    <label style="font-weight: bold;">Invoice Frequency:</label>
                                                                                     <span style="cursor: pointer;" id="inv_type_<?php echo $cumpony_id; ?>" onclick="return select_inv_type('<?php echo $cumpony_id; ?>');"><?php echo $invoice_type_set; ?></span>
-                                                                                    <select name="invoice_freq" class="invoice_freq_type none" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');">                                                                                        
+                                                                                    <select name="invoice_freq" class="invoice_freq_type" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');" style="display:none !important;">                                                                                        
                                                                                         <!--<option value="0"  <?php if($Prod['invoice_type'] == '0'){ ?>selected="selected"<?php } ?>>Select Type</option>-->
                                                                                         <option value="7"  <?php if($Prod['invoice_type'] == '7'){ ?>selected="selected"<?php } ?>>Weekly</option>
                                                                                         <option value="14" <?php if($Prod['invoice_type'] == '14'){ ?>selected="selected"<?php } ?>>Bi-Monthly</option>
@@ -2266,34 +2501,32 @@ if ($_GET['status_id']) {
                                                                                     </select>
                                                                                 </li>
                                                                             </ul>
-                                                                        </div>                                                                        
+                                                                        </div> <div style="margin-bottom:10px; float:left;">  <?php
+                                                                            $status_class = ($Prod['status'] == '1') ? 'action_sus' : 'action_rein';
+                                                                            $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
+                                                                            ?><span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span></div>                                                                          
                                                                     </td>
                                                                     
-                                                                    <td width="40%" class="inf">
-                                                                        <table border="0">
-                                                                            <tr>
-                                                                                <td style="padding-top: 5px;">
-                                                                                    <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
-                                                                                        <option value="0">Address Book</option>
-                                                                                        <?php
-                                                                                        $address_book = AddressBookCompany($cumpony_id);
-                                                                                        foreach ($address_book as $address) {
-                                                                                            ?>                                                                                        
-                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
-                                                                                            <?php
-                                                                                        }
-                                                                                        ?>
-                                                                                    </select>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td style="padding-top: 5px;">
-                                                                                    <div id="addressbook_info_<?php echo $cumpony_id; ?>">
-
-                                                                                    </div>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </table>                                                                                
+                                                                    <td width="40%" class="inf"  style="vertical-align:top;">
+                                                                       <table border="0" > <?php //print_r($Prod);?>
+                                                                                           <tr><td>
+                                                                                                   <span class="acc_name_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Name:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; <?php if($Prod['comp_contact_name']==""){ ?> min-height:15px; <?php } ?> display: inline-block;" class="acc_name_inline acc_name_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_name'];?></span>
+                                                                                               <input style="width: 80px;" type="text" class="none acc_name_inline_txt_<?php echo $cumpony_id; ?>" id="acc_name_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_name'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_name_update acc_name_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_name_cancel acc_name_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                               </td> </tr>
+<!--                                                                            <tr><td><b>Last Name</b></td></tr>-->
+                                                                            <tr><td class="phone_tp">
+                                                                                   
+                                                                                     <span class="acc_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Phone:</strong></span> 
+                                                                                    <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_phone_inline acc_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_phone'];?></span>
+                                                                                    <input style="width: 80px;" type="text" class="none comp_phone acc_phone_inline_txt_<?php echo $cumpony_id; ?>" id="acc_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_phone'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_phone_update acc_phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_phone_cancel acc_phone_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                
+                                                                                </td></tr>
+                                                                        </table>                                                                               
                                                                     </td>
                                                                     <td width="30%" class="inf" style="font-weight: bold;padding-left: 2px;">&nbsp;</td>
                                                                 </tr>
@@ -2303,10 +2536,13 @@ if ($_GET['status_id']) {
                                                                 $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
                                                                 ?>
                                                                 <tr>
-                                                                    <td colspan="3">
+                                                                    <td colspan="3" style="opacity:0;">
                                                                         <span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span>
                                                                     </td>
                                                                 </tr>
+                                                               
+                                                                 <!--------------custtype-------------->
+                                                                
                                                                 <tr>
                                                                                 <td colspan="3">
                                                                                     <div style="float:left;width:50%;font-weight: bold;">Customer Notes: </div>
@@ -2528,41 +2764,64 @@ if ($_GET['status_id']) {
                                                                         <span id="fail_alert_<?php echo $cumpony_id; ?>" style="color:#F00;"></span> 
                                                                     </td>
                                                                 </tr>
+                                                                <tr style="text-align: left;" align="left">
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="33%"></td>
+                                                                    <td class="inf" style="font-weight: bold;padding-left: 2px;" width="34%">User Info</td>
+                                                                </tr>
                                                                 <tr valign="top">
                                                                     <td width="33%" style="height: 30px;text-align: left;padding-left: 2px;">
-                                                                        <span style="font-weight: bold;float:left;">Cust. ID :&nbsp;&nbsp;</span>
+                                                                        <span style="font-weight: bold;float:left;">Cust. ID:&nbsp;&nbsp;</span>
                                                                         <span style="cursor: pointer;" class="cust_inline cust_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $cust_id; ?></span>
                                                                         <span style="float:left;" class="none cust_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none cust_inline_txt_<?php echo $cumpony_id; ?>" id="cust_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $cust_id; ?>" />
                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cust_update cust_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="cust_cancel cust_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>   
                                                                     </td>
                                                                     <td width="33%" style="text-align: left;padding-left: 2px;">
-                                                                        <span style="font-weight: bold;float:left;">Company :&nbsp;&nbsp;</span>
+                                                                        <span style="font-weight: bold;float:left;">Company:&nbsp;&nbsp;</span>
                                                                         <span style="cursor: pointer;" class="bus_inline bus_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_name; ?></span>
                                                                         <span style="float:left;" class="none bus_comp_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 110px;" type="text" class="none bus_inline_txt_<?php echo $cumpony_id; ?>" id="bus_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_name; ?>" />
                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="cn_update cn_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="cn_cancel cn_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                    
-                                                                    </td>                                                                    
-                                                                    <td width="34%"><span style="font-weight: bold;">Cust. Type :</span>
-                                                                        <select id="account_type_<?php echo $cumpony_id; ?>" onchange="return change_account_type('<?php echo $cumpony_id; ?>');" style="border-radius: 5px;border: 1px solid #aeaeae;">
-                                                                            <option value="1" <?php if($Prod['cus_type'] == '1'){ ?> selected="selected" <?php } ?>>ACCOUNT</option>
-                                                                            <option value="2" <?php if($Prod['cus_type'] == '2'){ ?> selected="selected" <?php } ?>>CASH</option>
-                                                                            <option value="3" <?php if($Prod['cus_type'] == '3'){ ?> selected="selected" <?php } ?>>CASH-EXEMPT</option>
-                                                                        </select>
+                                                                    </td>       
+                                                                    <?php $customer_per_company = custPerComp($cumpony_id); ?>
+                                                                    <td style="text-align: left;" align="left">
+                                                                        <table width="265" border="0">
+                                                                            <tbody>
+                                                                                 <tr>
+                                                                                <td class="inf">Select User</td>
+                                                                                <td align="left" style="padding-right: 60px;">
+                                                                                    <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
+                                                                                    <div id="user_select_box_<?php echo $cumpony_id; ?>_<?php echo $customer_per_company[0]['cus_id']; ?>">
+                                                                                        <select  name="customer_name" id="<?php echo $cumpony_id; ?>" class="customer_name_<?php echo $cumpony_id; ?> select_customer">
+                                                                                            <option value="0">--Customers--</option>                                                                                                
+                                                                                            <?php
+                                                                                            foreach ($customer_per_company as $customers) {
+                                                                                                $bold = ($customers['cus_manager'] == '1') ? 'select_customer1' : '';
+                                                                                                ?>
+                                                                                                <option value="<?php echo $customers['cus_id']; ?>" class="<?php echo $bold; ?>"><?php echo $customers['cus_contact_name']; ?></option>                                                                                                 <?php } ?>                                                                                               
+                                                                                        </select>                                                                                            
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                                                                                                           
+                                                                            </tr>
+                                                                        </tbody></table>
                                                                     </td>
                                                                 </tr>
                                                                 <tr align="left" style="text-align: left;">
                                                                     <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Business Info</td>
                                                                     <td width="33%" class="inf" style="font-weight: bold;padding-left: 2px;">Delivery Info</td>
-                                                                    <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;">User Info</td>
+                                                                    <td width="34%" class="inf" style="font-weight: bold;padding-left: 2px;"></td>
                                                                 </tr>
                                                                 <tr valign="top">                                                                        
                                                                     <!--Business Table Start-->
                                                                     <td align="left" width="250" style="text-align: left;">
                                                                         <table border="0" width="325"> 
                                                                             <tr>                                                                                       
-                                                                                <td>
-                                                                                    <strong style="float:left;">A1 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
+                                                                                <td>  <?php $user_address1 =($user_address1 == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $user_address1;?>
+                                                                                    <strong style="float:left;">A1:&nbsp;</strong><span style="cursor: pointer;" class="bus_add1_inline bus_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address1; ?></span>
                                                                                     <span style="float:left;" class="none bus_add1_lbl_<?php echo $cumpony_id; ?>"></span><input style="float:left;width: 150px;" type="text" class="none bus_add1_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address1; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_update ad1_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_cancel ad1_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2573,7 +2832,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>
                                                                                 <td align="left">
-                                                                                    <strong style="float:left;">A2 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
+                                                                                    <strong style="float:left;">A2:&nbsp;</strong><span style="cursor: pointer;" class="bus_add2_inline bus_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_address2_ori; ?></span>
                                                                                     <span style="float:left;" class="none bus_add2_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add2_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_address2_ori; ?>" />
                                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_update ad2_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_cancel ad2_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -2584,7 +2843,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>
                                                                                 <td align="left">
-                                                                                    <strong style="float:left;">A3 :&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
+                                                                                    <strong style="float:left;">A3:&nbsp;</strong><span style="cursor: pointer;" class="bus_add3_inline bus_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $user_suit; ?></span>
                                                                                     <span style="float:left;" class="none bus_add3_lbl_<?php echo $cumpony_id; ?>"><input style="float:left; width: 150px;" type="text" class="none bus_add3_inline_txt_<?php echo $cumpony_id; ?>" id="bus_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $user_suit; ?>" />
                                                                                         <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_update ad3_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                         <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_cancel ad3_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -2600,10 +2859,10 @@ if ($_GET['status_id']) {
                                                                             </tr>-->
                                                                             <tr>                                                                                        
                                                                                 <td align="left" width="500">
-                                                                                    <table>
+                                                                                    <table border="0" cellspacing="0" cellpadding="0">
                                                                                         <tr>
                                                                                             <td>
-                                                                                                <table>
+                                                                                                <table border="0" cellspacing="0" cellpadding="0">
                                                                                                     <tr>
                                                                                                         <td>
                                                                                                             <span style="cursor: pointer;" class="bus_city_inline bus_city_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_city; ?>,&nbsp;</span>
@@ -2661,7 +2920,7 @@ if ($_GET['status_id']) {
                                                                             </tr>                                                                                     
                                                                             <tr>                                                                                        
                                                                                 <td>
-                                                                                    <span style="float:left;"><strong>P : </strong></span>
+                                                                                    <span style="float:left;"><strong>P: </strong></span>
                                                                                     <span style="cursor: pointer;" class="bus_phone_inline bus_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_phone; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_phone bus_phone_inline_txt_<?php echo $cumpony_id; ?>" id="bus_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_phone; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="phone_update phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2670,7 +2929,7 @@ if ($_GET['status_id']) {
                                                                             </tr> 
                                                                             <tr>                                                                                        
                                                                                 <td>                                                                                           
-                                                                                    <span style="float:left;"><strong>F : </strong></span>                                                                                            
+                                                                                    <span style="float:left;"><strong>F: </strong></span>                                                                                            
                                                                                     <span style="cursor: pointer;" class="bus_fax_inline bus_fax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $company_fax; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_fax bus_fax_inline_txt_<?php echo $cumpony_id; ?>" id="bus_fax_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $company_fax; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="fax_update fax_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2678,7 +2937,7 @@ if ($_GET['status_id']) {
                                                                                 </td>
                                                                             </tr> 
                                                                             <tr>
-                                                                                <td class="inf">Tax Exemption&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                            
+                                                                                <td class="inf"><strong style="position:relative; left:-2px;">Tax Exemption:</strong>&nbsp;&nbsp;                                                                                          
                                                                                     <span style="cursor: pointer;" class="bus_tax_inline bus_tax_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $tax; ?></span>
                                                                                     <select name="tax" id="<?php echo $cumpony_id; ?>" class="none bus_tax bus_tax_inline_txt_<?php echo $cumpony_id; ?>" >                                                                                                                   
                                                                                         <option value="1" <?php if ($tax == 'Yes') { ?> selected="selected" <?php } ?>>Yes</option>                                                                                                    
@@ -2689,20 +2948,21 @@ if ($_GET['status_id']) {
                                                                             </tr>
             <?php if ($Prod['tax_exe'] == '1') { ?>                                                                                        
                                                                                 <tr class="tax_exempt_number_row_view_<?php echo $cumpony_id; ?>">
-                                                                                    <td>Tax ID : &nbsp;
-                                                                                        <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>                                                                                                
-                                                                                    </td>                                                                                             
+                                                                                      <td  class="tax_id_label_<?php echo $cumpony_id; ?>" style="position: relative;left: -2px;"><strong>Tax ID: </strong>&nbsp;
+                                                                                                    <span style="cursor: pointer;" class="bus_tax_exep_inline tax_exempt_number_span_<?php echo $cumpony_id ?>" id="<?php echo $cumpony_id ?>"><?php echo $tax_excempt_number; ?></span>
+                                                                                                    
+                                                                                      </td>                                                                                             
                                                                                 </tr> 
             <?php } ?>
                                                                             <tr class="none tax_exempt_number_row_<?php echo $cumpony_id; ?>">
-                                                                                <td>
-                                                                                    <span style="float: left;">Tax ID : &nbsp;</span>
-                                                                                    <span class="tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
-                                                                                    <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus="autofocus" value="<?php echo $tax_form_excempt; ?>" />
-                                                                                    <div style="float:left; margin:0 4px">
-                                                                                        <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
-                                                                                    </div>
-                                                                                </td>                                                                                             
+                                                                                <td style="position: relative;left: -2px;">
+                                                                                                <span style="float: left;"><strong>Tax ID:</strong> &nbsp;</span>
+                                                                                                <span style="cursor:pointer;" id="<?php echo $cumpony_id; ?>" class="tt tax_exempt_number_span_<?php echo $cumpony_id ?>"><?php //echo $tax_excempt_number;     ?></span>
+                                                                                                <input type="text" name="tax_exempt_number" class="tax_exempt_number_<?php echo $cumpony_id; ?>" id="tax_exempt_number_<?php echo $cumpony_id; ?>" style="float: left;width: 90px;" autofocus value="<?php echo ($tax_form_excempt!="" ? $tax_form_excempt :$tax_excempt_number); ?>" />
+                                                                                                <div style="float:left; margin:0 4px">
+                                                                                                    <img src="images/like_icon.png" style="margin-top:-3px;" alt="Update" title="Update" width="22" height="22" class="tax_exempt_update tax_exempt_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" />
+                                                                                                </div>
+                                                                                            </td>                                                                                                
                                                                             </tr>                                                                                    
                                                                         </table>
                                                                     </td>
@@ -2715,7 +2975,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $del_add_1 = ($deleivery_address[0]['address_1'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_1'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A1 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
+                                                                                    <span style="float:left;"><strong>A1:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add1_inline del_add1_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_1; ?></span>                                                                                                                                                                        
                                                                                     <input style="float:left;width:140px;" type="text" class="none del_add1_inline_txt_<?php echo $cumpony_id; ?>" id="del_add1_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_1; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad1_del_update ad1_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad1_del_cancel ad1_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2727,7 +2987,7 @@ if ($_GET['status_id']) {
                                                                                     <?php
                                                                                     $del_add_2 = ($deleivery_address[0]['address_2'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['address_2'];
                                                                                     ?>
-                                                                                    <span style="float:left;"><strong>A2 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
+                                                                                    <span style="float:left;"><strong>A2:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add2_inline del_add2_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_add_2; ?></span>   
                                                                                     <input style="float:left; width: 140px;" type="text" class="none del_add2_inline_txt_<?php echo $cumpony_id; ?>" id="del_add2_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $del_add_2; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad2_del_update ad2_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad2_del_cancel ad2_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>                                                                                             
@@ -2738,7 +2998,7 @@ if ($_GET['status_id']) {
                                                                             ?>
                                                                             <tr>                                                                                       
                                                                                 <td>
-                                                                                    <span style="float:left;"><strong>A3 :&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
+                                                                                    <span style="float:left;"><strong>A3:&nbsp;</strong></span><span style="cursor: pointer;" class="del_add3_inline del_add3_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $suite_del; ?></span>                                                                                                                                                                        
                                                                                     <input style="float:left;width: 140px;" type="text" class="none del_add3_inline_txt_<?php echo $cumpony_id; ?>" id="del_add3_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $suite_del; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="ad3_del_update ad3_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
                                                                                     <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="ad3_del_cancel ad3_del_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2757,10 +3017,10 @@ if ($_GET['status_id']) {
                                                                             </tr>-->
                                                                             <tr>                                                                                        
                                                                                 <td align="left" width="500">
-                                                                                    <table align="left">
+                                                                                    <table align="left" border="0" cellspacing="0" cellpadding="0">
                                                                                         <tr align="left">
                                                                                             <td align="left">
-                                                                                                <table border="0">
+                                                                                                <table border="0" cellspacing="0" cellpadding="0">
                                                                                                     <tr>
                                                                                                         <td>
                                                                                                             <span style="cursor: pointer;" class="del_city_inline del_city_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $deleivery_address[0]['city']; ?></span>,
@@ -2818,7 +3078,7 @@ if ($_GET['status_id']) {
                                                                             <tr>                                                                                        
                                                                                 <td>
             <?php $del_phone = ($deleivery_address[0]['phone'] == '') ? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' : $deleivery_address[0]['phone']; ?>
-                                                                                    <span class="del_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>P : </strong></span>
+                                                                                    <span class="del_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>P: </strong></span>
                                                                                     <span style="cursor: pointer;" class="del_phone_inline del_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $del_phone; ?></span>
                                                                                     <input style="width: 80px;" type="text" class="none comp_phone del_phone_inline_txt_<?php echo $cumpony_id; ?>" id="del_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $deleivery_address[0]['phone']; ?>" />
                                                                                     <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="phone_del_update phone_del_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
@@ -2843,7 +3103,7 @@ if ($_GET['status_id']) {
                                                                     <!--Personal Table Start-->
                                                                     <td align="left" style="text-align: left;">
                                                                         <table border="0" width="265">
-                                                                            <tr>
+<!--                                                                            <tr>
                                                                                 <td class="inf">Select User</td>
                                                                                 <td align="left" style="padding-right: 60px;">
                                                                                     <span class="cus_id none" id="<?php echo $customer_per_company[0]['cus_id']; ?>"></span> 
@@ -2858,7 +3118,7 @@ if ($_GET['status_id']) {
                                                                                         </select>                                                                                            
                                                                                     </div>
                                                                                 </td>
-                                                                            </tr>
+                                                                            </tr>-->
                                                                             <tr>
                                                                                 <td colspan="2" height="70">
                                                                                     <!--                                                                                            <div id="jassim"></div>-->
@@ -2870,21 +3130,49 @@ if ($_GET['status_id']) {
                                                                                     <div id="jass">
 
                                                                                     </div>
+                                                                                    
+                                                                                      <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
+                                                                                        <option value="0">Address Book</option>
+                                                                                        <?php
+                                                                                        $address_book = AddressBookCompany($cumpony_id);
+                                                                                        foreach ($address_book as $address) {
+                                                                                            ?>                                                                                        
+                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
+                                                                                            <?php
+                                                                                        }
+                                                                                        ?>
+                                                                                    </select>
+
+                                                                                <div id="addressbook_info_<?php echo $cumpony_id; ?>">
+                                                                                </div>
                                                                                 </td>                                                                                           
                                                                             </tr>
                                                                         </table>
                                                                     </td>
                                                                     <!--Personal Table Start End-->
                                                                 </tr>
+                                                                
+                                                                 <!--------------custtype-------------->
+                                                               
                                                                 <tr>
                                                                                 <?php
                                                                                 $e_billing_checked = ($Prod['e_billing'] == '1') ? 'checked="checked"' : '' ;
                                                                                 ?>
-                                                                    <td>
-                                                                        <label style="font-weight: bold;">E-Billing:</label>        
-                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">
+                                                                   <td style="opacity:0;">
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+<span style="font-weight: bold;">Cust. Type :</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
                                                                     </td>
-                                                                    <td>&nbsp;</td>
+                                                                    <td><span class="acc_email_head_inline_span_<?php echo $cumpony_id; ?>"><strong> A/P:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_email_inline acc_email_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_email'];?></span>
+                                                                                               <input style="width: 120px;" type="text" class="none acc_email_inline_txt_<?php echo $cumpony_id; ?>" id="acc_email_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_email'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_email_update acc_email_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_email_cancel acc_email_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div></td>
                                                                     <td>&nbsp;</td>
                                                                 </tr>
                                                                 <tr>
@@ -2899,13 +3187,31 @@ if ($_GET['status_id']) {
                                                                     $invoice_type_set = "Select Type";
                                                                     }
                                                                     ?>
-                                                                    <td align="left" width="30%" class="inf">
-                                                                        <div style="width: 100%;float: left;margin-bottom: 3px;"> 
+                                                                    <td align="left" width="30%" class="inf custtype">
+                                                                    <div>
+<!--                                                                        <label style="font-weight: bold;">E-Billing:</label>        
+                                                                        <input type="checkbox" <?php echo $e_billing_checked; ?>  name="e_billing" id="e_billing_<?php echo $cumpony_id; ?>" class="e_billing" onclick="return e_billing_active('<?php echo $cumpony_id; ?>');" value="1">-->
+<span style="font-weight: bold;">Cust. Type :</span>
+                                                                        <select id="account_type_35" onchange="return change_account_type('35');" style="border-radius: 5px;border: 1px solid #aeaeae;">
+                                                                            <option value="1">ACCOUNT</option>
+                                                                            <option value="2">CASH</option>
+                                                                            <option value="3">CASH-EXEMPT</option>
+                                                                        </select>
+                                                                    </div>
+                                                                        <div style="padding-bottom:10px;padding-top: 10px;"><b>Invoicing:</b> 
+                                                                            <?php 
+                                                                                $expebill = explode(",", $Prod['e_billing']);
+                                                                            ?>
+                                                                            E-Mail <input type="checkbox" <?php if(in_array("1", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',1);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+                                                                            Print <input type="checkbox" <?php if(in_array("2", $expebill)) { echo "checked"; } ?> onclick="return set_ebilling_type(this,'<?php echo $cumpony_id; ?>',2);" name="invoice_ebill_<?php echo $cumpony_id; ?>" id="invoice_ebill_<?php echo $cumpony_id; ?>"> 
+<!--                                                                            Both <input type="checkbox">-->
+                                                                        </div>
+                                                                        <div style="width: 100%;float: left;margin-bottom: 10px;"> 
                                                                             <ul>
                                                                                 <li>
-                                                                                    <label style="font-weight: bold;">Invoice Frequency :</label>
+                                                                                    <label style="font-weight: bold;">Invoice Frequency:</label>
                                                                                     <span style="cursor: pointer;" id="inv_type_<?php echo $cumpony_id; ?>" onclick="return select_inv_type('<?php echo $cumpony_id; ?>');"><?php echo $invoice_type_set; ?></span>
-                                                                                    <select name="invoice_freq" class="invoice_freq_type none" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');">                                                                                        
+                                                                                    <select name="invoice_freq" class="invoice_freq_type" id="invoice_freq_<?php echo $cumpony_id; ?>" onchange="return set_invoice_type('<?php echo $cumpony_id; ?>');" style="display:none !important;">                                                                                        
                                                                                         <!--<option value="0"  <?php if($Prod['invoice_type'] == '0'){ ?>selected="selected"<?php } ?>>Select Type</option>-->
                                                                                         <option value="7"  <?php if($Prod['invoice_type'] == '7'){ ?>selected="selected"<?php } ?>>Weekly</option>
                                                                                         <option value="14" <?php if($Prod['invoice_type'] == '14'){ ?>selected="selected"<?php } ?>>Bi-Monthly</option>
@@ -2913,34 +3219,32 @@ if ($_GET['status_id']) {
                                                                                     </select>
                                                                                 </li>
                                                                             </ul>
-                                                                        </div>                                                                        
+                                                                        </div>                                                                         <div style="margin-bottom:10px; float:left;">  <?php
+                                                                            $status_class = ($Prod['status'] == '1') ? 'action_sus' : 'action_rein';
+                                                                            $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
+                                                                            ?><span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span></div>  
                                                                     </td>
                                                                     
-                                                                    <td width="40%" class="inf">
-                                                                        <table border="0">
-                                                                            <tr>
-                                                                                <td style="padding-top: 5px;">
-                                                                                    <select  name="address_book" id="<?php echo $cumpony_id; ?>" class="address_book_<?php echo $cumpony_id; ?> select_address">
-                                                                                        <option value="0">Address Book</option>
-                                                                                        <?php
-                                                                                        $address_book = AddressBookCompany($cumpony_id);
-                                                                                        foreach ($address_book as $address) {
-                                                                                            ?>                                                                                        
-                                                                                            <option value="<?php echo $address['id']; ?>"><?php echo $address['company_name']; ?></option>
-                                                                                            <?php
-                                                                                        }
-                                                                                        ?>
-                                                                                    </select>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td style="padding-top: 5px;">
-                                                                                    <div id="addressbook_info_<?php echo $cumpony_id; ?>">
-
-                                                                                    </div>
-                                                                                </td>
-                                                                            </tr>
-                                                                        </table>                                                                                
+                                                                    <td width="40%" class="inf" style="vertical-align:top;">
+                                                                           <table border="0"> <?php //print_r($Prod);?>
+                                                                                           <tr><td>
+                                                                                                   <span class="acc_name_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Name:</strong></span> 
+                                                                                                   <span style="cursor: pointer; min-width: 125px;<?php if($Prod['comp_contact_name']==""){ ?> min-height:15px; <?php } ?>  display: inline-block;" class="acc_name_inline acc_name_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_name'];?></span>
+                                                                                               <input style="width: 80px;" type="text" class="none acc_name_inline_txt_<?php echo $cumpony_id; ?>" id="acc_name_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_name'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_name_update acc_name_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_name_cancel acc_name_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                               </td> </tr>
+<!--                                                                            <tr><td><b>Last Name</b></td></tr>-->
+                                                                            <tr><td class="phone_tp">
+                                                                                   
+                                                                                     <span class="acc_phone_head_inline_span_<?php echo $cumpony_id; ?>"><strong>Phone:</strong></span> 
+                                                                                    <span style="cursor: pointer; min-width: 125px; min-height: 22px; display: inline-block;" class="acc_phone_inline acc_phone_inline_span_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>"><?php echo $Prod['comp_contact_phone'];?></span>
+                                                                                    <input style="width: 80px;" type="text" class="none comp_phone acc_phone_inline_txt_<?php echo $cumpony_id; ?>" id="acc_phone_inline_txt_<?php echo $cumpony_id; ?>" value="<?php echo $Prod['comp_contact_phone'];?>" />
+                                                                                    <div style="float:left; margin:0 4px"><img src="images/like_icon.png" style="margin-top:-3px;display: none;" alt="Update" title="Update" width="22" height="22" class="acc_phone_update acc_phone_update_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                    <div style="float:left;  margin:0 4px"><img src="images/cancel_icon.png"  style="margin-top:-4px;display: none;"  alt="Cancel" title="Cancel" width="22" height="22" class="acc_phone_cancel acc_phone_cancel_<?php echo $cumpony_id; ?>" id="<?php echo $cumpony_id; ?>" /></div>
+                                                                                
+                                                                                </td></tr>
+                                                                        </table>                                                                            
                                                                     </td>
                                                                     <td width="30%" class="inf" style="font-weight: bold;padding-left: 2px;">&nbsp;</td>
                                                                 </tr>
@@ -2950,13 +3254,16 @@ if ($_GET['status_id']) {
                                                                 $status_text = ($Prod['status'] == '1') ? 'SUSPEND' : 'REINSTATE';
                                                                 ?>
                                                                 <tr>
-                                                                    <td colspan="3">
+                                                                    <td colspan="3" style="opacity:0;">
                                                                         <span class="<?php echo $status_class; ?>" id="action_<?php echo $cumpony_id; ?>" onclick="return sus_reiv('<?php echo $cumpony_id; ?>');"><?php echo $status_text; ?></span>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td colspan="3">&nbsp;</td>
                                                                 </tr>
+                                                               
+                                                                 <!--------------custtype-------------->
+                                                                
                                                                 <tr>
                                                                     <td colspan="3">                                                                        
                                                                         <div style="float:left;width:50%;font-weight: bold;">Customer Notes: </div>
@@ -3120,7 +3427,69 @@ if ($_GET['status_id']) {
     <td style="background:#464646; text-align:center; color:#fff; line-height:30px;" height="30p">© <?php echo date("Y"); ?> sohorepro.com</td>
 </tr>
 </table>
+<!-- Email popup -->
+<div class="email-popup-overlay">
+    <div class="email-popup-box">
+        <div class="email-popup-content">
+            Validating Address. Please wait           
+        </div>
+        <!-- Default approval buttons should be hidden -->
+        <div class="email-popup-btn" style="display:none !important;">
+          <input id="re-enter" value="Re-Enter" type="button">
+          <input id="accept" value="Accept" type="button">
+        </div>
+        
+    </div>
+    
+</div>
+<style>
+    .email-popup-overlay {
+        display:none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.3);
+}
+.email-popup-box {
+	background-color: #fff;
+	width: 314px;
+	margin: 0 auto;
+	top: 34%;
+	position: absolute;
+	right: 36%;
+	text-align: center;
+	border-radius: 3px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 5px;
+	padding: 12px;
+}
+.email-popup-btn input {
+	width: 100px;
+border: 0px;
+padding: 8px 0;
+margin: 16px 0 0;
+background-color: #ff7e00;
+color: #fff;
+border-radius: 5px;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+cursor:pointer;
+}
+    .email-popup-content {
+	margin: 14px 0;
+	font-size: 16px;
+}
 
+.email-popup-btn input[type="button"] {
+    margin-right: 20px;
+}
+.email-popup-btn input[type="button"]:last-child {
+    margin-right: 0;
+}
+</style>
+<!-- Email popup end-->
 </body>
 </html>
 
@@ -4153,10 +4522,221 @@ if ($_GET['status_id']) {
 
             });
 
-
             //Bussiness Phone Inline Edit End 
 
+// Account Name Inline Edit start
+     $('.acc_name_inline').click(function()
+            {
+                var ID = $(this).attr('id');
+                $(".acc_name_inline_span_" + ID).hide();
+                $(".acc_name_inline_txt_" + ID).css("display", "inline-block");
+                $(".acc_name_update_" + ID).css("display", "inline-block");
+                $(".acc_name_cancel_" + ID).css("display", "inline-block");
+                $(".acc_name_head_inline_span_" + ID).css("float", "left");
+                $(".acc_name_inline_txt_" + ID).css("float", "left");
+            });
 
+            $('.acc_name_cancel').click(function()
+            {
+                var ID = $(this).attr('id');
+                $(".acc_name_inline_span_" + ID).show();
+                $(".acc_name_inline_txt_" + ID).hide();
+                $(".acc_name_update_" + ID).hide();
+                $(".acc_name_cancel_" + ID).hide();
+            });
+
+
+            $('.acc_name_update').click(function()
+            {
+                var ID = $(this).attr('id');
+                var acc_name = $(".acc_name_inline_txt_" + ID).val();
+                //alert(cname_val);        
+             //   if (acc_name != '') {
+
+                    $.ajax
+                            ({
+                                type: "POST",
+                                url: "customers_edit_inline.php",
+                                data: "id=" + ID + "&bus_acc_name=" + acc_name,
+                                success: function(option)
+                                {
+                                    $(".acc_name_inline_span_" + ID).html(option);
+                                    $(".acc_name_inline_span_" + ID).css("display", "inline-block");
+                                    $(".acc_name_inline_txt_" + ID).hide();
+                                    $(".acc_name_update_" + ID).hide();
+                                    $(".acc_name_cancel_" + ID).hide();
+                                }
+                            });
+
+             //   }
+
+            });
+            //Account Name Inline Edit End
+            
+            //Email popup box
+
+$(".email-popup-btn input").click(function(){
+   $(".email-popup-overlay").fadeOut(); 
+    
+});
+
+//Email popup box end
+            
+            // Account Email Inline Edit start
+     $('.acc_email_inline').click(function()
+            {
+                var ID = $(this).attr('id');
+                $(".acc_email_inline_span_" + ID).hide();
+                $(".acc_email_inline_txt_" + ID).css("display", "inline-block");
+                $(".acc_email_update_" + ID).css("display", "inline-block");
+                $(".acc_email_cancel_" + ID).css("display", "inline-block");
+                $(".acc_email_head_inline_span_" + ID).css("float", "left");
+                $(".acc_email_inline_txt_" + ID).css("float", "left");
+            });
+
+            $('.acc_email_cancel').click(function()
+            {
+                var ID = $(this).attr('id');
+                $(".acc_email_inline_span_" + ID).show();
+                $(".acc_email_inline_txt_" + ID).hide();
+                $(".acc_email_update_" + ID).hide();
+                $(".acc_email_cancel_" + ID).hide();
+            });
+
+
+            $('.acc_email_update').click(function()
+            { 
+                var ID = $(this).attr('id');
+                var acc_name = $.trim($(".acc_email_inline_txt_" + ID).val());
+                
+                //Set Default status of alert box
+                $(".email-popup-btn").hide();
+                $(".email-popup-content").html("Validating Address. Please wait");
+                if (acc_name != '') {                    
+                    $(".email-popup-overlay").fadeIn(); 
+                }
+                //alert(cname_val);        
+               // if (acc_name != '') {
+
+                    $.ajax
+                            ({
+                                type: "POST",
+                                url: "customers_edit_inline.php",
+                                data: "id=" + ID + "&bus_acc_email=" + acc_name,
+                                success: function(option)
+                                { var result = option.split('~');
+                                   // alert(result[1]);
+                                  if(result[0]=="0"){
+                                     // alert(result[1]);
+                                       $(".email-popup-content").html("The Email already used by "+result[1]);
+                                      // $(".email-popup-overlay").fadeIn(); 
+                                      
+                                      //Show the approval buttons only when email exists
+                                      $(".email-popup-btn").show();
+                                      
+                                     $("#re-enter").click(function(){
+                                        
+                                          $(".acc_email_inline_span_" + ID).hide();
+                $(".acc_email_inline_txt_" + ID).css("display", "inline-block");
+                $(".acc_email_update_" + ID).css("display", "inline-block");
+                $(".acc_email_cancel_" + ID).css("display", "inline-block");
+                $(".acc_email_head_inline_span_" + ID).css("float", "left");
+                $(".acc_email_inline_txt_" + ID).css("float", "left");
+                  $(".acc_email_inline_txt_" + ID).focus();
+                                     });
+                                     
+                                      $("#accept").click(function(){ 
+                                          
+                    $.ajax
+                            ({
+                                type: "POST",
+                                url: "customers_edit_inline.php",
+                                data: "id=" + ID + "&accept_email=" + acc_name,
+                                success: function(option)
+                                {
+                                    $(".acc_email_inline_span_" + ID).css("display", "inline-block");
+                                     $(".acc_email_inline_span_" + ID).html(option);
+                                    $(".acc_email_inline_txt_" + ID).val(option);
+                                    $(".acc_email_inline_txt_" + ID).hide();
+                                    $(".acc_email_update_" + ID).hide();
+                                    $(".acc_email_cancel_" + ID).hide();
+                                }
+                            });
+                                      });
+                                     var old_email = $(".acc_email_inline_span_"+ID).text();
+                                     //alert(old_email);
+//                                    $(".acc_email_inline_span_" + ID).css("display", "inline-block");
+//                                     $(".acc_email_inline_txt_" + ID).val(old_email);
+//                                    $(".acc_email_inline_txt_" + ID).hide();
+//                                    $(".acc_email_update_" + ID).hide();
+//                                    $(".acc_email_cancel_" + ID).hide();
+                                  }else{
+                                    $(".email-popup-overlay").hide(); 
+                                    $(".acc_email_inline_span_" + ID).html(option);
+                                    $(".acc_email_inline_txt_" + ID).html(option);
+                               
+                                    $(".acc_email_inline_span_" + ID).css("display", "inline-block");
+                                    $(".acc_email_inline_txt_" + ID).hide();
+                                    $(".acc_email_update_" + ID).hide();
+                                    $(".acc_email_cancel_" + ID).hide();
+                                }
+                            }
+                            });
+
+              //  }
+
+            });
+            //Account Email Inline Edit End
+            
+            
+              // Account Phone Inline Edit start
+     $('.acc_phone_inline').click(function()
+            {
+                var ID = $(this).attr('id');
+                $(".acc_phone_inline_span_" + ID).hide();
+                $(".acc_phone_inline_txt_" + ID).css("display", "inline-block");
+                $(".acc_phone_update_" + ID).css("display", "inline-block");
+                $(".acc_phone_cancel_" + ID).css("display", "inline-block");
+                $(".acc_phone_head_inline_span_" + ID).css("float", "left");
+                $(".acc_phone_inline_txt_" + ID).css("float", "left");
+            });
+
+            $('.acc_phone_cancel').click(function()
+            {
+                var ID = $(this).attr('id');
+                $(".acc_phone_inline_span_" + ID).show();
+                $(".acc_phone_inline_txt_" + ID).hide();
+                $(".acc_phone_update_" + ID).hide();
+                $(".acc_phone_cancel_" + ID).hide();
+            });
+
+
+            $('.acc_phone_update').click(function()
+            {
+                var ID = $(this).attr('id');
+                var acc_phone = $(".acc_phone_inline_txt_" + ID).val();
+                //alert(acc_phone);        
+              //  if (acc_phone != '') {
+
+                    $.ajax
+                            ({
+                                type: "POST",
+                                url: "customers_edit_inline.php",
+                                data: "id=" + ID + "&bus_acc_phone=" + acc_phone,
+                                success: function(option)
+                                {
+                                    $(".acc_phone_inline_span_" + ID).html(option);
+                                    $(".acc_phone_inline_span_" + ID).css("display", "inline-block");
+                                    $(".acc_phone_inline_txt_" + ID).hide();
+                                    $(".acc_phone_update_" + ID).hide();
+                                    $(".acc_phone_cancel_" + ID).hide();
+                                }
+                            });
+
+                //}
+
+            });
+            //Account Phone Inline Edit End
 
             //Bussiness Fax Inline Edit Start
 
@@ -4220,6 +4800,27 @@ if ($_GET['status_id']) {
                 $(".bus_tax_inline_txt_" + ID).css("display", "inline-block");
             });
 
+
+  $('.bus_tax_exep_inline').click(function()
+            {
+                var ID = $(this).attr('id');
+            //    alert(ID);
+                $(".tax_id_label_" + ID).hide();
+             
+                $(".tax_exempt_number_row_" + ID).css("display", "inline-block");
+            });
+            
+             $('.tt').click(function()
+            { 
+                var ID = $(this).attr('id');
+              //alert(ID);
+               
+                
+                $("#tax_exempt_number_" + ID).css("display", "inline-block");
+                 $(".tt").hide();
+                 $(".tax_exempt_update_" +ID).css("display","block");
+            });
+            
             $('.tax_cancel').click(function()
             {
                 var ID = $(this).attr('id');
@@ -4284,9 +4885,11 @@ if ($_GET['status_id']) {
                                 data: "id=" + ID + "&tax_exempt_number=" + exempt_val,
                                 success: function(option)
                                 {
+                                   // $(".tax_exempt_number_span_" + ID).html(option);
                                     $(".tax_exempt_number_span_" + ID).html(option);
-                                    $(".tax_exempt_number_" + ID).css("display", "none");
+                                   $(".tax_exempt_number_" + ID).css("display", "none");
                                     $(".tax_exempt_update_" + ID).css("display", "none");
+                                    $(".tt").show();
                                 }
                             });
 
@@ -4978,6 +5581,48 @@ if ($_GET['status_id']) {
                }); 
         }
         
+    }
+    
+    
+    function set_ebilling_type(ITEM, COMP_ID, OPTION)
+    {
+        if(ITEM.checked == true){
+            if(COMP_ID != ''){
+                $.ajax
+                       ({
+                           type: "POST",
+                           url: "get_child.php",
+                           data: "cst_invtype=1&tchkd=add&invoice_comp_id="+COMP_ID+"&invoice_opt="+OPTION,
+                           beforeSend: loadStart,
+                           complete: loadStop,
+                           success: function(option)
+                           {
+                               //$("#inv_type_"+COMP_ID).html(option);
+                               //$("#inv_type_"+COMP_ID).show();
+                               //$("#invoice_freq_"+COMP_ID).hide();
+                           }
+                       }); 
+                }
+        }
+        else
+        {
+            if(COMP_ID != ''){
+                $.ajax
+                       ({
+                           type: "POST",
+                           url: "get_child.php",
+                           data: "cst_invtype=1&tchkd=del&invoice_comp_id="+COMP_ID+"&invoice_opt="+OPTION,
+                           beforeSend: loadStart,
+                           complete: loadStop,
+                           success: function(option)
+                           {
+                               //$("#inv_type_"+COMP_ID).html(option);
+                               //$("#inv_type_"+COMP_ID).show();
+                               //$("#invoice_freq_"+COMP_ID).hide();
+                           }
+                       }); 
+                }
+        }
     }
     
     function edit_cus_notes(COM_ID){        

@@ -7,9 +7,11 @@ $page_name_new= $page_names[$pagename_pos];
 $user_id         = $_SESSION['sohorepro_userid'];
 $totoal_cart     = totalCart($user_id);
 $comp_name       = getCompName($_SESSION['sohorepro_companyid']);
+
+$pagefilename = basename($_SERVER["SCRIPT_FILENAME"], '.php');
 ?>
 <?php if (isset($_SESSION['sohorepro_userid'])) { ?>
-<div id="" class="sticky-navigation"  style="float:left;width: 65%;z-index: 100;">
+<div id="" class="sticky-navigation"  style="float:left;width: <?php if($pagefilename != 'myaccount_orders') { echo "60%"; } else { echo "72%;"; } ?>; max-width: 976px;z-index: 100;">
 <div style="float: left;width: 30%;">
     <ul class="navigation primary" style="float:left !important;width: 100%;">
             <li class="navLargeFormat" style=" border-bottom: none !important;">
@@ -23,8 +25,11 @@ $comp_name       = getCompName($_SESSION['sohorepro_companyid']);
 <div style="float: right;width: 70%;">        
         <ul class="navigation primary" style="float:right !important;">
             <li class="navPlotting" style=" border-bottom: none !important;">
-                <a href="index.php" style="font-weight: bolder;color: #F00 !important;">WELCOME <?php echo strtoupper($_SESSION['sohorepro_username']); ?></a>
+                <a href="myaccount_orders.php" style="font-weight: bolder;color: #F00 !important;">WELCOME <?php echo strtoupper($_SESSION['sohorepro_username']); ?></a>
                 <div style="float: left;width: 100%;padding: 0px;margin-top: -10px;"><?php echo $comp_name; ?></div>
+                <?php if(isset($user_id) && $user_id != '') { ?>
+                <div style="width: 100%;padding: 0px;margin-top: -10px; clear: both;"><a href="myaccount_orders.php" style="font-weight: bolder;color: #4788ef !important; overflow: visible;">My Account</a></div>
+                <?php } ?>
             </li>
             <li class="navLargeFormat" style=" border-bottom: none !important;"><a href="service_address_book.php" style="<?php if($page_name_new=='service_address_book.php') { echo "font-weight: bold;"; } ?>">ADDRESS BOOK</a></li>
             <li class="navLargeFormat" id="cart_li" style=" border-bottom: none !important;width: 64px;"><a href="add_recipients.php" style="<?php if($page_name_new=='shoppingcart.php') { echo "font-weight: bold;"; } ?>">CART</a><div style="<?php if($_SESSION['cart_count'] == ''){ ?>display: none;<?php } ?>" id="cart_count"><?php echo $_SESSION['cart_count']; ?></div></li>

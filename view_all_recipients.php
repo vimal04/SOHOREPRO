@@ -384,6 +384,8 @@ padding-bottom: 0px !important;
 $user_session_comp      = $_SESSION['sohorepro_companyid'];
 $user_session            = $_SESSION['sohorepro_userid'];
 $entered_needed_sets     = NeededSets($user_session_comp, $user_session);
+$entered_needed_sets_lfp = NeededSetsLFP($user_session_comp, $user_session);
+$entered_needed_sets_fap = NeededSetsFAP($user_session_comp, $user_session);
 $total_sets              = SetsOrderedFinalizeCountOfSetsCustomer($user_session_comp, $user_session);
 $upload_file_exist       = UploadFileExist($user_session_comp, $user_session);
 ?>
@@ -529,7 +531,7 @@ if(count($cust_original_order) > "0"){
                         <?php
                         if ($entered['size'] == 'CUSTOM') {
                             ?>
-                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
+                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px; margin-top:5px">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Custom Size Details
                                 </div>
@@ -542,7 +544,7 @@ if(count($cust_original_order) > "0"){
                         }
                         if ($entered['output'] == 'BOTH') {
                             ?>
-                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
+                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px; margin-top:5px">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Color Page Numbers
                                 </div>
@@ -555,7 +557,7 @@ if(count($cust_original_order) > "0"){
                         }
                         if ($entered['spl_instruction'] != '') {
                             ?> 
-                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px;">
+                            <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 10px; margin-top:5px">
                                 <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                     Special Instructions
                                 </div>
@@ -570,7 +572,7 @@ if(count($cust_original_order) > "0"){
                                 $pickup_option = ($entered['pick_up'] == "ASAP") ? $entered['pick_up'] : $entered['pick_up'] . ' ' . $entered['pick_up_time'];
                                 if($entered['use_same_alt'] == '0'){
                                 ?>
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;">
+                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px; margin-top:5px">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Schedule a Pickup
                                     </div>
@@ -580,7 +582,7 @@ if(count($cust_original_order) > "0"){
                                     </div>
                                 </div>
                             <?php }else{ ?>
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;">
+                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px; margin-top:5px">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Schedule a Pickup
                                     </div>
@@ -599,7 +601,7 @@ if(count($cust_original_order) > "0"){
                                 $option_sechdule = ($entered['my_office_alt'] == 'my_office') ? '<span style="font-weight: bold">My Office</span>' : '<span style="font-weight: bold">Alternate:</span><br>'.$address_string;
                                 if($entered['use_same_alt'] == '1'){
                                 ?>   
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;">
+                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px; margin-top:5px">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Schedule a Pick-up Option
                                     </div>
@@ -611,7 +613,7 @@ if(count($cust_original_order) > "0"){
                             <?php }
                             if($entered['my_office_alt'] == 'my_office'){
                             ?>
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;">
+                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;margin-top:5px">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Schedule a Pick-up Option
                                     </div>
@@ -620,12 +622,21 @@ if(count($cust_original_order) > "0"){
                                         <?php echo $option_sechdule; ?>
                                     </div>
                                 </div>
-                            <?php } ?>
-                            <?php } ?>
+                            <?php } else{ ?>
+                        <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-right: 5px;margin-top:5px">
+                                    <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
+                                        Schedule a Pick-up Option
+                                    </div>
+                                    <div style="padding-top: 3px;width: 100%;float: left;">
+                                        <input type="hidden" name="pick_up_time" id="pick_up_time" value="<?php //echo $option_sechdule; ?>" />
+                                        <?php echo $option_sechdule; ?>
+                                    </div>
+                                </div>
+                            <?php }} ?>
                             <?php if ($entered['drop_off'] != '0') {
                                      if($entered['use_same_alt'] == '0'){
                                 ?>
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;">
+                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-top:5px">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Drop-off Option
                                     </div>
@@ -635,7 +646,7 @@ if(count($cust_original_order) > "0"){
                                     </div>
                                 </div>
                             <?php }  else {?>
-                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;">
+                                <div style="width: 22%;float: left;border: 1px solid #BFC5CD;margin-top:5px">
                                     <div style="padding-top: 3px;font-weight: bold;width: 100%;float: left;background-color: #BFC5CD;color: #5C5C5C;text-align: center;">
                                         Drop-off Option
                                     </div>
@@ -1087,7 +1098,7 @@ if(count($cust_original_order) > "0"){
                         </div> 
                 </div>
                 </div>
-            </div>
+           
 
 <!-- LFP Original End -->
 <?php }   if(count($number_of_fap) > "0"){ ?>
@@ -1149,8 +1160,8 @@ if(count($cust_original_order) > "0"){
 //                        echo '<pre>';
                        // print_r($number_of_fap);
 //                        echo '</pre>';
-                        
-                        foreach ($number_of_fap as $original){ $i=1;
+                         $i=1;
+                        foreach ($number_of_fap as $original){
                                 $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
                                 $cust_needed_sets       = $original['poe'];
                                 $cust_order_type        = "LFP";  
@@ -1402,7 +1413,10 @@ if(count($cust_original_order) > "0"){
                     <li> 
                     <div id="multi_recipients">
                         <div style="float:left; width:100%;font-size:17px; margin: 10px 15px 13px 0;">
-                       <?php  if($entered_needed_sets[0]['delivery_type_option'] == '1'){ 
+                       <?php  
+                       
+                       if($entered_needed_sets){
+                       if($entered_needed_sets[0]['delivery_type_option'] == '1'){ 
                            echo "RETURN EVERYTHING TO MY OFFICE";
                        }
                        elseif($entered_needed_sets[0]['delivery_type_option'] == '2'){
@@ -1414,7 +1428,19 @@ if(count($cust_original_order) > "0"){
                                echo "WILL PICKUP FROM SOHO REPRO - ". $cust_add[0]['caption'];
                       }
                        
-                     
+                       }elseif($number_of_lfp){
+                           if($number_of_lfp[0]['delivery_type_option'] == '1'){ 
+                           echo "RETURN EVERYTHING TO MY OFFICE";
+                       }
+                       elseif($number_of_lfp[0]['delivery_type_option'] == '2'){
+                           echo " SEND EVERYTHING TO";
+                       }
+                       elseif($number_of_lfp[0]['delivery_type_option']== '3'){
+                         
+                               $cust_add = AddressBookPickupSohoCap($entered_needed_sets[0]['shipp_id']);
+                               echo "WILL PICKUP FROM SOHO REPRO - ". $cust_add[0]['caption'];
+                      }
+                       }
                             ?>
                         </div>
                           <?php
@@ -2108,9 +2134,12 @@ if(count($cust_original_order) > "0"){
                         </div>
                     </div>
                     <?php
-                        }else{                             
+                        }else{    
+                            if($entered_needed_sets){
                     ?>
-                        
+                        <div class="def_class" style=";margin-bottom: 10px;margin-top: 10px;color: #4285F4;font-weight: bold; font-size: 17px;">
+                PLOTTING &amp; ARCHITECTURAL COPIES
+            </div>
                     <?php                        
                        
                         $r = 1;
@@ -2267,14 +2296,16 @@ if(count($cust_original_order) > "0"){
                     <?php 
                     $r++;
                     } 
-                        }
+                        } }
                     ?>
-                    </div>
+                    
 
-<div style="float:left;width:100%;">
+
     <!-- LFP Recipients Start -->
         <?php
                     if(count($number_of_lfp) > '0'){
+                        
+                        if($number_of_lfp[0]['delivery_type_option'] == '1'){
                          ?>
                         <div>
                             <h2 style="color: #4285F4; font-size: 15px;">LARGE FORMAT COLOR & BW</h2>
@@ -2297,15 +2328,15 @@ if(count($cust_original_order) > "0"){
                 
                 <div style="float: left;width: 33%;margin-left: 30px;">  
                     <?php 
-                    if(($entered_needed_sets[0]['shipp_id'] != 'P1') && ($entered_needed_sets[0]['shipp_id'] != "P2")){
-                   $cust_add = getCustomeInfo($entered_needed_sets[0]['shipp_id']);
+                    if(($number_of_lfp[0]['shipp_id'] != 'P1') && ($number_of_lfp[0]['shipp_id'] != "P2")){
+                   $cust_add = getCustomeInfo($number_of_lfp[0]['shipp_id']);
                   
                     $cust_add_2 = ($cust_add[0]['comp_business_address2'] != '') ? $cust_add[0]['comp_business_address2']. '<br>'  : '';
                     $attention_ev   =   ($_SESSION['attention_every'] != '') ? 'Attention:&nbsp;'.$_SESSION['attention_every'].'<br>' : '';
                     $tel_eve       =   ($_SESSION['tel_every'] != '') ? 'Tel:&nbsp;'.$_SESSION['tel_every'].'<br>' : '';
                     echo $cust_add[0]['comp_name'] . '<br>' .$attention_ev.$tel_eve. $cust_add[0]['comp_business_address1'] . '<br>' . $cust_add_2 . $cust_add[0]['comp_city'] . '&nbsp;' . $cust_add[0]['comp_state'] . '&nbsp;' . $cust_add[0]['comp_zipcode'].'<br>'.$cust_add[0]['comp_contact_phone'];                    
                     }else{
-                    $pic_address = AddressBookPickupSohoCap($entered_needed_sets[0]['shipp_id']);
+                    $pic_address = AddressBookPickupSohoCap($number_of_lfp[0]['shipp_id']);
                     echo $pic_address[0]['address'];
                     }
                     ?>                   
@@ -2351,7 +2382,7 @@ if(count($cust_original_order) > "0"){
                         <tr bgcolor="#F8F8F8">
                             <td><?php echo $original['option_id']; ?></td>
                             <td><?php echo $original['original']; ?></td>
-                            <td><span id="available_<?php echo $original['options']; ?>"><?php echo $cust_needed_sets; ?></span></td>
+                            <td><span id="available_<?php echo $original['option_id']; ?>"><?php echo $cust_needed_sets; ?></span></td>
                             <td><?php echo $cust_order_type; ?></td>                            
                             <td><?php echo ucwords(strtolower($size)); ?></td>
                             <td><?php echo strtoupper($output); ?></td>
@@ -2438,35 +2469,35 @@ if(count($cust_original_order) > "0"){
                    
                 </div>
                  <?php  
-                    }}
+                    }
                         ?>
                 <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
                     <?php
-                    $date_asap  = ($entered_needed_sets[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_needed_sets[0]['shipp_time'] : '';
+                    $date_asap  = ($number_of_lfp[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $number_of_lfp[0]['shipp_time'] : '';
                     ?>
-                    <span style="font-weight: bold;">When Needed: </span><?php echo $entered_needed_sets[0]['shipp_date'].$date_asap; ?>            
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $number_of_lfp[0]['shipp_date'].$date_asap; ?>            
                 </div>        
                 <?php
-                if ($entered_needed_sets[0]['delivery_type'] != '0') {
+                if ($number_of_lfp[0]['delivery_type'] != '0') {
                     ?>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <span style="font-weight: bold;">Send Via: </span>
                     </div>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <?php
-                        if ($entered_needed_sets[0]['delivery_type'] == '1') {
+                        if ($number_of_lfp[0]['delivery_type'] == '1') {
                             $delivery_type = 'Next Day Air';
-                        } elseif ($entered_needed_sets[0]['delivery_type'] == '2') {
+                        } elseif ($number_of_lfp[0]['delivery_type'] == '2') {
                             $delivery_type = 'Two Day Air';
-                        } elseif ($entered_needed_sets[0]['delivery_type'] == '3') {
+                        } elseif ($number_of_lfp[0]['delivery_type'] == '3') {
                             $delivery_type = 'Three Day Air';
-                        } elseif ($entered_needed_sets[0]['delivery_type'] == '4') {
+                        } elseif ($number_of_lfp[0]['delivery_type'] == '4') {
                             $delivery_type = 'Ground';
                         }
 
-                        $ship_type_1 = ($entered_needed_sets[0]['shipp_comp_1'] == '0') ? '' : $entered_needed_sets[0]['shipp_comp_1'];
-                        $ship_type_2 = ($entered_needed_sets[0]['shipp_comp_2'] == '0') ? '' : $entered_needed_sets[0]['shipp_comp_2'];
-                        $ship_type_3 = ($entered_needed_sets[0]['shipp_comp_3'] == '0') ? '' : $entered_needed_sets[0]['shipp_comp_3'];
+                        $ship_type_1 = ($number_of_lfp[0]['shipp_comp_1'] == '0') ? '' : $number_of_lfp[0]['shipp_comp_1'];
+                        $ship_type_2 = ($number_of_lfp[0]['shipp_comp_2'] == '0') ? '' : $number_of_lfp[0]['shipp_comp_2'];
+                        $ship_type_3 = ($number_of_lfp[0]['shipp_comp_3'] == '0') ? '' : $number_of_lfp[0]['shipp_comp_3'];
 
                         echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_needed_sets[0]['billing_number'];
                         ?>
@@ -2478,12 +2509,12 @@ if(count($cust_original_order) > "0"){
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         SOHO TO ARRANGE DELIVERY
                     </div>    
-                <?php }if($entered_needed_sets[0]['spl_inc'] != ''){ ?>
+                <?php }if($number_of_lfp[0]['spl_inc_delivery'] != ''){ ?>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <span style="font-weight: bold;">Special Instructions: </span>
                     </div>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
-                        <?php echo $entered_needed_sets[0]['spl_inc']; ?>
+                        <?php echo $number_of_lfp[0]['spl_inc_delivery']; ?>
                     </div>
                         <?php } ?>
                         </div>
@@ -2491,17 +2522,697 @@ if(count($cust_original_order) > "0"){
                    
                    
                 </div> </div>
- </div>
+    
+    
+                    <?php }elseif ($number_of_lfp[0]['delivery_type_option'] == '2') {
+                            if(($number_of_lfp[0]['shipp_id'] == 'P1') && ($number_of_lfp[0]['shipp_id'] == 'P2')){
+                                $shipp_add = AddressBookPickupSohoCap($number_of_lfp[0]['shipp_id']);
+                            }else{
+                                $shipp_add = editAddressServices($number_of_lfp[0]['shipp_id']);  
+                            }
+                    ?>   <div>
+                            <h2 style="color:#79A70A;; font-size: 15px;">LARGE FORMAT COLOR & BW</h2>
+                        </div>
+                         <div style="float: left;" class="shaddows">
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
+                        <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
+                            <div style="float: right;">
+                                <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_2('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
+                            </div>
+                            
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+                                SEND EVERYTHING TO
+                            </div>-->
+                            
+                            <div class="details_div">
+                    
+                <!-- Customer Details Start -->
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Send to: </div>
+                
+                <div style="float: left;width: 33%;margin-left: 30px;">  
+                    <?php 
+                    if(($number_of_lfp[0]['shipp_id'] != 'P1') && ($number_of_lfp[0]['shipp_id'] != 'P2')){
+                    $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                    $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                    $att    = ($number_of_lfp[0]['attention_to'] != "undefined") ? '<br>Attention:  '.$number_of_lfp[0]['attention_to'] : '';
+                    $phone  = ($number_of_lfp[0]['contact_ph'] != "") ? '<br>'.'Tel:  '.$number_of_lfp[0]['contact_ph'] : '';
+                    //$phone      =   ($phone_pre != '') ? $phone_pre : '';
+                    echo $shipp_add[0]['company_name'].$att.$phone.'<br>'. $shipp_add[0]['address_1'] . '<br>' . $add_2.$add_3. $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'].'<br>'.$shipp_add[0]['phone'];
+                    }  else {                    //echo $shipp_add[0]['address'];                        
+                    $shipp_add_p = AddressBookPickupSohoCap($number_of_lfp[0]['shipp_id']);
+                    echo $shipp_add_p[0]['address'];   
+                    }
+                    ?>                   
+                </div>                
+                <!-- Customer Details End -->                    
+                                
+               <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: </div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+                    
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                        <tr bgcolor="#BFC5CD">
+                            <td style="font-weight: bold;">Option</td> 
+                            <td style="font-weight: bold;">Originals</td> 
+                            <td style="font-weight: bold;">Sets</td> 
+                            <td style="font-weight: bold;">Order Type</td>                            
+                            <td style="font-weight: bold;">Size</td>
+                            <td style="font-weight: bold;">Outputs</td>
+                            <td style="font-weight: bold;">Media</td>
+                            <td style="font-weight: bold;">Binding</td>
+                        </tr>
+                        <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                        
+                        foreach ($number_of_lfp as $original){
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                $binding      = $original['binding'];                           
+                        ?>
+                        <tr bgcolor="#F8F8F8">
+                            <td><?php echo $original['option_id']; ?></td>
+                            <td><?php echo $original['original']; ?></td>
+                            <td><span id="available_<?php echo $original['option_id']; ?>"><?php echo $cust_needed_sets; ?></span></td>
+                            <td><?php echo $cust_order_type; ?></td>                            
+                            <td><?php echo ucwords(strtolower($size)); ?></td>
+                            <td><?php echo strtoupper($output); ?></td>
+                            <td><?php echo ucfirst($media); ?></td>
+                            <td><?php echo ucfirst($binding); ?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                   
+                </div>
+                
+                  <!--------------Mounting--------------------->
+                   <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: Mounting & Lamination</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($number_of_lfp as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#BFC5CD">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#F8F8F8">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']=="0") echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div>
+                 <?php  
+                    }
+                        ?>
+              
+                            <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                    <?php
+                    $date_asap  = ($number_of_lfp[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $number_of_lfp[0]['shipp_time'] : '';
+                    ?>
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $number_of_lfp[0]['shipp_date'].$date_asap; ?>            
+                </div>        
+                <?php
+                if ($number_of_lfp[0]['delivery_type'] != '0') {
+                    ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php
+                        if ($number_of_lfp[0]['delivery_type'] == '1') {
+                            $delivery_type = 'Next Day Air';
+                        } elseif ($number_of_lfp[0]['delivery_type'] == '2') {
+                            $delivery_type = 'Two Day Air';
+                        } elseif ($number_of_lfp[0]['delivery_type'] == '3') {
+                            $delivery_type = 'Three Day Air';
+                        } elseif ($number_of_lfp[0]['delivery_type'] == '4') {
+                            $delivery_type = 'Ground';
+                        }
+
+                        $ship_type_1 = ($number_of_lfp[0]['shipp_comp_1'] == '0') ? '' : $number_of_lfp[0]['shipp_comp_1'];
+                        $ship_type_2 = ($number_of_lfp[0]['shipp_comp_2'] == '0') ? '' : $number_of_lfp[0]['shipp_comp_2'];
+                        $ship_type_3 = ($number_of_lfp[0]['shipp_comp_3'] == '0') ? '' : $number_of_lfp[0]['shipp_comp_3'];
+
+                        echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $number_of_lfp[0]['billing_number'];
+                        ?>
+                    </div>
+                <?php } else { ?>                            
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        SOHO TO ARRANGE DELIVERY
+                    </div>    
+                <?php }if($number_of_lfp[0]['spl_inc'] != ''){  ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Special Instructions: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php echo $number_of_lfp[0]['spl_inc']; ?>
+                    </div>
+                <?php } ?>
+                        </div>
+                        </div>
+                    </div>  
+                    <?php
+                        }elseif ($number_of_lfp[0]['delivery_type_option'] == '3') {                       
+                         if(($number_of_lfp[0]['shipp_id'] == 'P1') && ($number_of_lfp[0]['shipp_id'] == 'P2')){
+                                $shipp_add = AddressBookPickupSohoCap($number_of_lfp[0]['shipp_id']);
+                            }else{
+                                $shipp_add = editAddressServices($number_of_lfp[0]['shipp_id']);  
+                            }
+                            
+                            $cust_add = AddressBookPickupSohoCap($number_of_lfp[0]['shipp_id']);
+                    ?>   <div>
+                            <h2 style="color: #79A70A; font-size: 15px;">LARGE FORMAT COLOR & BW</h2>
+                        </div>
+                         <div style="float: left;" class="shaddows">
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
+                        <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">    
+                            
+                          
+                            
+                            <div style="float: right;">
+                                <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_3('<?php echo $entered_needed_sets[0]['shipp_id']; ?>');">Edit</span>                               
+                            </div>
+                            
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+                                WILL PICKUP FROM SOHO REPRO - <?php echo $cust_add[0]['caption']; ?>
+                            </div>-->
+                            
+                            <div class="details_div">
+                    
+                <!-- Customer Details Start -->
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Pickup By: </div>
+                
+                <div style="float: left;width: 33%;margin-left: 30px;">  
+                    <?php                   
+                    //$cust_add_2 = ($cust_add[0]['comp_business_address2'] != '') ? $cust_add[0]['comp_business_address2']. '<br>'  : '';                    
+                    //echo $cust_add[0]['address'];
+                    $cust_add_p = getCustomeInfo($user_session_comp);
+                    $cust_add_2 = ($cust_add_p[0]['comp_business_address2'] != '') ? $cust_add_p[0]['comp_business_address2']. '<br>'  : '';                    
+                    echo $cust_add_p[0]['comp_name'] . '<br>' . $cust_add_p[0]['comp_business_address1'] . '<br>' . $cust_add_2 . $cust_add_p[0]['comp_city'] . ',&nbsp;' . $cust_add_p[0]['comp_state'] . '&nbsp;' . $cust_add_p[0]['comp_zipcode'].'<br>'.$cust_add_p[0]['comp_contact_phone'];
+                    ?>                   
+                </div>                
+                <!-- Customer Details End -->                    
+                                
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: </div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+                    
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                        <tr bgcolor="#BFC5CD">
+                            <td style="font-weight: bold;">Option</td> 
+                            <td style="font-weight: bold;">Originals</td> 
+                            <td style="font-weight: bold;">Sets</td> 
+                            <td style="font-weight: bold;">Order Type</td>                            
+                            <td style="font-weight: bold;">Size</td>
+                            <td style="font-weight: bold;">Outputs</td>
+                            <td style="font-weight: bold;">Media</td>
+                            <td style="font-weight: bold;">Binding</td>
+                        </tr>
+                        <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                        
+                        foreach ($number_of_lfp as $original){
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                $binding      = $original['binding'];                           
+                        ?>
+                        <tr bgcolor="#F8F8F8">
+                            <td><?php echo $original['option_id']; ?></td>
+                            <td><?php echo $original['original']; ?></td>
+                            <td><span id="available_<?php echo $original['option_id']; ?>"><?php echo $cust_needed_sets; ?></span></td>
+                            <td><?php echo $cust_order_type; ?></td>                            
+                            <td><?php echo ucwords(strtolower($size)); ?></td>
+                            <td><?php echo strtoupper($output); ?></td>
+                            <td><?php echo ucfirst($media); ?></td>
+                            <td><?php echo ucfirst($binding); ?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                   
+                </div>
+                
+                  <!--------------Mounting--------------------->
+                   <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: Mounting & Lamination</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($number_of_lfp as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#BFC5CD">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#F8F8F8">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']=="0") echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div>
+                 <?php  
+                    }
+                        ?>
+              
+                            <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                    <?php
+                    $date_asap  = ($number_of_lfp[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $number_of_lfp[0]['shipp_time'] : '';
+                    ?>
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $entered_needed_sets[0]['shipp_date'].$date_asap; ?>            
+                </div>        
+                <?php if($number_of_lfp[0]['spl_inc'] != ''){ ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Special Instructions: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php echo $number_of_lfp[0]['spl_inc']; ?>
+                    </div>
+                <?php } ?>
+                        </div>
+                        </div>
+                    </div>
+                    <?php
+                        }else{                             
+                                         
+                       ?>
+                           <div class="def_class" style=";margin-bottom: 10px;margin-top: 10px;color: #34A853;font-weight: bold; font-size: 17px;">
+                LARGE FORMAT COLOR &amp; BW
+            </div>
+                           <?php
+                        $r = 1;
+                        foreach ($entered_needed_sets_lfp as $entered_sets){
+                            if(($entered_sets['shipp_id'] == 'P1') && ($entered_sets['shipp_id'] == 'P2')){
+                                $shipp_add = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                            }else{
+                                $shipp_add = editAddressServices($entered_sets['shipp_id']);  
+                            }
+                        $needed_options  =   $entered_sets['option_id'];
+                        $needed_sets  = ($entered_sets['plot_needed'] != '0') ? $entered_sets['plot_needed'] : $entered_sets['arch_needed'];
+                        $order_type   = ($entered_sets['arch_needed'] != '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                        $plot_binding = ($entered_sets['binding'] == '0') ? '' : ','.$entered_sets['binding'];
+                        $plot_folding = ($entered_sets['folding'] == '0') ? '' : ','.$entered_sets['folding'];
+                        $arch_binding = ($entered_sets['arch_binding'] == '0') ? '' : ','.$entered_sets['arch_binding'];
+                        $arch_folding = ($entered_sets['arch_folding'] == '0') ? '' : ','.$entered_sets['arch_folding'];
+                        $size         = ($entered_sets['size'] == 'undefined') ? $entered_sets['arch_size'] : $entered_sets['size'];
+                        $output       = ($entered_sets['output'] == 'undefined') ? $entered_sets['arch_output'] : $entered_sets['output'];
+                        $media        = ($entered_sets['media'] == 'undefined') ? $entered_sets['arch_media'] : $entered_sets['media'];
+                        $binding      = ($entered_sets['binding'] == 'undefined') ? $entered_sets['arch_binding'] : $entered_sets['binding'];
+                        $folding      = ($entered_sets['folding'] == 'undefined') ? $entered_sets['arch_folding'] : $entered_sets['folding'];
+                    ?> 
+                            
+                        <div style="float: left;" id="option_4_<?php echo $entered_sets['id']; ?>" class="shaddows">
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT <?php echo $r; ?></span></div>
+                        <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
+                            <div style="float: right;">
+                                <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_4('<?php echo $entered_sets['id']; ?>', '<?php echo $r; ?>');">Edit</span>                               
+                            </div>
+                            <div class="details_div">
+                            <div style="float: left;width: 65%;margin-left: 30px;margin-top: 10px;font-weight: bold;">Send to: </div>
+                <div style="float: left;width: 33%;margin-left: 30px;">  
+                    <?php
+                    if(($entered_sets['shipp_id'] != 'P1') && ($entered_sets['shipp_id'] != 'P2')){
+                    $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                    $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                    $att    = ($entered_sets['attention_to'] != "undefined") ? '<br>Attention:  '.$entered_sets['attention_to'] : '';
+                    $phone  = ($entered_sets['contact_ph'] != "") ? '<br>'.'Tel:  '.$entered_sets['contact_ph'] : '';
+                    //$phone      =   ($phone_pre == "Tel:") ? $phone_pre : "";
+                    echo $shipp_add[0]['company_name'].$att.$phone.'<br>'. $shipp_add[0]['address_1'] . '<br>' . $add_2.$add_3 . $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'].'<br>'.$shipp_add[0]['phone'];
+                    }  else {                    //echo $shipp_add[0]['address'];                        
+                    $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                    echo $shipp_add_p[0]['address'];   
+                    }
+                    ?>                   
+                </div>
+                <!-- Address Show End -->
+
+              <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: </div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+                    
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                        <tr bgcolor="#BFC5CD">
+                            <td style="font-weight: bold;">Option</td> 
+                            <td style="font-weight: bold;">Originals</td> 
+                            <td style="font-weight: bold;">Sets</td> 
+                            <td style="font-weight: bold;">Order Type</td>                            
+                            <td style="font-weight: bold;">Size</td>
+                            <td style="font-weight: bold;">Outputs</td>
+                            <td style="font-weight: bold;">Media</td>
+                            <td style="font-weight: bold;">Binding</td>
+                        </tr>
+                        <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                        
+                        //foreach ($entered_needed_sets_lfp as $original){
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $entered_sets['print_of_need'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $entered_sets['size'];
+                                $output       = $entered_sets['output'];
+                                $media        = $entered_sets['media'];
+                                $binding      = $entered_sets['binding'];                           
+                        ?>
+                        <tr bgcolor="#F8F8F8">
+                            <td><?php echo $entered_sets['option_id']; ?></td>
+                            <td><?php echo $entered_sets['original']; ?></td>
+                            <td><span id="available_<?php echo $entered_sets['option_id']; ?>"><?php echo $cust_needed_sets; ?></span></td>
+                            <td><?php echo $cust_order_type; ?></td>                            
+                            <td><?php echo ucwords(strtolower($size)); ?></td>
+                            <td><?php echo strtoupper($output); ?></td>
+                            <td><?php echo ucfirst($media); ?></td>
+                            <td><?php echo ucfirst($binding); ?></td>
+                        </tr>
+                        <?php
+                   //     }
+                        ?>
+                    </table>
+                   
+                </div>
+                
+                  <!--------------Mounting--------------------->
+                   <?php
+              foreach ($original_service_lfp as $original){ if($original['ml_active']==1){ $title_lfp ="1"; }}?>
+                    <?php if($title_lfp>0){ ?>
+                      <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: Mounting & Lamination</div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                          <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                         $j=1;
+                        foreach ($number_of_lfp as $original){ 
+                        if($original['ml_active']==1){ $title_lfp ="1"; }}
+                     if($title_lfp>0){ 
+                                $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
+                                $cust_needed_sets       = $original['print_of_each'];
+                                $cust_order_type        = "LFP";  
+                                $size         = $original['size'];
+                                $output       = $original['output'];
+                                $media        = $original['media'];
+                                
+                                $binding      = $original['binding']; 
+                                 if($original['ml_type']=="M"){
+                            $ml_type="Mounting";
+                            
+                        }
+                        elseif($original['ml_type']=="L"){
+                             $ml_type="Lamination";
+                        }
+                        else{
+                            $ml_type="Both";
+                        }
+                        ?>
+                        <tr bgcolor="#BFC5CD">
+                          <td style="font-weight: bold;">Option</td> 
+                        <td style="font-weight: bold;">Originals</td> 
+<!--                        <td style="font-weight: bold;">Like Originals</td> -->
+                        <td style="font-weight: bold;">Order Type</td>                            
+                        <td style="font-weight: bold;">L</td>
+                         <td style="font-weight: bold;">W</td>
+                       <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?> <td style="font-weight: bold;">Mounting</td><?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?>  <td style="font-weight: bold;">Lamination</td><?php }?>
+                        <td style="font-weight: bold;">Grommets</td>
+                        </tr>
+                      
+                        <tr bgcolor="#F8F8F8">
+                           <td><?php echo $original['option_id']; ?></td>
+                        <td><?php echo $original['ml_originals']; ?></td>
+<!--                        <td><?php // if($original['ml_originals']=="1"){ echo "Yes";} else{"No";} ?></td>-->
+                        <td><?php echo $ml_type;?></td>                            
+                        <td><?php echo $original['ml_width']; ?></td>
+                        <td><?php echo $original['ml_length']; ?></td>
+                        <?php if($original['ml_type']=="M" OR $original['ml_type']=="Both" ){?>   <td><?php echo $original['ml_mounting']; ?></td> <?php }?>
+                        <?php if($original['ml_type']=="L" OR $original['ml_type']=="Both" ){?> <td><?php echo $original['ml_laminating'];?></td> <?php }?>
+                        <td><?php  if($original['ml_grommets']=="0") echo "No"; else echo "Yes"; ?></td>
+                        </tr>
+                       <?php 
+                    $i++;
+                    $j=2;
+                    }         
+                    ?>
+                    </table>
+                   
+                </div>
+                 <?php  
+                    }
+                        ?>
+                
+                <?php 
+                if($entered_sets['size'] == 'CUSTOM'){
+                ?>
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                    <div style="font-weight: bold;width: 100%;float: left;">
+                        Custom Size Details: 
+                    </div>
+                    <div style="padding-top: 3px;">                    
+                        <?php echo $entered_sets['size_custom']; ?>
+                    </div>
+                </div>
+                <?php } ?>
+                
+                <?php 
+                if($entered_sets['output'] == 'BOTH'){
+                ?>
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 5px;">
+                    <div style="font-weight: bold;width: 100%;float: left;">
+                        Color Page Number:
+                    </div>
+                    <div style="padding-top: 3px;">                    
+                        <?php echo $entered_sets['output_both_page']; ?>
+                    </div>
+                </div>
+                <?php } ?>
+                
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                    <?php
+                    $date_asap  = ($entered_sets['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_sets['shipp_time'] : '';
+                    ?>
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $entered_sets['shipp_date'].$date_asap; ?>            
+                </div>        
+                <?php
+                if ($entered_sets['delivery_type'] != '0') {
+                    ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php
+                        if ($entered_sets['delivery_type'] == '1') {
+                            $delivery_type = 'Next Day Air';
+                        } elseif ($entered_sets['delivery_type'] == '2') {
+                            $delivery_type = 'Two Day Air';
+                        } elseif ($entered_sets['delivery_type'] == '3') {
+                            $delivery_type = 'Three Day Air';
+                        } elseif ($entered_sets['delivery_type'] == '4') {
+                            $delivery_type = 'Ground';
+                        }
+
+                        $ship_type_1 = ($entered_sets['shipp_comp_1'] == '0') ? '' : $entered_sets['shipp_comp_1'];
+                        $ship_type_2 = ($entered_sets['shipp_comp_2'] == '0') ? '' : $entered_sets['shipp_comp_2'];
+                        $ship_type_3 = ($entered_sets['shipp_comp_3'] == '0') ? '' : $entered_sets['shipp_comp_3'];
+
+                        echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_sets['billing_number'];
+                        ?>
+                    </div>
+                <?php } else { ?>                            
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        SOHO TO ARRANGE DELIVERY
+                    </div>    
+                <?php }if($entered_sets['spl_inc_delivery'] != ''){  ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Special Instructions: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php echo $entered_sets['spl_inc_delivery']; ?>
+                    </div>
+                <?php } ?>
+                        </div>
+                        </div>
+                    </div>
+                    <?php 
+                    $r++;
+                    } 
+                        }
+                    }
+                    
+                        
+                        ?>
+              
+ 
  
                     
-                <div style="float:left;width:100%;">
+               
     <!--- FAP START --->
-        <?php
+       <?php
                     if(count($number_of_fap) > '0'){
+                        
+      if($number_of_fap[0]['delivery_type_option'] == '1'){
                          ?>
                         <div>
-                            <h2 style="color: #FBBC05; font-size: 15px;">FINE ART PRINTING</h2>
+                            <h2 style="color: #79A70A; font-size: 15px;">FINE ART PRINTING</h2>
                         </div>
+                  
                         <div style="float: left;margin-top: 6px;" class="shaddows">
                             <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
                         <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
@@ -2520,15 +3231,415 @@ if(count($cust_original_order) > "0"){
                 
                 <div style="float: left;width: 33%;margin-left: 30px;">  
                     <?php 
-                    if(($entered_needed_sets[0]['shipp_id'] != 'P1') && ($entered_needed_sets[0]['shipp_id'] != "P2")){
-                    $cust_add = getCustomeInfo($entered_needed_sets[0]['shipp_id']);
+                    if(($number_of_fap[0]['shipp_id'] != 'P1') && ($number_of_fap[0]['shipp_id'] != "P2")){
+                    $cust_add = getCustomeInfo($number_of_fap[0]['shipp_id']);
                     $cust_add_2 = ($cust_add[0]['comp_business_address2'] != '') ? $cust_add[0]['comp_business_address2']. '<br>'  : '';
                     $attention_ev   =   ($_SESSION['attention_every'] != '') ? 'Attention:&nbsp;'.$_SESSION['attention_every'].'<br>' : '';
                     $tel_eve       =   ($_SESSION['tel_every'] != '') ? 'Tel:&nbsp;'.$_SESSION['tel_every'].'<br>' : '';
                     echo $cust_add[0]['comp_name'] . '<br>' .$attention_ev.$tel_eve. $cust_add[0]['comp_business_address1'] . '<br>' . $cust_add_2 . $cust_add[0]['comp_city'] . '&nbsp;' . $cust_add[0]['comp_state'] . '&nbsp;' . $cust_add[0]['comp_zipcode'].'<br>'.$cust_add[0]['comp_contact_phone'];                    
                     }else{
-                    $pic_address = AddressBookPickupSohoCap($entered_needed_sets[0]['shipp_id']);
+                    $pic_address = AddressBookPickupSohoCap($number_of_fap[0]['shipp_id']);
                     echo $pic_address[0]['address'];
+                    }
+                    ?>                   
+                </div>                
+                <!-- Customer Details End -->                    
+                                
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: </div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+                    
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                        <tr bgcolor="#BFC5CD">
+                            <td style="font-weight: bold;">Option</td> 
+                            <td style="font-weight: bold;">Originals</td> 
+                            <td style="font-weight: bold;">Sets</td> 
+                            <td style="font-weight: bold;">Size</td>
+                            <td style="font-weight: bold;">Output</td>
+                            <td style="font-weight: bold;">Media</td>
+                           
+                        </tr>
+                        <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                        
+                        foreach ($number_of_fap as $original){                            
+                                                       
+             
+                                             
+                        ?>
+                        <tr bgcolor="#F8F8F8">
+                            <td><?php echo $original['option_id']; ?></td>
+                            <td><?php echo $original['original']; ?></td>
+                            <td><?php echo $original['poe'];  ?></td>
+                                                    
+                            <td><?php echo $original['size']; ?></td>
+                            <td style="text-transform: uppercase;"><?php echo $original['output']; ?></td>
+                            <td><?php echo $original['media']; ?></td>
+                           
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                   
+                </div>
+                
+             
+                            <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                    <?php
+                    $date_asap  = ($number_of_fap[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $number_of_fap[0]['shipp_time'] : '';
+                    ?>
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $number_of_fap[0]['shipp_date'].$date_asap; ?>            
+                </div>        
+                <?php
+                if ($number_of_fap[0]['delivery_type'] != '0') {
+                    ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php
+                        if ($number_of_fap[0]['delivery_type'] == '1') {
+                            $delivery_type = 'Next Day Air';
+                        } elseif ($number_of_fap[0]['delivery_type'] == '2') {
+                            $delivery_type = 'Two Day Air';
+                        } elseif ($number_of_fap[0]['delivery_type'] == '3') {
+                            $delivery_type = 'Three Day Air';
+                        } elseif ($number_of_fap[0]['delivery_type'] == '4') {
+                            $delivery_type = 'Ground';
+                        }
+
+                        $ship_type_1 = ($number_of_fap[0]['shipp_comp_1'] == '0') ? '' : $number_of_fap[0]['shipp_comp_1'];
+                        $ship_type_2 = ($number_of_fap[0]['shipp_comp_2'] == '0') ? '' : $number_of_fap[0]['shipp_comp_2'];
+                        $ship_type_3 = ($number_of_fap[0]['shipp_comp_3'] == '0') ? '' : $number_of_fap[0]['shipp_comp_3'];
+
+                        echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $number_of_fap[0]['billing_number'];
+                        ?>
+                    </div>
+                <?php } else { ?>                            
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        SOHO TO ARRANGE DELIVERY
+                    </div>    
+                <?php }if($number_of_fap[0]['spl_inc_delivery'] != ''){ ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Special Instructions: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php echo $number_of_fap[0]['spl_inc_delivery']; ?>
+                    </div>
+                        <?php } ?>
+                        </div>
+                        </div>
+                    </div>
+                    
+               
+                    <?php  
+                        }
+                        elseif ($number_of_fap[0]['delivery_type_option'] == '2') {
+                            if(($number_of_fap[0]['shipp_id'] == 'P1') && ($number_of_fap[0]['shipp_id'] == 'P2')){
+                                $shipp_add = AddressBookPickupSohoCap($entered_needed_sets[0]['shipp_id']);
+                            }else{
+                                $shipp_add = editAddressServices($number_of_fap[0]['shipp_id']);  
+                            }
+                    ?>   <div>
+                            <h2 style="color:#79A70A;; font-size: 15px;">FINE ART PRINTING</h2>
+                        </div>
+                         <div style="float: left;" class="shaddows">
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
+                        <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
+                            <div style="float: right;">
+                                <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_2('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
+                            </div>
+                            
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+                                SEND EVERYTHING TO
+                            </div>-->
+                            
+                            <div class="details_div">
+                    
+                <!-- Customer Details Start -->
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Send to: </div>
+                
+                <div style="float: left;width: 33%;margin-left: 30px;">  
+                    <?php 
+                    if(($number_of_fap[0]['shipp_id'] != 'P1') && ($number_of_fap[0]['shipp_id'] != 'P2')){
+                    $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                    $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                    $att    = ($number_of_fap[0]['attention_to'] != "undefined") ? '<br>Attention:  '.$number_of_fap[0]['attention_to'] : '';
+                    $phone  = ($number_of_fap[0]['contact_ph'] != "") ? '<br>'.'Tel:  '.$number_of_fap[0]['contact_ph'] : '';
+                    //$phone      =   ($phone_pre != '') ? $phone_pre : '';
+                    echo $shipp_add[0]['company_name'].$att.$phone.'<br>'. $shipp_add[0]['address_1'] . '<br>' . $add_2.$add_3. $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'].'<br>'.$shipp_add[0]['phone'];
+                    }  else {                    //echo $shipp_add[0]['address'];                        
+                    $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                    echo $shipp_add_p[0]['address'];   
+                    }
+                    ?>                   
+                </div>                
+                <!-- Customer Details End -->                    
+                                
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: </div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+                    
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                        <tr bgcolor="#BFC5CD">
+                            <td style="font-weight: bold;">Option</td> 
+                            <td style="font-weight: bold;">Originals</td> 
+                            <td style="font-weight: bold;">Sets</td> 
+                            <td style="font-weight: bold;">Size</td>
+                            <td style="font-weight: bold;">Output</td>
+                            <td style="font-weight: bold;">Media</td>
+                            
+                        </tr>
+                        <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                        
+                        foreach ($number_of_fap as $original){                            
+                                                   
+                        ?>
+                        <tr bgcolor="#F8F8F8">
+                            <td><?php echo $original['option_id']; ?></td>
+                            <td><?php echo $original['original']; ?></td>
+                            <td><?php echo $original['poe'];  ?></td>
+                                                    
+                            <td><?php echo $original['size']; ?></td>
+                            <td style="text-transform: uppercase;"><?php echo $original['output']; ?></td>
+                            <td><?php echo $original['media']; ?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                   
+                </div>
+                
+          
+                            <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                    <?php
+                    $date_asap  = ($number_of_fap[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $number_of_fap[0]['shipp_time'] : '';
+                    ?>
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $number_of_fap[0]['shipp_date'].$date_asap; ?>            
+                </div>        
+                <?php
+                if ($number_of_fap[0]['delivery_type'] != '0') {
+                    ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php
+                        if ($number_of_fap[0]['delivery_type'] == '1') {
+                            $delivery_type = 'Next Day Air';
+                        } elseif ($number_of_fap[0]['delivery_type'] == '2') {
+                            $delivery_type = 'Two Day Air';
+                        } elseif ($number_of_fap[0]['delivery_type'] == '3') {
+                            $delivery_type = 'Three Day Air';
+                        } elseif ($number_of_fap[0]['delivery_type'] == '4') {
+                            $delivery_type = 'Ground';
+                        }
+
+                        $ship_type_1 = ($number_of_fap[0]['shipp_comp_1'] == '0') ? '' : $number_of_fap[0]['shipp_comp_1'];
+                        $ship_type_2 = ($number_of_fap[0]['shipp_comp_2'] == '0') ? '' : $number_of_fap[0]['shipp_comp_2'];
+                        $ship_type_3 = ($number_of_fap[0]['shipp_comp_3'] == '0') ? '' : $number_of_fap[0]['shipp_comp_3'];
+
+                        echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $number_of_fap[0]['billing_number'];
+                        ?>
+                    </div>
+                <?php } else { ?>                            
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Send Via: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        SOHO TO ARRANGE DELIVERY
+                    </div>    
+                <?php }if($number_of_fap[0]['spl_inc_delivery'] != ''){  ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Special Instructions: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php echo $number_of_fap[0]['spl_inc_delivery']; ?>
+                    </div>
+                <?php } ?>
+                        </div>
+                        </div>
+                    </div>  
+                    <?php
+                        }elseif ($number_of_fap[0]['delivery_type_option'] == '3') {                       
+                         if(($number_of_fap[0]['shipp_id'] == 'P1') && ($number_of_fap[0]['shipp_id'] == 'P2')){
+                                $shipp_add = AddressBookPickupSohoCap($number_of_fap[0]['shipp_id']);
+                            }else{
+                                $shipp_add = editAddressServices($number_of_fap[0]['shipp_id']);  
+                            }
+                            
+                            $cust_add = AddressBookPickupSohoCap($number_of_fap[0]['shipp_id']);
+                    ?>   <div>
+                            <h2 style="color: #79A70A; font-size: 15px;">FINE ART PRINTING</h2>
+                        </div>
+                         <div style="float: left;" class="shaddows">
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT</span></div>
+                        <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">    
+                            
+                          
+                            
+                            <div style="float: right;">
+                                <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_3('<?php echo $entered_needed_sets[0]['shipp_id']; ?>');">Edit</span>                               
+                            </div>
+                            
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+                                WILL PICKUP FROM SOHO REPRO - <?php echo $cust_add[0]['caption']; ?>
+                            </div>-->
+                            
+                            <div class="details_div">
+                    
+                <!-- Customer Details Start -->
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Pickup By: </div>
+                
+                <div style="float: left;width: 33%;margin-left: 30px;">  
+                    <?php                   
+                    //$cust_add_2 = ($cust_add[0]['comp_business_address2'] != '') ? $cust_add[0]['comp_business_address2']. '<br>'  : '';                    
+                    //echo $cust_add[0]['address'];
+                    $cust_add_p = getCustomeInfo($user_session_comp);
+                    $cust_add_2 = ($cust_add_p[0]['comp_business_address2'] != '') ? $cust_add_p[0]['comp_business_address2']. '<br>'  : '';                    
+                    echo $cust_add_p[0]['comp_name'] . '<br>' . $cust_add_p[0]['comp_business_address1'] . '<br>' . $cust_add_2 . $cust_add_p[0]['comp_city'] . ',&nbsp;' . $cust_add_p[0]['comp_state'] . '&nbsp;' . $cust_add_p[0]['comp_zipcode'].'<br>'.$cust_add_p[0]['comp_contact_phone'];
+                    ?>                   
+                </div>                
+                <!-- Customer Details End -->                    
+                                
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">PACKING LIST: </div>
+                <div style="float: left;width: 92%;margin-left: 30px;margin-top: 5px;">
+                    <?php
+                    $cust_original_order    = EnteredPlotRecipients($user_session_comp, $user_session);
+                    
+                    //$cust_needed_originals  = $cust_original_order[0]['origininals'];
+                    
+                    //$cust_needed_sets       = ($cust_original_order[0]['print_ea'] != '0') ? $cust_original_order[0]['print_ea'] : $cust_original_order[0]['arch_needed'];
+                    //$cust_order_type        = ($cust_original_order[0]['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';
+                    $option                 = ($cust_original_order[0]['plot_arch'] == '0') ? 'Pickup Options:' : 'File Options:';  
+                    ?>
+                    <table border="1" style="width: 100%;">
+                        <tr bgcolor="#BFC5CD">
+                            <td style="font-weight: bold;">Option</td> 
+                            <td style="font-weight: bold;">Originals</td> 
+                            <td style="font-weight: bold;">Sets</td> 
+                            <td style="font-weight: bold;">Size</td>
+                            <td style="font-weight: bold;">Output</td>
+                            <td style="font-weight: bold;">Media</td>
+                            
+                        </tr>
+                        <?php
+//                        echo '<pre>';
+//                        print_r($cust_original_order);
+//                        echo '</pre>';
+                        
+                        foreach ($number_of_fap as $original){                            
+                            $cust_needed_sets       = ($original['print_ea'] != '0') ? $original['print_ea'] : $original['arch_needed'];
+                            $cust_order_type        = ($original['plot_arch'] == '0') ? 'Architectural Copies' : 'Plotting on Bond';                               
+                            $size         = ($original['size'] == 'undefined') ? $original['arch_size'] : $original['size'];
+                            $output       = ($original['output'] == 'undefined') ? $original['arch_output'] : $original['output'];
+                            $media        = ($original['media'] == 'undefined') ? $original['arch_media'] : $original['media'];
+                            $binding      = ($original['binding'] == 'undefined') ? $original['arch_binding'] : $original['binding'];
+                            $folding      = ($original['folding'] == 'undefined') ? $original['arch_folding'] : $original['folding'];                            
+                        ?>
+                        <tr bgcolor="#F8F8F8">
+                           <td><?php echo $original['option_id']; ?></td>
+                            <td><?php echo $original['original']; ?></td>
+                            <td><?php echo $original['poe'];  ?></td>
+                            <td><?php echo $original['size']; ?></td>
+                            <td style="text-transform: uppercase;"><?php echo $original['output']; ?></td>
+                            <td><?php echo $original['media']; ?></td>
+                        </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                   
+                </div>
+          
+                            <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
+                    <?php
+                    $date_asap  = ($number_of_fap[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $number_of_fap[0]['shipp_time'] : '';
+                    ?>
+                    <span style="font-weight: bold;">When Needed: </span><?php echo $number_of_fap[0]['shipp_date'].$date_asap; ?>            
+                </div>        
+                <?php if($number_of_fap[0]['spl_inc_delivery'] != ''){ ?>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <span style="font-weight: bold;">Special Instructions: </span>
+                    </div>
+                    <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
+                        <?php echo $number_of_fap[0]['spl_inc_delivery']; ?>
+                    </div>
+                <?php } ?>
+                        </div>
+                        </div>
+                    </div>
+                    <?php
+                        }
+                        else{ ?>
+    
+                        <div>
+                            <h2 style="color: #FBBC05; font-size: 15px;">FINE ART PRINTING</h2>
+                        </div>
+    
+     <?php 
+     $f =1;
+     foreach ($entered_needed_sets_fap as $original){ 
+         
+         if(($original['shipp_id'] == 'P1') && ($original['shipp_id'] == 'P2')){
+                                $shipp_add = AddressBookPickupSohoCap($original['shipp_id']);
+                            }else{
+                                $shipp_add = editAddressServices($original['shipp_id']);  
+                            }
+         ?>
+                        <div style="float: left;margin-top: 6px;" class="shaddows">
+                            <div class="ribbon" id="ribbon_final"><span>RECIPIENT <?php echo $f; ?></span></div>
+                        <div style="width: 100%;float: left;margin-top: 10px;margin-bottom: 10px;">                            
+                            <div style="float: right;">
+                                <span title="Edit Recipient" alt="Edit Recipient" style="font-weight: bold;cursor: pointer;padding-right: 15px;font-weight: bold;padding-right: 15px;background: #009C58;color: #FFF;padding: 2px 10px;border-radius: 5px;margin-top: 3px;margin-right: 15px;" onclick="return edit_recipient_option_1('<?php echo $entered_sets['id']; ?>');">Edit</span>                               
+                            </div>
+                            
+<!--                            <div style="float:left;width: 100%;text-align: center;font-weight: bold;">
+                                RETURN EVERYTHING TO MY OFFICE
+                            </div>-->
+                            
+                            <div class="details_div">
+                    
+                <!-- Customer Details Start -->
+                <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;font-weight: bold;">Send to: </div>
+                
+                <div style="float: left;width: 33%;margin-left: 30px;">  
+                    <?php 
+                
+ if(($original['shipp_id'] != 'P1') && ($original['shipp_id'] != 'P2')){
+                    $add_2 = ($shipp_add[0]['address_2'] == '') ? '' : $shipp_add[0]['address_2'] . '<br>';
+                    $add_3 = ($shipp_add[0]['address_3'] == '') ? '' : $shipp_add[0]['address_3'] . '<br>';
+                    $att    = ($entered_sets['attention_to'] != "undefined") ? '<br>Attention:  '.$original['attention_to'] : '';
+                    $phone  = ($entered_sets['contact_ph'] != "") ? '<br>'.'Tel:  '.$original['contact_ph'] : '';
+                    //$phone      =   ($phone_pre == "Tel:") ? $phone_pre : "";
+                    echo $shipp_add[0]['company_name'].$att.$phone.'<br>'. $shipp_add[0]['address_1'] . '<br>' . $add_2.$add_3 . $shipp_add[0]['city'] . ',&nbsp;' . StateName($shipp_add[0]['state']) . '&nbsp;' . $shipp_add[0]['zip'].'<br>'.$shipp_add[0]['phone'];
+                    }  else {                    //echo $shipp_add[0]['address'];                        
+                    $shipp_add_p = AddressBookPickupSohoCap($entered_sets['shipp_id']);
+                    echo $shipp_add_p[0]['address'];   
                     }
                     ?>                   
                 </div>                
@@ -2558,26 +3669,26 @@ if(count($cust_original_order) > "0"){
 //                        echo '<pre>';
 //                        print_r($number_of_fap);
 //                        echo '</pre>';
-                        $i=0;
-                        foreach ($number_of_fap as $original){ $i++;
+                       
+                      
                                 $rowColor = ($i % 2 != 0) ? '#F9F2DE' : '#FCD9A9';
-                                $cust_needed_sets       = $original['poe'];
-                                $cust_order_type        = "LFP";  
+                                $cust_needed_sets       = $original['print_of_need'];
+                               
                                 $size         = $original['size'];
                                 $output       = $original['output'];
                                 $media        = $original['media'];
                                 $binding      = $original['binding'];                     
                         ?>
                         <tr bgcolor="#F8F8F8">
-                            <td><?php echo $i; ?></td>
+                            <td><?php echo $f; ?></td>
                             <td><?php echo $original['original']; ?></td>
-                            <td><span id="available_<?php echo $original['options']; ?>"><?php echo $cust_needed_sets; ?></span></td>
+                            <td><span id="fap_available_<?php echo $original['option_id']; ?>"><?php echo $cust_needed_sets; ?></span></td>
                             <td><?php echo ucwords(strtolower($size)); ?></td>
                             <td><?php echo strtoupper($output); ?></td>
                             <td><?php echo ucfirst($media); ?></td>
                         </tr>
                         <?php
-                        }
+                        
                         ?>
                     </table>
                    
@@ -2587,31 +3698,31 @@ if(count($cust_original_order) > "0"){
                 
                 <div style="float: left;width: 65%;margin-left: 30px;margin-top: 7px;">
                     <?php
-                    $date_asap  = ($entered_needed_sets[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_needed_sets[0]['shipp_time'] : '';
+                    $date_asap  = ($entered_needed_sets_fap[0]['shipp_time'] != 'ASAP') ? '&nbsp;&nbsp;&nbsp;' . $entered_needed_sets_fap[0]['shipp_time'] : '';
                     ?>
                     <span style="font-weight: bold;">When Needed: </span><?php echo $entered_needed_sets[0]['shipp_date'].$date_asap; ?>            
                 </div>        
                 <?php
-                if (($entered_needed_sets[0]['delivery_type'] == '1') OR ($entered_needed_sets[0]['delivery_type'] == '2')) {
+                if (($entered_needed_sets_fap[0]['delivery_type'] == '1') OR ($entered_needed_sets_fap[0]['delivery_type'] == '2')) {
                     ?>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <span style="font-weight: bold;">Send Via: </span>
                     </div>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <?php
-                        if ($entered_needed_sets[0]['delivery_type'] == '1') {
+                        if ($entered_needed_sets_fap[0]['delivery_type'] == '1') {
                             $delivery_type = 'Next Day Air';
-                        } elseif ($entered_needed_sets[0]['delivery_type'] == '2') {
+                        } elseif ($entered_needed_sets_fap[0]['delivery_type'] == '2') {
                             $delivery_type = 'Two Day Air';
-                        } elseif ($entered_needed_sets[0]['delivery_type'] == '3') {
+                        } elseif ($entered_needed_sets_fap[0]['delivery_type'] == '3') {
                             $delivery_type = 'Three Day Air';
-                        } elseif ($entered_needed_sets[0]['delivery_type'] == '4') {
+                        } elseif ($entered_needed_sets_fap[0]['delivery_type'] == '4') {
                             $delivery_type = 'Ground';
                         }
 
-                        $ship_type_1 = ($entered_needed_sets[0]['shipp_comp_1'] == '0') ? '' : $entered_needed_sets[0]['shipp_comp_1'];
-                        $ship_type_2 = ($entered_needed_sets[0]['shipp_comp_2'] == '0') ? '' : $entered_needed_sets[0]['shipp_comp_2'];
-                        $ship_type_3 = ($entered_needed_sets[0]['shipp_comp_3'] == '0') ? '' : $entered_needed_sets[0]['shipp_comp_3'];
+                        $ship_type_1 = ($entered_needed_sets_fap[0]['shipp_comp_1'] == '0') ? '' : $entered_needed_sets_fap[0]['shipp_comp_1'];
+                        $ship_type_2 = ($entered_needed_sets_fap[0]['shipp_comp_2'] == '0') ? '' : $entered_needed_sets_fap[0]['shipp_comp_2'];
+                        $ship_type_3 = ($entered_needed_sets_fap[0]['shipp_comp_3'] == '0') ? '' : $entered_needed_sets_fap[0]['shipp_comp_3'];
 
                         echo $ship_type_1 . $ship_type_2 . $ship_type_3 . ',&nbsp;' . $delivery_type . ',&nbsp;Account # ' . $entered_needed_sets[0]['billing_number'];
                         ?>
@@ -2623,30 +3734,33 @@ if(count($cust_original_order) > "0"){
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         SOHO TO ARRANGE DELIVERY
                     </div>    
-                <?php }if($entered_needed_sets[0]['spl_inc'] != ''){ ?>
+                <?php }if($entered_needed_sets_fap[0]['spl_inc'] != ''){ ?>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
                         <span style="font-weight: bold;">Special Instructions: </span>
                     </div>
                     <div style="width: 100%;float: left;margin-left: 30px;margin-top: 7px;">
-                        <?php echo $entered_needed_sets[0]['spl_inc']; ?>
+                        <?php echo $entered_needed_sets_fap[0]['spl_inc']; ?>
                     </div>
                         <?php } ?>
                         </div>
                         </div>
                     </div>
                     <?php  
-                        }
+                    $f++; } }
+                    
+                    }
                         ?>
                 </div>
                 <!--- FAP END --->
- </div>
+ 
                     </div>
-                    </div>
+                   
                     
     
                         <div style="float:left;width:100%;text-align:right;padding-top: 10px;">                   
                            <input class="addproductActionLink" value="Checkout" style="cursor: pointer; float: right; font-size: 12px; padding: 1.5px; width: 135px; margin-right: 14px; -moz-border-radius: 5px; -webkit-border-radius: 5px;border:1px solid #8f8f8f;margin-top: -0px !important;" type="button" onclick="return finalize_recipients();" />
-                        </div>  
+                        </div> 
+                 </div>
     
                     </div>
 

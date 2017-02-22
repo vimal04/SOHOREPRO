@@ -4,6 +4,7 @@ $pagename_pos = count($page_names) - 1;
 $page_name_new = $page_names[$pagename_pos];
 
 ?>
+<?php// if (!isset($_SESSION['sohorepro_userid'])) { ?>
 <div id="content_usermeta">
     <div id="site-logo">
         <h1 class="site-logo"><a onclick="<?php if(($page_name_new == 'service_plotting.php') || ($page_name_new == 'add_recipients.php') || ($page_name_new == 'view_all_recipients.php')) { ?>return please_proceed();<?php } ?>" href="<?php if($_SESSION['sohorepro_companyid']  == ''){?>index.php<?php }else{?>service_plotting.php<?php } ?>" class="site-logo"><span>SOHO Repro Graphics</span><img src="store_files/logo-SOHO_Repro.gif" alt="SOHO Repro Graphics" height="182" width="205"></a></h1>
@@ -97,3 +98,4 @@ $page_name_new = $page_names[$pagename_pos];
         }
     }
 </script>
+<?php// } ?>

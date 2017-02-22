@@ -9,9 +9,10 @@ if ($_POST['add_fine_arts_services'] == '1') {
 
     $user_id_add_set = $_SESSION['sohorepro_userid'];
     $company_id_view_plot = $_SESSION['sohorepro_companyid'];
-
+    
     $original = $_POST['original'];
     $print_ea = $_POST['print_ea'];
+     $option = $_POST['option'];
     $size = $_POST['size'];
     $output = $_POST['output'];
     $order_0_set1_0_media = $_POST['order_0_set1_0_media'];
@@ -35,6 +36,7 @@ if ($_POST['add_fine_arts_services'] == '1') {
                                 poe             = '" . $print_ea . "',
                                 size            = '" . $size . "',  
                                 output          = '" . $output . "',
+                                option_id       = '" . $option . "',   
                                 media           = '" . $order_0_set1_0_media . "',
                                 size_custom     = '" . $size_custom . "',    
                                 output_both     = '" . $output_both . "',
@@ -200,6 +202,7 @@ if ($_POST['add_fine_arts_services'] == '1') {
             <div style="float:right;font-weight: bold;">
                 Option - <?php echo $count_option; ?>                          
             </div>
+            <input type="hidden" id="option_value" value="<?php echo $count_option;?>" name="option_value">
             <input type="hidden" name="optint_count_check" id="optint_count_check" value="0" />
         </label>  
         <div style="background-color:#FFFFFF" class="serviceOrderSetWapper" setindex="0">

@@ -1259,7 +1259,7 @@ text-align: center;
                 $user_id_add_set        = $_SESSION['sohorepro_userid'];
                 $company_id_view_plot   = $_SESSION['sohorepro_companyid']; 
                 $check_plotting         = EnteredLFPPrimary($company_id_view_plot, $user_id_add_set);
-                $check_plotting_needed  = PlottingNeededSetWithoutOrderId($company_id_view_plot, $user_id_add_set);   
+                $check_plotting_needed  = LFPNeededSetWithoutOrderId($company_id_view_plot, $user_id_add_set);   
                 $check_plotting_files   = UploadFileExist($company_id_view_plot, $user_id_add_set);                
                 ?>
                   
@@ -1846,10 +1846,10 @@ text-align: center;
                                     mysql_query($delete_empty);
                                 }
 
-            //                    if(count($check_plotting_needed) > 0){
-            //                        $delete_empty = "DELETE FROM sohorepro_sets_needed WHERE comp_id = '".$company_id_view_plot."' AND usr_id = '".$user_id_add_set."' AND order_id = '0'";
-            //                        mysql_query($delete_empty);
-            //                    }
+                                if(count($check_plotting_needed) > 0){
+                                    $delete_empty1 = "DELETE FROM sohorepro_service_lfp_sets_needed WHERE company_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' AND order_id = '0'";
+                                    mysql_query($delete_empty1);
+                                }
 
             //                    if(count($check_plotting_files) > 0){
             //                        $delete_sql = "DELETE FROM sohorepro_upload_files_set WHERE comp_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' AND order_id = '0' ";
@@ -2299,10 +2299,10 @@ text-align: center;
                         mysql_query($delete_empty);
                     }
                     
-//                    if(count($check_plotting_needed) > 0){
-//                        $delete_empty = "DELETE FROM sohorepro_sets_needed WHERE comp_id = '".$company_id_view_plot."' AND usr_id = '".$user_id_add_set."' AND order_id = '0'";
-//                        mysql_query($delete_empty);
-//                    }
+                    if(count($check_plotting_needed) > 0){
+                        $delete_empty = "DELETE FROM sohorepro_service_lfp_sets_needed WHERE company_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' AND order_id = '0'";
+                        mysql_query($delete_empty);
+                    }
                     
 //                    if(count($check_plotting_files) > 0){
 //                        $delete_sql = "DELETE FROM sohorepro_upload_files_set WHERE comp_id = '".$company_id_view_plot."' AND user_id = '".$user_id_add_set."' AND order_id = '0' ";

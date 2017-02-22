@@ -22,11 +22,12 @@ $comp_name       = getCompName($_SESSION['sohorepro_companyid']);
                }
 ?>
 <?php if (isset($_SESSION['sohorepro_userid'])) { ?>
-<div id="" class="sticky-navigation"  style="float:left;width: 62%;z-index: 100;">
+<div id="" class="sticky-navigation"  style="float:left;width: 100%;z-index: 100;">
 <div style="float: left;width: 30%;">
     <ul class="navigation primary" style="float:left !important;width: 100%;">
             <li class="navLargeFormat" style=" border-bottom: none !important;">
-                <a onclick="<?php if(($page_name_new == 'service_plotting.php') || ($page_name_new == 'add_recipients.php') || ($page_name_new == 'view_all_recipients.php')) { ?>return please_proceed();<?php } ?>" href="supplies.php" style="<?php if($page_name_new=='index.php') { echo "font-weight: bold;"; } ?>">SUPPLIES</a>
+                <a <?php if(($page_name_new == 'service_plotting.php') || ($page_name_new == 'add_recipients.php') || ($page_name_new == 'view_all_recipients.php')) { ?>id="french"<?php } ?> href="supplies.php" style="<?php if($page_name_new=='index.php') { echo "font-weight: bold;"; } ?>">SUPPLIES</a>
+                <!--<a onclick="<?php if(($page_name_new == 'service_plotting.php') || ($page_name_new == 'add_recipients.php') || ($page_name_new == 'view_all_recipients.php')) { ?>return please_proceed();<?php } ?>" href="supplies.php" style="<?php if($page_name_new=='index.php') { echo "font-weight: bold;"; } ?>">SUPPLIES</a>-->
             </li>
             <li class="navLargeFormat" style=" border-bottom: none !important;">
                 <a href="service_plotting.php" style="<?php if($page_name_new=='service_plotting.php') { echo "font-weight: bold;"; } ?>">SERVICES</a>
@@ -56,7 +57,7 @@ $comp_name       = getCompName($_SESSION['sohorepro_companyid']);
         <div style="clear:both"></div> 
 </div>   
 <?php
-} ?>                                                                                                                    
+}  ?>                                                                                                                    
 
 <div id="content_output-navigation">
 <!--    <ul class="navigation primary"><li class="navPlotting"><a href="#" class=" ">PLOTTING &amp; ARCHITECTURAL COPIES</a></li>
@@ -68,9 +69,34 @@ $comp_name       = getCompName($_SESSION['sohorepro_companyid']);
         <li class="navScanning"><a href="#" class=" ">SCANNING</a></li>
         <li class="navOffset"><a href="#" class=" ">OFFSET PRINTING</a></li>
     </ul>-->
-    <div style="clear:both"></div>                                        				
-</div>
+    <div style="clear:both"></div> 
+    <?php// echo $_SESSION['sohorepro_userid'];?>
+</div><style>
+    .ui-dialog .ui-dialog-titlebar-close span {
+    display: block;
+    margin: -8px;
+}
+.ui-dialog-titlebar {
+    background: #F99B3E none repeat scroll 0 0 !important;
+}
+    </style>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" type="text/css" />
+<script src="js/jquery.easy-confirm-dialog.js"></script>
+
 <script>
+    
+ $("#french").easyconfirm({locale: {
+	title: 'Are you Sure?',
+	text: 'Proceeding to the Supply Store prior to checking out will result in losing any entered information.',
+	button: ['Cancel',' Proceed'],
+        closeText: 'Close'
+}});
+$("#french").click(function() {
+	//alert("Je vous remercie de votre soumission!");
+        window.location.href="http://cipldev.com/supply-new.sohorepro.com/supply?redirect_supply=<?php echo $_SESSION['sohorepro_userid']; ?>";
+});
 function please_proceed()
 {
     alert("You must complete your transaction and checkout BEFORE proceeding to the Supply Store.");
