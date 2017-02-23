@@ -31,24 +31,13 @@ $comp_array = array(
     "end_date" => $_POST['txtenddate']
 );
 
-$Orders_org = getClosedOrdersAllFreq($_REQUEST['sort'],$_REQUEST['feq_sort'],$comp_array);
-$Orders_inv = getClosedOrdersAllFreqInv($_REQUEST['sort'],$_REQUEST['num']);
+$Orders = getClosedOrdersAllFreq($_REQUEST['sort'],$_REQUEST['feq_sort'],$comp_array);
+
 $startDate = $Orders[count($Orders)-1]['created_date'];
 
 $time = strtotime($startDate);
 $myFormatForView = date("m/d/Y", $time);
 
-$rows_org = count($Orders);
-$rows_inv = count($Orders_inv);
-if(isset($_REQUEST['num'])){
-    $Orders = $Orders_inv;
-    $rows = $rows_inv;
-    
-}
-else{
-    $Orders = $Orders_org;
-    $rows = $rows_org;
-}
 if($_REQUEST['feq_sort']){
 $f_sort = "feq_sort=".$_REQUEST['feq_sort']."&";
 }
@@ -1014,19 +1003,12 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
                                             } ?>
                                         </td>
                                     </tr>
+                                    <table id="invoice_res">
                                     <tr>
                                         <td colspan="6" class="billing_container">
-                                           <?php
-                                           $frequency="";
-                                           if(isset($_REQUEST['num'])){
-                                               $frequency = $_REQUEST['num'];
-                                           }
-                                           else{
-                                                $frequency = $_REQUEST['feq_sort'];
-                                           }
-?>
+                                        
                                             <div class="section_week">
-                                                <?php    if(!isset($_REQUEST['num'])){ ?>
+                                              
                                                 <div class="week_buttons">
                                                      <h4>Choose Period</h4>
                                                    <a <?php if($_GET['feq_sort']==""){ ?> class="active-period" <?php }?> href="supply_billing.php">All</a>
@@ -1034,38 +1016,23 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
                                                    <a <?php if($_GET['feq_sort']=="bimonthly"){ ?> class="active-period" <?php }?> href="supply_billing.php?feq_sort=bimonthly">Bi-Monthly</a>
                                                    <a <?php if($_GET['feq_sort']=="monthly"){ ?> class="active-period" <?php }?> href="supply_billing.php?feq_sort=monthly">Monthly</a>
                                                 </div>
-                                                <?php  } else{
-                                                    ?><span class="invoice-customer">
-                                          
-                                                        <a class="billing-return" href="supply_billing.php" >Return to billing</a>
-                                                      </span>
-                                                <?php 
-                                                }
-                                                $cl = closedOrderBillable($frequency);
+                                                <?php  
+                                                $cl = closedOrderBillable($_REQUEST['feq_sort']);
                                                  ?>
                                                 <div class="custom">
-                                                    <div class="cus-left"> <?php
-                                                     if($_REQUEST['num']){
-                                                    ?>
-                                                    
-                                                    <div class="bill_cont">
-                                                        <label class="billable_c">Total Billable:</label><span><?php  $grand = getGrandTotalClosed($frequency,$_GET['company']); echo '$' . number_format(($grand[0]['grandtotal']), 2, '.', ','); ?></span>
-                                                     </div>
-                                                        <div class="bill_cont"><label class="billable_c">Total # to be Printed:</label><span><?php echo '45';?></span></div>
-                                                         <div class="bill_cont"><label class="billable_c">Total # to be Emailed:</label><span><?php echo '45';?></span></div>
-                                                    <?php }else{ ?>
+                                                    <div class="cus-left">
                                                     <div class="bill_cont"><label class="billable_c">Billable customers:</label><span><?php echo count($cl); ?></span></div>
                                                     
                                                     
                                                      <div class="total-billable">
-                                                      <lable>Total Billable:</lable><span><?php  $grand = getGrandTotalClosed($frequency,$_GET['company']); echo '$' . number_format(($grand[0]['grandtotal']), 2, '.', ','); ?></span>
+                                                      <lable>Total Billable:</lable><span><?php  $grand = getGrandTotalClosed($_REQUEST['feq_sort'],$_GET['company']); echo '$' . number_format(($grand[0]['grandtotal']), 2, '.', ','); ?></span>
                                                      </div>
 <!--                                                    <label class="show_list">Show list of Orders grouped by customer</label>-->
-                                                <?php } ?>
+                                           
                                                     </div>
                                                     
-                                                    <?php if(!isset($_REQUEST['num'])){?>
-                                                    <form action="" name="invoice_form" method="POST" >
+                                                    
+                                                    <form id="invoice_form" action="" name="invoice_form" method="POST" >
                                            <input type="hidden" value="1" name="invoice-hidden"/>
                                              
                                          <div class="invoice_freq_full">  
@@ -1079,24 +1046,18 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
                                         </div>
                                         <span class="invoice-customer">
                                           
-                                            <input type="submit" name="generate_invoice_fr" value="Generate Invoices"/>
+                                            <input type="submit" id="generate_invoice_fr" name="generate_invoice_fr" value="Generate Invoices"/>
                                             
                                         </span>
                                          </div>
                                         </form>
-                                              <?php } ?>     
+                                             
                                                 </div>
                                                
                                             </div>
                                         </td>
                                     </tr>
-                                    <?php if($cl>0){?>
-                                    <tr> 
-                                        
                                
-                                      
-                        </tr>
-                                    <?php } ?>
                                     <tr>
                                         <td align="left" valign="top"><table width="759" border="0" cellspacing="0" cellpadding="0">
                                                 <tr>
@@ -1425,107 +1386,10 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
                         <tr align="right">
                             <td><?php echo Paginations($limit, $page, 'open_orders.php?page=', $rows); ?></td>
                         </tr>
-                       <?php if($cl>0){/*?>
-                                    <tr> 
-                               <td style="text-align: left;position:relative;left:35px;height: 60px;"> <?php 
-                                       if($_REQUEST['company']){
-                                                    ?>
-                                       <form action="" name="invoice_form1" method="POST" target="_blank">
-                                           <input type="hidden" value="1" name="invoice-hidden1"/>
-                                             <input type="hidden" name="cmp_id" value="<?php echo $_REQUEST['company'];?>"/>
-                                               <input type="hidden" name="company-dropdown1" value="<?php echo $_REQUEST['company'];?>"/>
-                                             <input name="txtstartdate" type="text" id="txtstartdate1" />
-                                            <input name="txtenddate" type="text" id="txtenddate1" />
-                                            
-                                           <span class="invoice-customer"> 
-                                              <?php $invoice_data = closedOrderBillable($_GET['feq_sort']); 
-                                          //print_r(count($invoice_data));
-                                        
-                                                    ?>
-<!--                                                 <select name='company-dropdown1'>    <option value="0"> Select Customer </option>
-                                                    <?php   // if (count($invoice_data) > 0) {
-                                                    //foreach ($invoice_data as $order) { ?>
-                                                
-                                                    <option value='<?php echo $order['customer_company']; ?>'> <?php echo $customer = ($order['customer_company_name'] != '') ? $order['customer_company_name'] : 'Guest User'; ?></option>
-                                                   
-                                                    <?php //}}?>
-                                                </select>-->
-                                              
-                                        </span>
-                                       
-                                        <span class="invoice-customer">
-                                          
-                                            <input type="submit" name="generate_invoice_date" value="Generate Invoice"/>
-                                            
-                                        </span>
-                                        </form>
-                                       <?php }else{ ?>
-                                    <form action="" name="invoice_form" method="POST" >
-                                           <input type="hidden" value="1" name="invoice-hidden"/>
-                                             
-                                           <span class="invoice-customer"> 
-                                              <?php $invoice_data = closedOrderBillable($_GET['feq_sort']); 
-                                          //print_r(count($invoice_data));
-                                               ?>
-
-                                               
-                                                <select name='company-dropdown'>    <option value="0"> Select Customer </option>
-                                                    <?php    if (count($invoice_data) > 0) {
-                                                    foreach ($invoice_data as $order) { ?>
-                                                
-                                                    <option value='<?php echo $order['customer_company']; ?>'> <?php echo $customer = ($order['customer_company_name'] != '') ? $order['customer_company_name'] : 'Guest User'; ?></option>
-                                                   
-                                                    <?php }}?>
-                                                </select>
-                                               
-                                        </span>
-                                       
-                                        <span class="invoice-customer">
-                                          
-                                            <input type="submit" name="generate_invoice" value="Generate Invoice"/>
-                                            
-                                        </span>
-                                        </form>
-                                    <?php } ?>
-                                    <?php /*
-                                       if(!isset($_REQUEST['company'])){
-                                                    ?>
-                                        <div style="clear:both; margin: 20px 0px;">
-                                        
-                                        <form action="" name="invoice_freq_form" method="POST" target="_blank">
-                                           <input type="hidden" value="1" name="invoice-hidden"/>
-                                           <span class="invoice-customer"> 
-                                                <?php $invoice_data = closedOrderBillable($_GET['feq_sort']); 
-                                          //print_r(count($invoice_data));?>
-                                                <select name='company-dropdown1'>    <option value="0"> Select Customer </option>
-                                                    <?php    if (count($invoice_data) > 0) {
-                                                    foreach ($invoice_data as $order) { ?>
-                                                
-                                                    <option value='<?php echo $order['customer_company']; ?>'> <?php echo $customer = ($order['customer_company_name'] != '') ? $order['customer_company_name'] : 'Guest User'; ?></option>
-                                                   
-                                                    <?php }}?>
-                                               </select>
-                                               
-                                               <?php $frequency = getsohoreproInvoiceFrequency(); ?>
-                                               <select name='invoice_frequency'>
-                                                   <option value="0"> Select Frequency </option>
-                                                   <?php foreach($frequency as $newFreq) { ?>
-                                                   <option value="<?php echo $newFreq['freq_value']; ?>"><?php echo $newFreq['freq_name']; ?></option>
-                                                   <?php } ?>
-                                                </select>
-                                        </span>
-                                       
-                                        <span class="invoice-customer"><input type="submit" style="width: 240px;" name="generate_invoice_freq" value="Generate Frequency Invoice"/></span>
-                                        </form>
-                                       </div>     
-                                       <?php } */ ?>
-                               </td>
-                               
-                                      
-                        </tr>
-                                    <?php } ?>
+                                </table>
+                    
                    
-                    </table></td>
+<!--                    </table></td>-->
                     
             </tr>
         </table></td>
@@ -1588,6 +1452,25 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
 //             });
 //            }
 //    }
+$(document).ready(function(){
+    $('#generate_invoice_fr').click(function(){ //alert("fdfd");
+        var form_data = $("#invoice_form").serialize();
+    $.ajax
+        ({
+            type: "POST",
+            url: "invoice_frequency.php",
+            data: form_data,
+            async: false,
+            beforeSend: loadStart,
+            complete: loadStop,
+            success: function(option)
+            {  
+                    $('#invoice_res').html(option);      
+            }
+        });
+    });
+});
+
 function form_blank_remove(){
    var drop_id = $("#company_drop_id").val();
    var cmp_id = $("#cmp_id").val();
