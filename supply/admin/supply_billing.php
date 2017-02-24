@@ -2,6 +2,14 @@
 include './config.php';
 include './auth.php';
 require_once('tcpdf_include.php');
+
+//$company_order =getClosedOrderCompany('1053');
+
+//print_r($company_order);
+
+//$customers = getComapnyByFreq('bimonthly');
+//echo "<pre>";
+//print_r($customers);exit;
 $sort_date = ($_REQUEST['sort'] == 'a') ? 'd' : 'a';
 $sort_date_img = ($_REQUEST['sort'] == 'a') ? 'down' : 'up';
 

@@ -975,6 +975,7 @@ ON sohorepro_order_master.id=sohorepro_product_master.order_id
 INNER JOIN sohorepro_tax_rate
 ON sohorepro_tax_rate.state_id=sohorepro_product_master.tax_status
 WHERE sohorepro_order_master.order_id = '$order_id' AND sohorepro_order_master.closed_status='1' 
+GROUP BY sohorepro_order_master.id
 ORDER BY sohorepro_order_master.created_date ASC" ;
     $price = mysql_query($select_price);
     while ($object = mysql_fetch_assoc($price)):
@@ -4453,6 +4454,104 @@ function getCustomerCSV() {
     $select_users = "SELECT `cus_fname`,`cus_contact_email` FROM `sohorepro_customers`"; 
     $customers = mysql_query($select_users);
     while ($object = mysql_fetch_row($customers)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getBaseUrl() 
+{
+    // output: /myproject/index.php
+    $currentPath = $_SERVER['PHP_SELF']; 
+    
+    // output: Array ( [dirname] => /myproject [basename] => index.php [extension] => php [filename] => index ) 
+    $pathInfo = pathinfo($currentPath); 
+    
+    // output: localhost
+    $hostName = $_SERVER['HTTP_HOST']; 
+    
+    // output: http://
+    $protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https://'?'https://':'http://';
+    
+    // return: http://localhost/myproject/
+    return $protocol.$hostName.$pathInfo['dirname']."/";
+}
+
+function updateInvoice_order($id){
+    $update_invoice = "UPDATE sohorepro_order_master SET invoice_status= '1' WHERE id = '".$id."' AND invoice_status = '0' ";
+    $products = mysql_query($update_invoice);
+    //echo $update_invoice; exit;
+    return $products;
+}
+
+function updateInvoiceTempOn($id){
+     $update_invoice = "UPDATE sohorepro_order_master SET invoice_temp='1' WHERE id = '".$id."' AND invoice_temp = '0' ";
+    $products = mysql_query($update_invoice);
+    
+    return $products;
+}
+
+function updateInvoiceDetails($invoice_name,$comp_id){
+    $invoice_number = '1000';
+    $insert_invoice = "INSERT INTO sohorepro_invoice (comp_id,invoice_number,invoice_name) VALUES ('$comp_id','$invoice_number','$invoice_name')";
+    mysql_query($insert_invoice);
+    return mysql_insert_id();
+            
+}
+
+function updateInvoice($id){
+    $update_invoice = "UPDATE sohorepro_order_master SET invoice_id='$id' WHERE invoice_temp = '1' ";
+     $products = mysql_query($update_invoice);
+    
+    return $products;
+}
+
+function updateInvoiceTempOff(){
+     $update_invoice = "UPDATE sohorepro_order_master SET invoice_temp='0' WHERE invoice_temp = '1' ";
+     $products = mysql_query($update_invoice);
+    
+    return $products;
+}
+
+function getInvoiceFreqFront($freq){
+    
+            if($freq=="weekly"){
+            $f_sort ="7";
+        }elseif($freq=="monthly"){
+             $f_sort ="30";
+        }elseif($freq=="bimonthly"){
+            $f_sort ="14";
+        }
+        $query = mysql_query("SELECT sohorepro_order_master.*,sohorepro_company.invoice_type,sohorepro_invoice.*
+                                FROM sohorepro_order_master
+                                INNER JOIN sohorepro_company
+                                ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+                                INNER JOIN sohorepro_invoice
+                                ON sohorepro_order_master.invoice_id=sohorepro_invoice.id
+                                WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1' 
+                                ORDER BY sohorepro_order_master.id DESC");
+        while ($object = mysql_fetch_assoc($query)):
+        $value[] = $object;
+    endwhile;
+    return $value;
+}
+
+function getComapnyByFreq($freq){
+        if($freq=="weekly"){
+            $f_sort ="7";
+        }elseif($freq=="monthly"){
+             $f_sort ="30";
+        }elseif($freq=="bimonthly"){
+            $f_sort ="14";
+        }
+        $query = mysql_query("SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
+                                FROM sohorepro_order_master
+                                INNER JOIN sohorepro_company
+                                ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
+                                WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1' 
+                                GROUP BY sohorepro_order_master.customer_company
+                                ORDER BY sohorepro_order_master.id DESC");
+         while ($object = mysql_fetch_assoc($query)):
         $value[] = $object;
     endwhile;
     return $value;
