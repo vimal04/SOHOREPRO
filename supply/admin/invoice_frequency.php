@@ -41,26 +41,10 @@ $comp_id = $_REQUEST['company'];
     <?php 
     if(isset($_POST['num'])){
      //   echo "hai"; exit;
-       $customers = getComapnyByFreq($_POST['num']);
-       //foreach($customers as $customer){
-             
-      // $company_id_in=$customer['customer_company'];
-         $company_id_in='1343';
-   
-$company_order =getClosedOrderCompany($company_id_in);
-//echo "<pre>";
-//print_r($company_order);
-?>
-   
-<!-- EXAMPLE OF CSS STYLE -->
- <?php
-  // $test_var->Header($company_id_in123);
-//ob_start();
-
-// Extend the TCPDF class to create custom Header and Footer
-
-// Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends TCPDF {
+        
+        
+        
+        class MYPDF extends TCPDF {
 
     //Page header
       
@@ -75,23 +59,23 @@ class MYPDF extends TCPDF {
         $pageno = $this->getAliasNumPage() ." of ". $this->getAliasNbPages();
         //$pageno = $this->getAliasNumPage();
         $head='<style>
-   .table-content-txt th{
-   font-size:11px !important;
-   border-bottom:1px solid #888;    
-   border-top:1px solid #888;
-    height:42px;
-        vertical-align:middle;
-        line-height:30px;        
-        font-family:Arial, Helvetica, sans-serif;
-   }         
+              .table-content-txt th{
+              font-size:11px !important;
+              border-bottom:1px solid #888;    
+              border-top:1px solid #888;
+              height:42px;
+              vertical-align:middle;
+              line-height:30px;        
+              font-family:Arial, Helvetica, sans-serif;
+            }         
         
        
-        .header table td, .content-text table td{
-   font-size:9px !important;         
-   }
-        .table-content-body{
+            .header table td, .content-text table td{
+             font-size:9px !important;         
+             }
+           .table-content-body{
             color:red !important;
-        }
+            }
         *{
 font-family:Arial, Helvetica, sans-serif;        
 }
@@ -152,6 +136,32 @@ font-family:Arial, Helvetica, sans-serif;
         $this->writeHTML('Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centurie.Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a', true, false, true, false, '');
     } 
 }
+       $customers = getComapnyByFreq($_POST['num']);
+        
+     
+       $invoice_number = $_POST['invoice_number'];
+       $company_id_in="";
+       $k=1;
+       $len = count($customers);
+       foreach($customers as $customer){ 
+          
+             
+       $company_id_in=$customer['customer_company'];
+         //$company_id_in='1343';
+   
+       $company_order =getClosedOrderCompany($company_id_in);
+
+?>
+   
+<!-- EXAMPLE OF CSS STYLE -->
+ <?php
+  // $test_var->Header($company_id_in123);
+//ob_start();
+
+// Extend the TCPDF class to create custom Header and Footer
+
+// Extend the TCPDF class to create custom Header and Footer
+
 
 $html1="";
 // create new PDF document
@@ -396,17 +406,25 @@ $invoice_name = "invoice_".$company_id_in."_".time().".pdf";
 //header('Content-Type: application/pdf');
 $display_path = $filePathUrl ."/".$company_id_in."/invoice_".$company_id_in."_".time().".pdf";
 $OutputPdfFileName = $companyInvoiceFolder."/invoice_".$company_id_in."_".time().".pdf";
+
 $pdf->Output($OutputPdfFileName, 'F');
 //header("Location:supply_billing.php?success_pdf");
 //exit;
 //$pdf->Output('D:\xampp\htdocs\services.sohorepro.com\supply\admin\samplesupply.pdf', 'I');
 //ob_end_flush();
 
-$Invoice_details = updateInvoiceDetails($invoice_name, $company_id_in );
+if($len==$k){
+   $update_invoice_number = updateInvoiceNumber($invoice_number+1); 
+}
+
+$Invoice_details = updateInvoiceDetails($invoice_name, $company_id_in, $invoice_number );
 
 $update_invoice_name = updateInvoice($Invoice_details);
 updateInvoiceTempOff();
-      // }
+$k++;
+$invoice_number++;
+       }
+     
     }
     //$update_invoice = updateInvoiceFileName();
   //$Orders = getClosedOrdersAllFreqInv($_REQUEST['sort'],$_REQUEST['num']);
@@ -478,6 +496,7 @@ updateInvoiceTempOff();
                                                         $temp_times = date("Y-m-d h:iA", $datew->format('U'));
                                                         $date = date("m/d/Y", strtotime($order['invoice_date'])) . ' ' . date("h:iA", strtotime("-0 minutes", strtotime($temp_times)));
                                                         $customer = $order['customer_company_name'];
+                                                        $id = $order['customer_company'];
                                                         if($order['invoice_type']=="14"){
                                                             $invoice_period= "Bi-Monthly";
                                                         }
@@ -496,7 +515,7 @@ updateInvoiceTempOff();
                                                             <td width="109" height="36" align="center" bgcolor="<?php echo $rowColor; ?>"   valign="middle"><span id="customer_name_<?php echo $id; ?>"><?php echo $customer; ?></span></td>                
                                                              
                                                             <td width="210" height="36" align="center" bgcolor="<?php echo $rowColor1; ?>"  valign="middle"><span class="refj_<?php echo $id; ?>" id="<?php echo $id; ?>"><?php echo $invoice_period; ?></span></td>
-                                                            <td width="210" height="36" align="center" bgcolor="<?php echo $rowColor; ?>" valign="middle"><a target="_blank"href="<?php echo getBaseUrl()."invoice/".$company_id_in."/".$order['invoice_name'];?>"><img src="<?php echo getBaseUrl(). "images/pdf.png"; ?>" /></a></td>
+                                                            <td width="210" height="36" align="center" bgcolor="<?php echo $rowColor; ?>" valign="middle"><a target="_blank"href="<?php echo getBaseUrl()."invoice/".$id."/".$order['invoice_name'];?>"><img src="<?php echo getBaseUrl(). "images/pdf.png"; ?>" /></a></td>
                                                         </tr>
                                                             
                                                         

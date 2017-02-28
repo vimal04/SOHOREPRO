@@ -1027,43 +1027,43 @@ exit;
 
                                                                                         </form>
 
-<!--                                                                                           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                                                                                           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
                                                                                         <script type="text/javascript">
                                                                                             $(document).ready(function(){
                                                                                                 
-//                                                                                                $('#reg_contactmail').blur(function(){
-//                                                                                                    
-//                                                                                                   var cont_email =  $('#reg_contactmail').val();
-//                                                                                                    $.ajax
-//        ({
-//            type: "POST",
-//            url: "ajax_test.php",
-//            data: "add_customer=1&cust_email="+cont_email,
-//           success: function(option)
-//            {  //alert(option);
-//                if(option>'0'){
-//                   $('#myModal').modal('show');
-//
-//                    $('#re-enter').click(function(){
-//                    $(this).data('clicked', true);
-//                    $('#myModal').modal('hide');
-//                     $('#reg_contactmail').val('');
-//                    $('#reg_contactmail').focus();
-//                    //alert("re enter")
-//                    });
-//                    $('#accept').click(function(){
-//                    $(this).data('clicked', true);
-//                    $('#myModal').modal('hide');
-//                    $('#reg_password').focus();
-//                    });  
-//                }
-//            }
-//        });
+                                                                                                $('#reg_contactmail').blur(function(){
+                                                                                                    
+                                                                                                   var cont_email =  $('#reg_contactmail').val();
+                                                                                                    $.ajax
+        ({
+            type: "POST",
+            url: "ajax_test.php",
+            data: "add_customer=1&cust_email="+cont_email,
+           success: function(option)
+            {  //alert(option);
+                if(option>'0'){
+                   $('#myModal').modal('show');
+
+                    $('#re-enter').click(function(){
+                    $(this).data('clicked', true);
+                    $('#myModal').modal('hide');
+                     $('#reg_contactmail').val('');
+                    $('#reg_contactmail').focus();
+                    //alert("re enter")
+                    });
+                    $('#accept').click(function(){
+                    $(this).data('clicked', true);
+                    $('#myModal').modal('hide');
+                    $('#reg_password').focus();
+                    });  
+                }
+            }
+        });
                                                                                                          
 
-                                                                                             //   });
+                                                                                                });
                                                                                   $(".ui-autocomplete-input").keyup(function()
                                                                                                 {
                                                                                                     var check = $(this).val;
@@ -1357,10 +1357,10 @@ $("#password").val('');
                                                                 </script>
                                                                 
                                                                  <!-- Modal -->
-<!--  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
     
-       Modal content
+      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -1376,4 +1376,4 @@ $("#password").val('');
       </div>
       
     </div>
-  </div>-->
+  </div>

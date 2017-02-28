@@ -39,8 +39,8 @@ $comp_array = array(
     "end_date" => $_POST['txtenddate']
 );
 
-$Orders = getClosedOrdersAllFreq($_REQUEST['sort'],$_REQUEST['feq_sort'],$comp_array);
-
+$Orders = getClosedOrdersAllFreq($start,$limit,$_REQUEST['sort'],$_REQUEST['feq_sort'],$comp_array);
+$rows = count($Orders);
 $startDate = $Orders[count($Orders)-1]['created_date'];
 
 $time = strtotime($startDate);
@@ -1038,7 +1038,11 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
 <!--                                                    <label class="show_list">Show list of Orders grouped by customer</label>-->
                                            
                                                     </div>
+                                                    <?php $starting_invoice = getStartInvoice();
                                                     
+                                                    //print_r($starting_invoice);
+                                                    
+                                                    ?>
                                                     
                                                     <form id="invoice_form" action="" name="invoice_form" method="POST" >
                                            <input type="hidden" value="1" name="invoice-hidden"/>
@@ -1049,7 +1053,7 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
                                                 <li><h3>Invoice Frequency</h3></li>
                                             <li><span><input type="radio" name="num" checked value="monthly"/>Monthly</span><label>CutOff Date <input type="text" placeholder="--" /></label></li>
                                             <li><span><input type="radio" name="num" value="bimonthly"/>Semi Monthly</span><label>Invoice Date <input type="text" placeholder="" /></label></li>
-                                            <li><span><input type="radio" name="num" value="weekly"/>Weekly</span><label>Starting Invoice # <input type="text" placeholder="" /></label></li>
+                                            <li><span><input type="radio" name="num" value="weekly"/>Weekly</span><label>Starting Invoice # <input id="invoice_number" type="text" value="<?php echo $starting_invoice[0]; ?>" name="invoice_number" placeholder="" /></label></li>
                                             </ul>
                                         </div>
                                         <span class="invoice-customer">
@@ -1463,6 +1467,7 @@ $("#txtenddate1").datepicker({maxDate : todayDate }).datepicker('setDate',todayD
 $(document).ready(function(){
     $('#generate_invoice_fr').click(function(){ //alert("fdfd");
         var form_data = $("#invoice_form").serialize();
+        var invoice_number = $('#invoice_number').val();
     $.ajax
         ({
             type: "POST",

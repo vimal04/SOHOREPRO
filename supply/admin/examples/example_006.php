@@ -26,8 +26,104 @@
 
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
+ class MYPDF extends TCPDF {
 
-// create new PDF document
+    //Page header
+      
+    public function Header() {
+        // Logo
+//        $image_file = K_PATH_IMAGES.'logo_example.jpg';
+//        $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+//        // Set font
+//        $this->SetFont('helvetica', 'B', 20);
+//        // Title
+      // $this->Cell(0, 15, '<< TCPDF Example 003 >>', 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        $pageno = $this->getAliasNumPage() ." of ". $this->getAliasNbPages();
+        //$pageno = $this->getAliasNumPage();
+        $head='<style>
+              .table-content-txt th{
+              font-size:11px !important;
+              border-bottom:1px solid #888;    
+              border-top:1px solid #888;
+              height:42px;
+              vertical-align:middle;
+              line-height:30px;        
+              font-family:Arial, Helvetica, sans-serif;
+            }         
+        
+       
+            .header table td, .content-text table td{
+             font-size:9px !important;         
+             }
+           .table-content-body{
+            color:red !important;
+            }
+        *{
+font-family:Arial, Helvetica, sans-serif;        
+}
+   </style>
+<!-- EXAMPLE OF CSS STYLE -->
+<div class="header">
+    <table border="0" cellpadding="0" cellsapcing="0" style="font-family:Arial, Helvetica, sans-serif;"> 
+            <tr>
+                <td width="120px"><img src="http://cipldev.com/supply-new.sohorepro.com/supply/admin/images/soho-logo.jpg" alt="logo" style="width:114px;"></td>
+                <td width="320px">
+                    <table>
+                    <tr>
+                        <td><span style="float: left;">381 BROOME STREET, NEW YORK, NY 100013 </span></td>
+                    </tr>
+                    <tr>
+                        <td><span style="float: left;text-algin:left;margin-right:4px;margin-top:10px;line-height:17px;">P:</span><span style="float: left;margin-left:4px;padding-left:5px;display:block;"> 212.925.7575</span></td>
+                    </tr>
+        
+                    <tr>
+                        <td><span style="float: left;margin-right:4px;line-height:17px;">F:</span><span style="float: left;"> 212.925.9741</span></td>
+                    </tr>
+                    <tr>
+                        <td><span style="float: left;margin-right:4px;line-height:17px;"></span><span style="float: left;">info@sohorepro.com</span></td>
+                    </tr>
+                    <tr>
+                        <td><span style="float: left;margin-right:4px;line-height:17px;"></span><span style="float: left;">www.sohorepro.com</span></td></tr>
+                    <tr>
+                        <td><span style="float: left; clear: both;">Federal Tax ID No.: 13-3856325</span></td></tr>
+                    </table>
+                </td>
+                <td>
+         
+                <table style="font-family:Arial, Helvetica, sans-serif;">
+                <tr> 
+                    <td style="border:1px solid #888;height:30px;line-height:30px;"><span style="float: left; width: 100%; border-bottom: 1px solid #888; padding: 5px; box-sizing: border-box;"><span style="float: left; text-align:left;">&nbsp;&nbsp; Invoice number:</span><span style="float: left; text-align:left;"> 99784</span> <span style="float: right;text-align:right;dispaly:block; padding-left:10px;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Page '.$pageno.'</span></span></td>
+					 
+				
+                </tr>
+                <tr>
+                  <td style="border:1px solid #888;height:30px;line-height:30px"><span style="float: left; width: 100%; padding: 5px; box-sizing: border-box;"><span style="float: left;">&nbsp;&nbsp; Date:</span><span style="float: left;">'.date("m/d/Y").'</span> <span style="float: right; margin-right: 12px;"><span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Terms: </span><span> Net 15 Days</span></span></span></td>
+                </tr>
+                </table>
+            </td>
+        </tr>
+         </table>
+         </div>';
+        $this->writeHTML($head,true,false,true,false,'');
+    }
+
+    // Page footer
+    public function Footer() {
+        // Position at 15 mm from bottom
+        
+        $this->SetY(-15);
+        // Set font
+        $this->SetFont('helvetica', 'I', 8);
+        // Page number
+        $this->writeHTML('Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centurie.Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a', true, false, true, false, '');
+    } 
+}
+
+for($i = 0; $i<4; $i++){
+// create new PDF document'
+    
+    
+   
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
 // set document information
@@ -319,12 +415,14 @@ $pdf->writeHTML($html, true, false, true, false, '');
 
 // reset pointer to the last page
 $pdf->lastPage();
+  ob_start();
 
 // ---------------------------------------------------------
 
 //Close and output PDF document
-$pdf->Output('example_006.pdf', 'I');
+$pdf->Output('D:\xampp\htdocs\services.sohorepro.com\supply\admin\examples\pdfs\example'.$i.'.pdf', 'F');
 
+}
 //============================================================+
 // END OF FILE
 //============================================================+

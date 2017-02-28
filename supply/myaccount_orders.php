@@ -457,9 +457,20 @@ if (isset($_REQUEST['login_submit'])) {
                                                                                                 if($_REQUEST['sort']){
                                                                                                     $orderbysort= "sort=".$sortnew."&";
                                                                                                 }
-
-                                                                                                $Orders = getMyOrders($_SESSION['sohorepro_userid'],$_SESSION['sohorepro_companyid'],$ordersort,$sort,$sorttype);
-                                                                                                $rows = count(myOrdersCount($_SESSION['sohorepro_userid'],$_SESSION['sohorepro_companyid'],$ordersort,$sort,$sorttype));                                                                                                
+                                                                                                
+                                                                                                $userinfo = UserDtls($_SESSION['sohorepro_userid']);
+                                                                                                $invoiceTab = ($_GET['order_sort']) ? $_GET['order_sort']:'';
+                                                                                                
+                                                                                                if($userinfo[0]['ap_user'] == 1 || $invoiceTab!= 'invoice')
+                                                                                                {
+                                                                                                    $Orders = getMyOrders($_SESSION['sohorepro_userid'],$_SESSION['sohorepro_companyid'],$ordersort,$sort,$sorttype);
+                                                                                                    $rows = count(myOrdersCount($_SESSION['sohorepro_userid'],$_SESSION['sohorepro_companyid'],$ordersort,$sort,$sorttype));                                                                                                
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    $Orders = array();
+                                                                                                    $rows = array();
+                                                                                                }
                                                                                                 
                                                                                                 $sort_date_img1 = 'up';
                                                                                                 $sort_date_img2 = 'up';
@@ -501,7 +512,7 @@ if (isset($_REQUEST['login_submit'])) {
                                                                                                                     <a <?php if ($_GET['order_sort'] == "all" || !isset($_GET['order_sort'])) { ?> class="active-period" <?php } ?> href="myaccount_orders.php?order_sort=all">All</a>
                                                                                                                     <a <?php if ($_GET['order_sort'] == "open") { ?> class="active-period" <?php } ?> href="myaccount_orders.php?order_sort=open">Open</a>
                                                                                                                     <a <?php if ($_GET['order_sort'] == "closed") { ?> class="active-period" <?php } ?> href="myaccount_orders.php?order_sort=closed">Closed</a>
-                                                                                                                    <a <?php if ($_GET['order_sort'] == "invoice") { ?> class="active-period" <?php } ?> href="myaccount_orders.php?order_sort=invoice">Invoiced</a>
+                                                                                                                    <a <?php if ($_GET['order_sort'] == "invoice") { ?> class="active-period" <?php } ?> href="myaccount_orders.php?order_sort=invoice" <?php if($userinfo[0]['ap_user'] != 1) {?> style="display:none;"<?php } ?>>Invoiced</a>
                                                                                                                 </div>
                                                                                                                 <?php $cl = closedOrderBillable($_GET['feq_sort']);
                                                                                                                 ?>
@@ -509,7 +520,7 @@ if (isset($_REQUEST['login_submit'])) {
                                                                                                             </div></td>
                                                                                                     </tr>
                                                                                                     <tr>
-                                                                                                        <td align="left" valign="top"><table width="759" border="0" cellspacing="0" cellpadding="0">
+                                                                                                        <td align="left" valign="top"><table width="880" border="0" cellspacing="0" cellpadding="0">
                                                                                                                 
                                                                                                                 <tr>
                                                                                                                     <td width="258" valign="middle" height="28" bgcolor="#f99b3e" align="center" class="td_brdr"><a style="text-decoration: none; color: #fff;" href="myaccount_orders.php?<?php echo $order_sort?><?php echo $orderbysort?>sorttype=order_number">ORDER NUMBER&nbsp;<img src="admin/images/<?php echo $sort_date_img1; ?>.png"  alt="" width="10px" height="5px"/></a></td>

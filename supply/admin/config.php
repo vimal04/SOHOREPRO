@@ -598,7 +598,7 @@ function getDistinctClosed($filter){
    return $value;
 
 }
-function getClosedOrdersAllFreq($sorting,$sort_feq,$comp_id) {
+function getClosedOrdersAllFreq($start,$limit,$sorting,$sort_feq,$comp_id) {
     //return $sorting;
     if($sort_feq){
         if($sort_feq=="weekly"){
@@ -620,7 +620,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' 
-ORDER BY sohorepro_order_master.created_date ASC";
+ORDER BY sohorepro_order_master.created_date ASC LIMIT $start, $limit";
     }
      elseif($f_sort!="" && $sorting == 'd'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -628,7 +628,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' 
-ORDER BY sohorepro_order_master.created_date DESC";
+ORDER BY sohorepro_order_master.created_date DESC LIMIT $start, $limit";
     }
      elseif($f_sort!="" && $sorting == 'd'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -636,7 +636,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' 
-ORDER BY sohorepro_order_master.created_date DESC";
+ORDER BY sohorepro_order_master.created_date DESC LIMIT $start, $limit";
     }
      elseif($f_sort!="" && $sorting == 'jnd'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -644,7 +644,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' 
-ORDER BY sohorepro_order_master.order_id DESC";
+ORDER BY sohorepro_order_master.order_id DESC LIMIT $start, $limit";
     }
         elseif($f_sort!="" && $sorting == 'jna'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -652,7 +652,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' 
-ORDER BY sohorepro_order_master.order_id ASC";
+ORDER BY sohorepro_order_master.order_id ASC LIMIT $start, $limit";
     }
         elseif($f_sort!="" && $sorting == 'feq_a'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -660,7 +660,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' 
-ORDER BY sohorepro_company.invoice_type ASC";
+ORDER BY sohorepro_company.invoice_type ASC LIMIT $start, $limit";
     }
       elseif($f_sort!="" && $sorting == 'feq_d'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -668,7 +668,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1' 
-ORDER BY sohorepro_company.invoice_type ASC";
+ORDER BY sohorepro_company.invoice_type ASC LIMIT $start, $limit";
     }
     elseif($sorting == 'a'){
      $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -676,7 +676,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
-ORDER BY created_date ASC";  
+ORDER BY created_date ASC LIMIT $start, $limit";
     }  
     elseif($sorting == 'd') 
     {
@@ -685,7 +685,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
-ORDER BY created_date DESC";     
+ORDER BY created_date DESC LIMIT $start, $limit";     
     }
     elseif($sorting == 'jnd') 
     {
@@ -694,7 +694,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
-ORDER BY order_id DESC";     
+ORDER BY order_id DESC LIMIT $start, $limit";    
     }
     elseif($sorting == 'jna') 
     {
@@ -703,7 +703,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
-ORDER BY order_id ASC";     
+ORDER BY order_id ASC LIMIT $start, $limit";    
     }
       elseif($sorting == 'feq_a'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -711,7 +711,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' ".$sub_query." 
-ORDER BY sohorepro_company.invoice_type ASC";
+ORDER BY sohorepro_company.invoice_type ASC LIMIT $start, $limit";
     }
       elseif($sorting == 'feq_d'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -719,7 +719,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' ".$sub_query."
-ORDER BY sohorepro_company.invoice_type DESC";
+ORDER BY sohorepro_company.invoice_type DESC LIMIT $start, $limit";
     }
     elseif($sort_feq == 'weekly'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -727,7 +727,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '7' AND sohorepro_order_master.closed_status = '1' 
-ORDER BY sohorepro_order_master.id DESC";
+ORDER BY sohorepro_order_master.id DESC LIMIT $start, $limit";
     }
     elseif($sort_feq == 'monthly'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -735,7 +735,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '30' AND sohorepro_order_master.closed_status = '1' 
-ORDER BY sohorepro_order_master.id DESC";
+ORDER BY sohorepro_order_master.id DESC LIMIT $start, $limit";
     }
     elseif($sort_feq == 'bimonthly'){
         $select_orders = "SELECT sohorepro_order_master.*,sohorepro_company.invoice_type
@@ -743,7 +743,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_company.invoice_type = '14' AND sohorepro_order_master.closed_status = '1' 
-ORDER BY sohorepro_order_master.id DESC";
+ORDER BY sohorepro_order_master.id DESC LIMIT $start, $limit";
     }
  
     elseif($comp_id['company_id']!=""){
@@ -756,7 +756,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' AND sohorepro_company.comp_id='$company_id'
-ORDER BY sohorepro_order_master.id DESC";
+ORDER BY sohorepro_order_master.id DESC LIMIT $start, $limit";
     
     } 
     else
@@ -768,7 +768,7 @@ FROM sohorepro_order_master
 INNER JOIN sohorepro_company
 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
 WHERE sohorepro_order_master.closed_status = '1' 
-ORDER BY sohorepro_order_master.id DESC";
+ORDER BY sohorepro_order_master.id DESC LIMIT $start, $limit";
     }
   //  echo $select_orders;
    // exit;
@@ -4491,9 +4491,9 @@ function updateInvoiceTempOn($id){
     return $products;
 }
 
-function updateInvoiceDetails($invoice_name,$comp_id){
-    $invoice_number = '1000';
-    $insert_invoice = "INSERT INTO sohorepro_invoice (comp_id,invoice_number,invoice_name) VALUES ('$comp_id','$invoice_number','$invoice_name')";
+function updateInvoiceDetails($invoice_name,$comp_id,$invoice_no){
+    
+    $insert_invoice = "INSERT INTO sohorepro_invoice (comp_id,invoice_number,invoice_name) VALUES ('$comp_id','$invoice_no','$invoice_name')";
     mysql_query($insert_invoice);
     return mysql_insert_id();
             
@@ -4529,6 +4529,7 @@ function getInvoiceFreqFront($freq){
                                 INNER JOIN sohorepro_invoice
                                 ON sohorepro_order_master.invoice_id=sohorepro_invoice.id
                                 WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1' 
+                                GROUP BY sohorepro_order_master.customer_company
                                 ORDER BY sohorepro_order_master.id DESC");
         while ($object = mysql_fetch_assoc($query)):
         $value[] = $object;
@@ -4548,12 +4549,22 @@ function getComapnyByFreq($freq){
                                 FROM sohorepro_order_master
                                 INNER JOIN sohorepro_company
                                 ON sohorepro_order_master.customer_company=sohorepro_company.comp_id
-                                WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1' 
+                                WHERE sohorepro_company.invoice_type = '$f_sort' AND sohorepro_order_master.closed_status = '1'  AND sohorepro_order_master.invoice_status = '0' 
                                 GROUP BY sohorepro_order_master.customer_company
                                 ORDER BY sohorepro_order_master.id DESC");
          while ($object = mysql_fetch_assoc($query)):
         $value[] = $object;
     endwhile;
     return $value;
+}
+
+function getStartInvoice(){
+    $query = mysql_query("SELECT * FROM sohorepro_invoice_settings");
+    $result = mysql_fetch_row($query);
+            return $result;
+}
+function updateInvoiceNumber($invoice_number){
+    $query =  mysql_query("UPDATE sohorepro_invoice_settings SET invoice_starting_no='$invoice_number' WHERE id='1'");
+    return $query;
 }
 ?>

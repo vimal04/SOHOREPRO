@@ -2,6 +2,7 @@
 include './admin/config.php';
 include './admin/db_connection.php';
 include './admin/include/class.phpmailer.php';
+include './admin/mail_template.php';
 
 if(isset($_REQUEST['login_submit']))
 { 
@@ -161,7 +162,50 @@ exit;
 
 }
 
+// INSERT USER START //
 
+if (isset($_REQUEST['order_val']) == '1') {
+    extract($_POST);
+    $cus_contact_name = $reg_fname.' '.$reg_lname;
+    $sql = "INSERT INTO sohorepro_customers SET
+             cus_fname = '" . $reg_fname . "', 
+             cus_lname = '" . $reg_lname . "',
+             cus_email = '" . $reg_email_id . "',
+             cus_pass = '" . $reg_password . "',
+             cus_compname = '" . $customer_id_new . "',
+             cus_contact_name = '" . $cus_contact_name . "',
+             cus_contact_email = '" . $reg_email_id . "',
+             cus_contact_phone = '" . $reg_user_phone . "', 
+             cus_contact_ph_ext = '" . $reg_user_phone_ext . "', 
+             cus_status   = '1' ";    
+
+    mysql_query($sql);
+    $notifi_to_admin = CreateUsrNotiAdmin($customer_id_new, $cus_contact_name, $reg_email_id);
+    $notifi_to_user = CreateUsrNotiUser($customer_id_new, $cus_contact_name, $reg_email_id, $reg_password);
+
+    //Check If Added the product in Guest
+    $chk_prf_guest  = ChkPrdGuest();
+    if(count($chk_prf_guest) > 0)
+    {    
+    //Check User Login
+    $user_login = UserLogin($reg_email_id,$reg_password);
+        if(count($user_login) > 0){
+            $_SESSION['sohorepro_userid']      =$user_login[0]['cus_id'];
+            $_SESSION['sohorepro_companyid']   =$user_login[0]['cus_compname'];
+            $_SESSION['sohorepro_username']    =$user_login[0]['cus_contact_name'];
+            header("Location:shoppingcart.php?ref=".$new_usr_ref);  
+        }  else {
+            echo 'Credentials In-Correct';
+        }   
+    }  else {
+    header("Location:existing_customer.php?new_user=succ&cus_id=" . $customer_id_new);  
+    }
+}
+
+
+
+
+// INSERT USER END //
 
 
 clearstatcache();
@@ -407,7 +451,7 @@ $comp_array=substr($comp_array,0,strlen($comp_array)-1);
  $("#reg_phone3").mask("999-999-9999");
  $("#reg_phone4").mask("999-999-9999");
  $("#reg_user_phone").mask("999-999-9999");  
- $("#reg_user_phone_ext").mask("99999");
+ $("#reg_user_phone_ext").mask("999");
  $("#reg_busizip").mask("99999");
  });
  
@@ -499,7 +543,7 @@ $comp_array=substr($comp_array,0,strlen($comp_array)-1);
                 $("#reg_phone3").mask("999-999-9999");
                 $("#reg_phone4").mask("999-999-9999");
                 $("#reg_user_phone").mask("999-999-9999"); 
-                $("#reg_user_phone_ext").mask("99999");
+                $("#reg_user_phone_ext").mask("999");
                 $("#reg_busizip").mask("99999");
                 $( "#reg_contphone" ).autocomplete({ disabled: true });
             }
@@ -583,7 +627,7 @@ $comp_array=substr($comp_array,0,strlen($comp_array)-1);
                 $("#reg_phone3").mask("999-999-9999");
                 $("#reg_phone4").mask("999-999-9999");
                 $("#reg_user_phone").mask("999-999-9999"); 
-                $("#reg_user_phone_ext").mask("99999");
+                $("#reg_user_phone_ext").mask("999");
                 $("#reg_busizip").mask("99999");
               }
         });
@@ -599,7 +643,7 @@ $comp_array=substr($comp_array,0,strlen($comp_array)-1);
                 $("#reg_phone3").mask("999-999-9999");
                 $("#reg_phone4").mask("999-999-9999");
                 $("#reg_user_phone").mask("999-999-9999");    
-                $("#reg_user_phone_ext").mask("99999");
+                $("#reg_user_phone_ext").mask("999");
                 $("#reg_busizip").mask("99999");
         });
     
@@ -862,9 +906,7 @@ if($_GET['for_err'] == '1'){
 <?php
 } 
 ?>
- <form id="reg_form" name="reg_form" action="add_new_user.php" method="post">
- <input type="hidden" name="order_val" value="1" id="order_val" />
- <input type="hidden" name="new_usr_ref" value="<?php echo $_GET['ref'] ?>"  />
+
  <h2 class="headline-interior orange">Confirm Existing Account</h2>
  <div class="bkgd-stripes-orange">&nbsp;</div>
  <h2 style="color: #5C5C5C;">Do you have an account with us? If so, please search by phone number</h2>
@@ -876,6 +918,10 @@ $none_class     = ($_GET['cus_id'] != '') ? '' : 'display: none;';
  <div class="label_regview exis_head" style="" align="center">
      <h2 style="float:left; color: #5C5C5C;">Phone number : </h2><input intvalue="Contact phone" class="reginput" style="width: 220px; height: 18px; font-size: 18px; border:4px solid #FF9000;" name="reg_contphone" autofocus id="reg_contphone" type="text" placeholder="Search Phone number" onblur="load_companyinfo();" value="<?php echo $cont_num; ?>" />
  </div>
+ 
+ <form id="reg_form" name="reg_form" action="existing_customer.php" method="post">
+ <input type="hidden" name="order_val" value="1" id="order_val" />
+ <input type="hidden" name="new_usr_ref" value="<?php echo $_GET['ref'] ?>"  />
  
 <!-- <div id="not_exist" style="<?php echo $none_class; ?>float: left;width: 100%;">
      <a href="new_account_add.php" style="text-decoration: none;color: #000  !important;">Click here to create a new account (pending approval)</a>

@@ -80,7 +80,7 @@ $comp_name       = getCompName($_SESSION['sohorepro_companyid']);
     background: #F99B3E none repeat scroll 0 0 !important;
 }
     </style>
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/blitzer/jquery-ui.css" type="text/css" />
 <script src="js/jquery.easy-confirm-dialog.js"></script>
